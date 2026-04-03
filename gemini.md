@@ -9,6 +9,7 @@
 - Base de données: Dexie.js (IndexedDB)
 - PWA: @vite-pwa/sveltekit
 - Vitest : test unitaires
+- Playwright pour les tests E2E
 
 ## Règles de Développement
 1. **Réactivité :** Utilise toujours les transitions natives de Svelte (`fly`, `fade`, `scale`) pour chaque changement d'état.
