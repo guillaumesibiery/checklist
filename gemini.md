@@ -37,6 +37,7 @@
 - Respecte les principes SOLID, KISS, DRY. 
 - Les méthodes ne doivent pas dépasser les 200 lignes. 
 - Implémente des tests unitaires pour vérifier le fonctionnement des requêtes select, insert, update et delete en base de données IndexedDB.
+- Les scripts TS sont isolés dans des fichiers .ts
 5. **Git :** :
 - Tu n'as pas le droit de commiter les développements sur une branche.
 - Tu n'as pas le droit de merger une branche. 
