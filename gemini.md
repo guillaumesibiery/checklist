@@ -1,3 +1,11 @@
+## Project Configuration
+
+- **Language**: TypeScript
+- **Package Manager**: npm
+- **Add-ons**: tailwindcss, vitest, sveltekit-adapter
+
+---
+
 # Instructions du Projet Checklist
 - L'objectif est de construire une application Web qui permet de créer des checklist pour suivre leurs avancement à partir de modèles existant.
 - Chaque utilisateur gère ses propres checklist, en cours ou archivées.
