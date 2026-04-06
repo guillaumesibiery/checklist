@@ -111,6 +111,7 @@
                         Annuler
                     </button>
                     <button
+                        data-testid="create-users"
                         onclick={state.createUser}
                         disabled={!state.isValid}
                         class="px-5 py-2.5 rounded-lg font-medium transition-colors cursor-pointer {state.isValid ? 'bg-primary text-text-inverse hover:bg-opacity-90' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}"
