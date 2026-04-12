@@ -1,9 +1,10 @@
 import { goto } from '$app/navigation';
 import { onMount } from 'svelte';
-import { db } from '$lib/db';
+import { db, type User } from '$lib/db';
 
 export function createAccueilState() {
-    let user = $state<{firstName: string} | null>(null);
+    let user = $state<User | null>(null);
+    let showLogoutModal = $state(false);
 
     onMount(async () => {
         const idStr = localStorage.getItem('currentUserId');
@@ -24,8 +25,14 @@ export function createAccueilState() {
         goto('/');
     }
 
+    function toggleLogoutModal() {
+        showLogoutModal = !showLogoutModal;
+    }
+
     return {
         get user() { return user; },
-        logout
+        get showLogoutModal() { return showLogoutModal; },
+        logout,
+        toggleLogoutModal
     };
 }
