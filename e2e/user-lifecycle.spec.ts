@@ -20,10 +20,11 @@ test('cycle de vie utilisateur : création, déconnexion et suppression', async 
 
   // 3. Vérification de la redirection vers /accueil
   await expect(page).toHaveURL(/\/accueil/);
-  await expect(page.getByText(`Bienvenue, ${testUserName} !`)).toBeVisible();
+  await expect(page.getByText(`Bonjour, ${testUserName}`)).toBeVisible();
 
   // 4. Déconnexion
   await page.getByRole('button', { name: 'Déconnexion' }).click();
+  await page.getByRole('button', { name: 'Oui, me déconnecter' }).click();
   
   // Retour à la page de connexion
   await expect(page).toHaveURL(/\/$/);
