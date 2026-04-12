@@ -1,0 +1,38 @@
+{
+    "modelName":"Baby pack",
+    "checklistId":"",
+    "checklistName":"",
+    "userId":"",
+    "creationDate":"",
+    "lastModifiedDate":"",
+    "progress":"",
+    "status":"",
+    "elements":[
+        {
+            "category":"",
+            "progress": "",
+            "items":[
+                {
+                    "item":"",
+                    "quantity":""
+                }
+            ]
+            
+        },
+        {
+            "category":"",
+            "progress": "",
+            "items":[
+                {
+                    "item":"",
+                    "quantity":""
+                },
+                {
+                    "item":"",
+                    "quantity":""
+                }
+            ]
+            
+        }
+    ]
+}
