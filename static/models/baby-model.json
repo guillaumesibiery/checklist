@@ -9,30 +9,197 @@
     "status":"",
     "elements":[
         {
-            "category":"",
+            "category":"Documents",
             "progress": "",
             "items":[
                 {
-                    "item":"",
+                    "item":"Carnet de santé",
+                    "quantity":""
+                },
+                {
+                    "item":"Carte identité/passeport",
+                    "quantity":""
+                },
+                {
+                    "item":"Carte assurance maladie",
                     "quantity":""
                 }
             ]
             
         },
         {
-            "category":"",
+            "category":"Trousse à pharmacie",
             "progress": "",
             "items":[
                 {
-                    "item":"",
+                    "item":"Désinfectant",
                     "quantity":""
                 },
                 {
-                    "item":"",
+                    "item":"Sérum physiologique",
+                    "quantity":""
+                },
+                {
+                    "item":"Pansements",
+                    "quantity":""
+                },
+                {
+                    "item":"Thermomètre",
+                    "quantity":""
+                },
+                {
+                    "item":"Doliprane",
+                    "quantity":""
+                },
+                {
+                    "item":"Gel arnica",
+                    "quantity":""
+                },
+                {
+                    "item":"Sachets réhydratation",
+                    "quantity":""
+                },
+                {
+                    "item":"Produits anti moustiques/insectes",
+                    "quantity":""
+                },
+                {
+                    "item":"Crême solaire",
+                    "quantity":""
+                },
+                {
+                    "item":"Compresses",
+                    "quantity":""
+                },
+                {
+                    "item":"Brumisateur",
                     "quantity":""
                 }
             ]
-            
+        },
+        {
+            "category":"Balade",
+            "progress": "",
+            "items":[
+                {
+                    "item":"Poussete Yoyo",
+                    "quantity":""
+                },
+                {
+                    "item":"Chancelière poussette",
+                    "quantity":""
+                },
+                {
+                    "item":"Cape de pluie poussette",
+                    "quantity":""
+                },
+                {
+                    "item":"Sac transport poussette",
+                    "quantity":""
+                },
+                {
+                    "item":"Porte bébé",
+                    "quantity":""
+                },
+                {
+                    "item":"Siège auto",
+                    "quantity":""
+                },
+                {
+                    "item":"Tapis de jeu",
+                    "quantity":""
+                },
+                {
+                    "item":"Sac à langer",
+                    "quantity":""
+                },
+                {
+                    "item":"Sac isotherme",
+                    "quantity":""
+                },
+                {
+                    "item":"Chapeau/casquette",
+                    "quantity":""
+                },
+                {
+                    "item":"Lunettes de soleil",
+                    "quantity":""
+                }
+            ]
+        },
+        {
+            "category":"Repas",
+            "progress": "",
+            "items":[
+                {
+                    "item":"Bavoirs",
+                    "quantity":""
+                },
+                {
+                    "item":"Langes (courts et longs)",
+                    "quantity":""
+                },
+                {
+                    "item":"Biberons",
+                    "quantity":"2"
+                },
+                {
+                    "item":"Tétines (pour biberons)",
+                    "quantity":""
+                },
+                {
+                    "item":"Goupillons",
+                    "quantity":""
+                },
+                {
+                    "item":"Produit lave vaisselle",
+                    "quantity":""
+                },
+                {
+                    "item":"Boite de lait + doseuse",
+                    "quantity":""
+                },
+                {
+                    "item":"Chauffe bibeonr",
+                    "quantity":"1"
+                },
+                {
+                    "item":"Vitamine D",
+                    "quantity":""
+                },
+                {
+                    "item":"Siège réhausseur",
+                    "quantity":"1"
+                },
+                {
+                    "item":"Kit repas tout prêt",
+                    "quantity":""
+                },
+                {
+                    "item":"Bouteilles d'eau",
+                    "quantity":""
+                },
+                {
+                    "item":"Boite repas à emporter",
+                    "quantity":""
+                },
+                {
+                    "item":"Cuillères",
+                    "quantity":""
+                },
+                {
+                    "item":"Assiètes",
+                    "quantity":""
+                },
+                {
+                    "item":"Bols",
+                    "quantity":""
+                },
+                {
+                    "item":"Gourde d'eau",
+                    "quantity":""
+                }
+            ]   
         }
     ]
 }
