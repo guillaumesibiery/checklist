@@ -16,7 +16,7 @@ export function createPageState() {
   let isValid = $derived(
     firstName.trim().length > 0 &&
     firstName.length <= 50 &&
-    /^[a-zA-Z0-9]+$/.test(firstName) &&
+    /^[a-zA-Z0-9 àâäéèêëïîôöùûüçÀÂÄÉÈÊËÏÎÔÖÙÛÜÇ'-]+$/.test(firstName) &&
     !existingUserError
   );
 
@@ -31,7 +31,7 @@ export function createPageState() {
 
   function handleInput(e: Event) {
       const target = e.target as HTMLInputElement;
-      target.value = target.value.replace(/[^a-zA-Z0-9]/g, '');
+      target.value = target.value.replace(/[^a-zA-Z0-9 àâäéèêëïîôöùûüçÀÂÄÉÈÊËÏÎÔÖÙÛÜÇ'-]/g, '');
       firstName = target.value;
       checkUserExists();
   }

@@ -81,42 +81,42 @@
 {#if state.showModal}
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" transition:fade onclick={() => state.showModal = false}>
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden" transition:fly={{ y: 50 }} onclick={(e) => e.stopPropagation()}>
-            <div class="p-6">
-                <h2 class="text-2xl font-bold mb-6 text-text-main">Créer un utilisateur</h2>
-                
-                <div class="mb-6">
-                    <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" transition:fade onclick={() => state.showModal = false}>
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 overflow-hidden" transition:scale={{ duration: 200, start: 0.9 }} onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+            <h2 class="text-2xl font-bold mb-6 text-center text-text-main">Créer un utilisateur</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label for="firstName" class="block text-sm font-bold text-text-main/60 mb-1 ml-1 uppercase tracking-wider">Prénom</label>
                     <input
                         type="text"
                         id="firstName"
                         maxlength="50"
                         oninput={state.handleInput}
                         bind:value={state.firstName}
-                        class="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all {state.existingUserError ? 'border-red-500 bg-red-50' : 'border-gray-300'}"
+                        class="w-full p-4 bg-secondary rounded-2xl border-2 border-transparent focus:border-primary outline-none transition-all font-medium {state.existingUserError ? 'border-red-500' : ''}"
                         placeholder="Votre prénom"
                         autofocus
                     />
                     {#if state.existingUserError}
-                        <p class="mt-2 text-sm text-red-600" transition:fade>Un utilisateur avec ce prénom existe déjà</p>
+                        <p class="mt-1 ml-1 text-xs text-red-500 font-medium" transition:fade>Un utilisateur avec ce prénom existe déjà</p>
                     {/if}
                 </div>
 
-                <div class="flex gap-4 justify-end">
-                    <button
-                        onclick={() => { state.showModal = false; state.firstName = ''; state.existingUserError = false; }}
-                        class="px-5 py-2.5 rounded-lg text-gray-600 font-medium hover:bg-gray-100 transition-colors cursor-pointer"
-                    >
-                        Annuler
-                    </button>
+                <div class="flex flex-col gap-3 pt-4">
                     <button
                         data-testid="create-users"
                         onclick={state.createUser}
                         disabled={!state.isValid}
-                        class="px-5 py-2.5 rounded-lg font-medium transition-colors cursor-pointer {state.isValid ? 'bg-primary text-text-inverse hover:bg-opacity-90' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}"
+                        class="w-full py-4 px-4 bg-primary text-text-inverse rounded-2xl font-bold hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
                     >
                         Créer
+                    </button>
+                    <button
+                        onclick={() => { state.showModal = false; state.firstName = ''; state.existingUserError = false; }}
+                        class="w-full py-4 px-4 bg-secondary text-text-main rounded-2xl font-bold hover:bg-gray-200 transition-colors cursor-pointer"
+                    >
+                        Annuler
                     </button>
                 </div>
             </div>
@@ -128,27 +128,32 @@
 {#if state.showDeleteModal}
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" transition:fade onclick={() => state.showDeleteModal = false}>
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden" transition:fly={{ y: 50 }} onclick={(e) => e.stopPropagation()}>
-            <div class="p-6">
-                <h2 class="text-2xl font-bold mb-4 text-text-main">Supprimer l'utilisateur</h2>
-                <p class="text-gray-600 mb-6">
-                    Êtes-vous sûr de vouloir supprimer l'utilisateur <span class="font-bold text-text-main">{state.userToDeleteName}</span> ?
-                </p>
-                <div class="flex gap-4 justify-end">
-                    <button
-                        onclick={() => state.showDeleteModal = false}
-                        class="px-5 py-2.5 rounded-lg text-gray-600 font-medium hover:bg-gray-100 transition-colors cursor-pointer"
-                    >
-                        Annuler
-                    </button>
-                    <button
-                        onclick={state.confirmDeleteUser}
-                        class="px-5 py-2.5 rounded-lg font-medium transition-colors cursor-pointer bg-red-600 text-white hover:bg-red-700"
-                    >
-                        Valider
-                    </button>
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" transition:fade onclick={() => state.showDeleteModal = false}>
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 overflow-hidden" transition:scale={{ duration: 200, start: 0.9 }} onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+            <div class="flex flex-col items-center mb-6">
+                <div class="p-4 bg-red-50 text-red-500 rounded-full mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 1 0 1.5 0l-.5-8.5Zm4.33.75a.75.75 0 0 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Z" clip-rule="evenodd" />
+                    </svg>
                 </div>
+                <h2 class="text-2xl font-bold text-center text-text-main">Supprimer l'utilisateur ?</h2>
+                <p class="text-text-main/60 text-center mt-2 font-medium">
+                    Êtes-vous sûr de vouloir supprimer l'utilisateur <span class="text-text-main font-bold italic">"{state.userToDeleteName}"</span> ?
+                </p>
+            </div>
+            <div class="flex flex-col gap-3">
+                <button
+                    onclick={state.confirmDeleteUser}
+                    class="w-full py-4 px-4 bg-red-500 text-white rounded-2xl font-bold hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-red-500/20"
+                >
+                    Valider la suppression
+                </button>
+                <button
+                    onclick={() => state.showDeleteModal = false}
+                    class="w-full py-4 px-4 bg-secondary text-text-main rounded-2xl font-bold hover:bg-gray-200 transition-colors cursor-pointer"
+                >
+                    Annuler
+                </button>
             </div>
         </div>
     </div>
