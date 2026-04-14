@@ -168,7 +168,8 @@
                 },
                 {
                     "item":"Biberons",
-                    "quantity":"2"
+                    "quantity":"2",
+                    "disabled":""
                 },
                 {
                     "item":"Tétines (pour biberons)",
@@ -192,7 +193,8 @@
                 },
                 {
                     "item":"Chauffe bibeonr",
-                    "quantity":"1"
+                    "quantity":"1",
+                    "disabled":""
                 },
                 {
                     "item":"Vitamine D",
@@ -201,7 +203,8 @@
                 },
                 {
                     "item":"Siège réhausseur",
-                    "quantity":"1"
+                    "quantity":"",
+                    "disabled":""
                 },
                 {
                     "item":"Kit repas tout prêt",
@@ -425,19 +428,23 @@
             "items":[
                 {
                     "item":"Tenues (pull/pantalons/shorts)",
-                    "quantity":"4"
+                    "quantity":"4",
+                    "disabled":""
                 },
                 {
                     "item":"Pyjamas",
-                    "quantity":"3"
+                    "quantity":"3",
+                    "disabled":""
                 },
                 {
                     "item":"Bodys",
-                    "quantity":"5"
+                    "quantity":"5",
+                    "disabled":""
                 },
                 {
                     "item":"Paires de chaussettes",
-                    "quantity":"3"
+                    "quantity":"3",
+                    "disabled":""
                 },
                 {
                     "item":"Chaussures/chaussons",
