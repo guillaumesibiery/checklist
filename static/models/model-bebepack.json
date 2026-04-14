@@ -1,0 +1,436 @@
+{
+    "modelName":"Bébé pack",
+    "checklistId":"",
+    "checklistName":"",
+    "userId":"",
+    "creationDate":"",
+    "lastModifiedDate":"",
+    "progress":"",
+    "status":"",
+    "elements":[
+        {
+            "category":"Documents",
+            "progress": "",
+            "items":[
+                {
+                    "item":"Carnet de santé",
+                    "quantity":""
+                },
+                {
+                    "item":"Carte identité/passeport",
+                    "quantity":""
+                },
+                {
+                    "item":"Carte assurance maladie",
+                    "quantity":""
+                }
+            ]
+            
+        },
+        {
+            "category":"Trousse à pharmacie",
+            "progress": "",
+            "items":[
+                {
+                    "item":"Désinfectant",
+                    "quantity":""
+                },
+                {
+                    "item":"Sérum physiologique",
+                    "quantity":""
+                },
+                {
+                    "item":"Pansements",
+                    "quantity":""
+                },
+                {
+                    "item":"Thermomètre",
+                    "quantity":""
+                },
+                {
+                    "item":"Doliprane",
+                    "quantity":""
+                },
+                {
+                    "item":"Gel arnica",
+                    "quantity":""
+                },
+                {
+                    "item":"Sachets réhydratation",
+                    "quantity":""
+                },
+                {
+                    "item":"Produits anti moustiques/insectes",
+                    "quantity":""
+                },
+                {
+                    "item":"Crême solaire",
+                    "quantity":""
+                },
+                {
+                    "item":"Compresses",
+                    "quantity":""
+                },
+                {
+                    "item":"Brumisateur",
+                    "quantity":""
+                }
+            ]
+        },
+        {
+            "category":"Balade",
+            "progress": "",
+            "items":[
+                {
+                    "item":"Poussete Yoyo",
+                    "quantity":""
+                },
+                {
+                    "item":"Chancelière poussette",
+                    "quantity":""
+                },
+                {
+                    "item":"Cape de pluie poussette",
+                    "quantity":""
+                },
+                {
+                    "item":"Sac transport poussette",
+                    "quantity":""
+                },
+                {
+                    "item":"Porte bébé",
+                    "quantity":""
+                },
+                {
+                    "item":"Siège auto",
+                    "quantity":""
+                },
+                {
+                    "item":"Tapis de jeu",
+                    "quantity":""
+                },
+                {
+                    "item":"Sac à langer",
+                    "quantity":""
+                },
+                {
+                    "item":"Sac isotherme",
+                    "quantity":""
+                },
+                {
+                    "item":"Chapeau/casquette",
+                    "quantity":""
+                },
+                {
+                    "item":"Lunettes de soleil",
+                    "quantity":""
+                }
+            ]
+        },
+        {
+            "category":"Repas",
+            "progress": "",
+            "items":[
+                {
+                    "item":"Bavoirs",
+                    "quantity":""
+                },
+                {
+                    "item":"Langes (courts et longs)",
+                    "quantity":""
+                },
+                {
+                    "item":"Biberons",
+                    "quantity":"2"
+                },
+                {
+                    "item":"Tétines (pour biberons)",
+                    "quantity":""
+                },
+                {
+                    "item":"Goupillons",
+                    "quantity":""
+                },
+                {
+                    "item":"Produit lave vaisselle",
+                    "quantity":""
+                },
+                {
+                    "item":"Boite de lait + doseuse",
+                    "quantity":""
+                },
+                {
+                    "item":"Chauffe bibeonr",
+                    "quantity":"1"
+                },
+                {
+                    "item":"Vitamine D",
+                    "quantity":""
+                },
+                {
+                    "item":"Siège réhausseur",
+                    "quantity":"1"
+                },
+                {
+                    "item":"Kit repas tout prêt",
+                    "quantity":""
+                },
+                {
+                    "item":"Bouteilles d'eau",
+                    "quantity":""
+                },
+                {
+                    "item":"Boite repas à emporter",
+                    "quantity":""
+                },
+                {
+                    "item":"Cuillères",
+                    "quantity":""
+                },
+                {
+                    "item":"Assiètes",
+                    "quantity":""
+                },
+                {
+                    "item":"Bols",
+                    "quantity":""
+                },
+                {
+                    "item":"Gourde d'eau",
+                    "quantity":""
+                }
+            ]   
+        },
+        {
+            "category":"Dodo",
+            "progress": "",
+            "items":[
+                {
+                    "item":"Veilleuse tortue",
+                    "quantity":""
+                },
+                {
+                    "item":"Gigoteuse",
+                    "quantity":""
+                },
+                {
+                    "item":"Drap housse",
+                    "quantity":""
+                },
+                {
+                    "item":"Babyphone & chargeur",
+                    "quantity":""
+                },
+                {
+                    "item":"Lit parapluie",
+                    "quantity":""
+                },
+                {
+                    "item":"Moustiquaire",
+                    "quantity":""
+                }
+            ]
+            
+        },
+        {
+            "category":"Toilette",
+            "progress": "",
+            "items":[
+                {
+                    "item":"Couches & sacs poubelle",
+                    "quantity":""
+                },
+                {
+                    "item":"Lingettes & cotons",
+                    "quantity":""
+                },
+                {
+                    "item":"Drap housse",
+                    "quantity":""
+                },
+                {
+                    "item":"Babyphone + chargeur",
+                    "quantity":""
+                },
+                {
+                    "item":"Liniment & crême change",
+                    "quantity":""
+                },
+                {
+                    "item":"Matelas à langer",
+                    "quantity":""
+                },
+                {
+                    "item":"Savon bébé",
+                    "quantity":""
+                },
+                {
+                    "item":"Crême corps",
+                    "quantity":""
+                },
+                {
+                    "item":"Serviette de bain",
+                    "quantity":""
+                },
+                {
+                    "item":"Brosse dents & dentifrice",
+                    "quantity":""
+                },
+                {
+                    "item":"Sérum phy",
+                    "quantity":""
+                },
+                {
+                    "item":"Seringue mouche bébé",
+                    "quantity":""
+                },
+                {
+                    "item":"Ciseaux",
+                    "quantity":""
+                },
+                {
+                    "item":"Brosse cheveux",
+                    "quantity":""
+                },
+                {
+                    "item":"Jeux pour le bain",
+                    "quantity":""
+                },
+                {
+                    "item":"Baignoire pliable",
+                    "quantity":""
+                }
+            ] 
+        },
+        {
+            "category":"Jouer",
+            "progress": "",
+            "items":[
+                {
+                    "item":"Maillot de bain",
+                    "quantity":""
+                },
+                {
+                    "item":"Serviette de bain",
+                    "quantity":""
+                },
+                {
+                    "item":"Couches piscine",
+                    "quantity":""
+                },
+                {
+                    "item":"Tente anti-UV",
+                    "quantity":""
+                },
+                {
+                    "item":"Bouée",
+                    "quantity":""
+                },
+                {
+                    "item":"Jeux à mordre, cubes, boites",
+                    "quantity":""
+                },
+                {
+                    "item":"Voitures",
+                    "quantity":""
+                },
+                {
+                    "item":"Livres musicaux",
+                    "quantity":""
+                },
+                {
+                    "item":"Doudous",
+                    "quantity":""
+                },
+                {
+                    "item":"Sac à jouets",
+                    "quantity":""
+                }
+            ] 
+        },
+        {
+            "category":"Vêtements",
+            "progress": "",
+            "items":[
+                {
+                    "item":"Tenues (pull/pantalons/shorts)",
+                    "quantity":"4"
+                },
+                {
+                    "item":"Pyjamas",
+                    "quantity":"3"
+                },
+                {
+                    "item":"Bodys",
+                    "quantity":"5"
+                },
+                {
+                    "item":"Paires de chaussettes",
+                    "quantity":"3"
+                },
+                {
+                    "item":"Chaussures/chaussons",
+                    "quantity":""
+                },
+                {
+                    "item":"Manteaux/vestes",
+                    "quantity":""
+                },
+                {
+                    "item":"Chapeaux/casquettes",
+                    "quantity":""
+                }
+            ]
+        },
+        {
+            "category":"Autres",
+            "progress": "",
+            "items":[
+                {
+                    "item":"Lessives",
+                    "quantity":""
+                },
+                {
+                    "item":"Lingettes décolorstop",
+                    "quantity":""
+                },
+                {
+                    "item":"Liquide vaisselle",
+                    "quantity":""
+                },
+                {
+                    "item":"Torchons/serviettes",
+                    "quantity":""
+                },
+                {
+                    "item":"Sacs poubelle",
+                    "quantity":""
+                },
+                {
+                    "item":"Capsules de café",
+                    "quantity":""
+                },
+                {
+                    "item":"Parapluie",
+                    "quantity":""
+                },
+                {
+                    "item":"Guide vacances",
+                    "quantity":""
+                },
+                {
+                    "item":"Change",
+                    "quantity":""
+                },
+                {
+                    "item":"Pain de froid",
+                    "quantity":""
+                },
+                {
+                    "item":"Lingettes",
+                    "quantity":""
+                }
+            ]
+        }
+    ]
+}
