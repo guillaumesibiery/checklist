@@ -14,17 +14,20 @@
             "items":[
                 {
                     "item":"Carnet de santé",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Carte identité/passeport",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Carte assurance maladie",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 }
             ]
@@ -36,57 +39,68 @@
             "items":[
                 {
                     "item":"Désinfectant",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Sérum physiologique",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Pansements",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Thermomètre",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Doliprane",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Gel arnica",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Sachets réhydratation",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Produits anti moustiques/insectes",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Crême solaire",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Compresses",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Brumisateur",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 }
             ]
@@ -97,57 +111,68 @@
             "items":[
                 {
                     "item":"Poussete Yoyo",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Chancelière poussette",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Cape de pluie poussette",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Sac transport poussette",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Porte bébé",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Siège auto",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Tapis de jeu",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Sac à langer",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Sac isotherme",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Chapeau/casquette",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Lunettes de soleil",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 }
             ]
@@ -158,87 +183,104 @@
             "items":[
                 {
                     "item":"Bavoirs",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Langes (courts et longs)",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Biberons",
-                    "quantity":"2",
+                    "wanted-quantity":"2",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Tétines (pour biberons)",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Goupillons",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Produit lave vaisselle",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Boite de lait + doseuse",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Chauffe bibeonr",
-                    "quantity":"1",
+                    "wanted-quantity":"1",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Vitamine D",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Siège réhausseur",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Kit repas tout prêt",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Bouteilles d'eau",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Boite repas à emporter",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Cuillères",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Assiètes",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Bols",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Gourde d'eau",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 }
             ]   
@@ -249,32 +291,38 @@
             "items":[
                 {
                     "item":"Veilleuse tortue",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Gigoteuse",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Drap housse",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Babyphone & chargeur",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Lit parapluie",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Moustiquaire",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 }
             ]
@@ -286,82 +334,98 @@
             "items":[
                 {
                     "item":"Couches & sacs poubelle",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Lingettes & cotons",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Drap housse",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Babyphone + chargeur",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Liniment & crême change",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Matelas à langer",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Savon bébé",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Crême corps",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Serviette de bain",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Brosse dents & dentifrice",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Sérum phy",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Seringue mouche bébé",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Ciseaux",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Brosse cheveux",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Jeux pour le bain",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Baignoire pliable",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 }
             ] 
@@ -372,52 +436,62 @@
             "items":[
                 {
                     "item":"Maillot de bain",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Serviette de bain",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Couches piscine",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Tente anti-UV",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Bouée",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Jeux à mordre, cubes, boites",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Voitures",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Livres musicaux",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Doudous",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Sac à jouets",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 }
             ] 
@@ -428,37 +502,44 @@
             "items":[
                 {
                     "item":"Tenues (pull/pantalons/shorts)",
-                    "quantity":"4",
+                    "wanted-quantity":"4",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Pyjamas",
-                    "quantity":"3",
+                    "wanted-quantity":"3",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Bodys",
-                    "quantity":"5",
+                    "wanted-quantity":"5",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Paires de chaussettes",
-                    "quantity":"3",
+                    "wanted-quantity":"3",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Chaussures/chaussons",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Manteaux/vestes",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Chapeaux/casquettes",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 }
             ]
@@ -469,57 +550,68 @@
             "items":[
                 {
                     "item":"Lessives",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Lingettes décolorstop",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Liquide vaisselle",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Torchons/serviettes",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Sacs poubelle",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Capsules de café",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Parapluie",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Guide vacances",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Change",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Pain de froid",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 },
                 {
                     "item":"Lingettes",
-                    "quantity":"",
+                    "wanted-quantity":"",
+                    "added-quantity":"",
                     "disabled":""
                 }
             ]
