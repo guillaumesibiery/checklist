@@ -38,11 +38,12 @@
 - Les méthodes ne doivent pas dépasser les 200 lignes. 
 - Implémente des tests unitaires pour vérifier le fonctionnement des requêtes select, insert, update et delete en base de données IndexedDB.
 - Les scripts TS sont isolés dans des fichiers .ts
+- Joue les tests e2e Playwright à chaque modification.
 5. **Git :** :
 - Tu n'as pas le droit de commiter les développements sur une branche.
 - Tu n'as pas le droit de merger une branche. 
 - Tu n'as pas le droit de supprimer une branche.
-- Créé une branche à chaque nouvelle feature depuis la branche main.
+- Créé une branche à chaque nouvelle feature depuis la branche main. Tu ne dois pas faire de modifications directement sur la branche main.
 
 ## Structure des données
 - Utilise un fichier `src/lib/db.ts` pour centraliser la configuration Dexie.
