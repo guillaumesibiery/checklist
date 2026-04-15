@@ -86,44 +86,50 @@
 
         <!-- Menu fixe en bas -->
         {#if showNav}
-            <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-secondary px-8 pb-6 pt-2 flex justify-between items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]" transition:fade>
+            <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-secondary pb-6 pt-2 grid grid-cols-3 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]" transition:fade>
                 <!-- Accueil -->
-                <button 
-                    onclick={() => goto('/accueil')}
-                    class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
-                >
-                    <div class="p-2 {page.url.pathname === '/accueil' ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
-                            <path d="M11.47 3.84a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 1-1.06 1.06l-1.06-1.06V18.3c0 .58-.45 1.06-1.03 1.06h-2.25c-.58 0-1.06-.48-1.06-1.06v-4.5c0-.58-.48-1.06-1.06-1.06h-1.5c-.58 0-1.06.48-1.06 1.06v4.5c0 .58-.48 1.06-1.06 1.06H6.75c-.58 0-1.06-.48-1.06-1.06v-5.75l-1.06 1.06a.75.75 0 0 1-1.06-1.06l8.69-8.69Z" />
-                        </svg>
-                    </div>
-                    <span class="text-[10px] font-bold {page.url.pathname === '/accueil' ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Accueil</span>
-                </button>
+                <div class="flex justify-center">
+                    <button 
+                        onclick={() => goto('/accueil')}
+                        class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
+                    >
+                        <div class="p-2 {page.url.pathname === '/accueil' ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                                <path d="M11.47 3.84a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 1-1.06 1.06l-1.06-1.06V18.3c0 .58-.45 1.06-1.03 1.06h-2.25c-.58 0-1.06-.48-1.06-1.06v-4.5c0-.58-.48-1.06-1.06-1.06h-1.5c-.58 0-1.06.48-1.06 1.06v4.5c0 .58-.48 1.06-1.06 1.06H6.75c-.58 0-1.06-.48-1.06-1.06v-5.75l-1.06 1.06a.75.75 0 0 1-1.06-1.06l8.69-8.69Z" />
+                            </svg>
+                        </div>
+                        <span class="text-[10px] font-bold {page.url.pathname === '/accueil' ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Accueil</span>
+                    </button>
+                </div>
 
-                <button 
-                    onclick={layoutState.toggleCreateModal}
-                    class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
-                >
-                    <div class="p-2 bg-primary text-text-inverse rounded-2xl group-active:scale-95 transition-transform shadow-lg shadow-primary/20">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
-                            <path d="M10.75 4.75a.75.75 0 0 1 1.5 0v5.25h5.25a.75.75 0 0 1 0 1.5h-5.25v5.25a.75.75 0 0 1-1.5 0v-5.25H5.25a.75.75 0 0 1 0-1.5h5.25V4.75Z" />
-                        </svg>
-                    </div>
-                    <span class="text-[10px] font-black text-primary uppercase tracking-widest text-center leading-tight">Creer<br/>une checklist</span>
-                </button>
+                <div class="flex justify-center">
+                    <button 
+                        onclick={layoutState.toggleCreateModal}
+                        class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
+                    >
+                        <div class="p-2 bg-primary text-text-inverse rounded-2xl group-active:scale-95 transition-transform shadow-lg shadow-primary/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                                <path d="M10.75 4.75a.75.75 0 0 1 1.5 0v5.25h5.25a.75.75 0 0 1 0 1.5h-5.25v5.25a.75.75 0 0 1-1.5 0v-5.25H5.25a.75.75 0 0 1 0-1.5h5.25V4.75Z" />
+                            </svg>
+                        </div>
+                        <span class="text-[10px] font-black text-primary uppercase tracking-widest text-center leading-tight">Creer<br/>une checklist</span>
+                    </button>
+                </div>
 
                 <!-- Historique -->
-                <button 
-                    onclick={() => goto('/historique')}
-                    class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
-                >
-                    <div class="p-2 {page.url.pathname === '/historique' ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
-                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <span class="text-[10px] font-bold {page.url.pathname === '/historique' ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Historique</span>
-                </button>
+                <div class="flex justify-center">
+                    <button 
+                        onclick={() => goto('/historique')}
+                        class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
+                    >
+                        <div class="p-2 {page.url.pathname === '/historique' ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                                <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <span class="text-[10px] font-bold {page.url.pathname === '/historique' ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Historique</span>
+                    </button>
+                </div>
             </nav>
         {/if}
 
