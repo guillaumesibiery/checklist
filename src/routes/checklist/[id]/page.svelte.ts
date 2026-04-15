@@ -5,14 +5,29 @@ import { onMount } from 'svelte';
 export function createChecklistState(id: string) {
     let checklist = $state<Checklist | null>(null);
     let loading = $state(true);
+    let expandedCategories = $state(new Set<number>());
 
     onMount(async () => {
         const c = await db.checklists.where('checklistId').equals(id).first();
         if (c) {
             checklist = c;
+            // Par défaut, on ouvre toutes les catégories au chargement
+            const initialSet = new Set<number>();
+            c.elements.forEach((_, index) => initialSet.add(index));
+            expandedCategories = initialSet;
         }
         loading = false;
     });
+
+    function toggleCategory(index: number) {
+        const newSet = new Set(expandedCategories);
+        if (newSet.has(index)) {
+            newSet.delete(index);
+        } else {
+            newSet.add(index);
+        }
+        expandedCategories = newSet;
+    }
 
     async function save() {
         if (!checklist || !checklist.id) return;
@@ -93,9 +108,11 @@ export function createChecklistState(id: string) {
     return {
         get checklist() { return checklist; },
         get loading() { return loading; },
+        get expandedCategories() { return expandedCategories; },
         updateQuantity,
         toggleItem,
         toggleDisabled,
+        toggleCategory,
         quit
     };
 }

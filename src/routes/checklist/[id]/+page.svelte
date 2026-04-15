@@ -11,7 +11,8 @@
         check: `<path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />`,
         logout: `<path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a0 0 0 0 1 0 0H7.5a0 0 0 0 1 0 0V5.25a0 0 0 0 1 0 0h6a0 0 0 0 1 0 0V8.25a.75.75 0 0 0 1.5 0V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />`,
         plus: `<path d="M10.75 4.75a.75.75 0 0 1 1.5 0v5.25h5.25a.75.75 0 0 1 0 1.5h-5.25v5.25a.75.75 0 0 1-1.5 0v-5.25H5.25a.75.75 0 0 1 0-1.5h5.25V4.75Z" />`,
-        minus: `<path d="M5.25 10.75a.75.75 0 0 1 0-1.5h13.5a.75.75 0 0 1 0 1.5H5.25Z" />`
+        minus: `<path d="M5.25 10.75a.75.75 0 0 1 0-1.5h13.5a.75.75 0 0 1 0 1.5H5.25Z" />`,
+        chevronDown: `<path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clip-rule="evenodd" />`
     };
 
     function getIcon(name: keyof typeof icons) {
@@ -44,20 +45,33 @@
                      style="width: {state.checklist.progress}%">
                 </div>
             </div>
-            <span class="mt-1 text-xs font-medium">{state.checklist.progress}%</span>
+            <span class="mt-1 text-lg font-black">{state.checklist.progress}%</span>
         </header>
 
         <!-- Content -->
-        <main class="pt-28 px-4 space-y-6">
+        <main class="pt-36 px-4 space-y-6">
             {#each state.checklist.elements as element, catIndex}
+                {@const isExpanded = state.expandedCategories.has(catIndex)}
                 <section class="bg-white rounded-2xl shadow-sm overflow-hidden" in:fade={{ delay: catIndex * 100 }}>
-                    <div class="p-4 bg-white flex justify-between items-center">
-                        <h2 class="text-lg font-bold text-text-main">{element.category}</h2>
-                        <span class="text-xs font-medium text-text-main/40">{element.progress}%</span>
-                    </div>
-                    <div class="divide-y divide-secondary">
-                        {#each element.items as item, itemIndex}
-                            {@const isDisabled = item.disabled === 'true' || item.disabled === true}
+                    <button class="w-full p-4 bg-white flex justify-between items-center hover:bg-secondary/50 transition-colors"
+                            onclick={() => state.toggleCategory(catIndex)}>
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
+                                 class="w-5 h-5 text-primary transition-transform duration-300"
+                                 class:rotate-180={!isExpanded}>
+                                {@html icons.chevronDown}
+                            </svg>
+                            <h2 class="text-lg font-bold text-text-main">{element.category}</h2>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
+                            {element.progress}%
+                        </span>
+                    </button>
+                    
+                    {#if isExpanded}
+                        <div class="divide-y divide-secondary" transition:fade={{ duration: 200 }}>
+                            {#each element.items as item, itemIndex}
+                                {@const isDisabled = item.disabled === 'true' || item.disabled === true}
                             <div class="p-4 flex items-center gap-3 transition-opacity duration-300"
                                  class:opacity-40={isDisabled}>
                                 
@@ -114,30 +128,34 @@
                                     </div>
                                 {/if}
                             </div>
-                        {/each}
-                    </div>
+                            {/each}
+                        </div>
+                    {/if}
                 </section>
             {/each}
         </main>
 
         <!-- Footer Menu -->
-        <footer class="fixed bottom-0 left-0 right-0 p-4 bg-secondary z-10" in:fly={{ y: 50 }}>
-            <nav class="bg-primary h-20 flex justify-around items-center px-6 rounded-2xl shadow-lg">
-                <button class="p-3 text-text-inverse hover:scale-110 transition-transform active:scale-95" aria-label="Partager">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+        <footer class="fixed bottom-0 left-0 right-0 p-4 bg-secondary/80 backdrop-blur-sm z-10" in:fly={{ y: 50 }}>
+            <nav class="bg-primary h-24 flex justify-around items-center px-4 rounded-3xl shadow-xl">
+                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95" aria-label="Partager">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                         {@html icons.share}
                     </svg>
+                    <span class="text-[10px] font-bold uppercase tracking-wider">Partager</span>
                 </button>
-                <button class="p-3 text-text-inverse hover:scale-110 transition-transform active:scale-95" aria-label="Valider">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95" aria-label="Finaliser">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                         {@html icons.check}
                     </svg>
+                    <span class="text-[10px] font-bold uppercase tracking-wider">Finaliser</span>
                 </button>
-                <button class="p-3 text-text-inverse hover:scale-110 transition-transform active:scale-95" 
+                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95" 
                         onclick={state.quit} aria-label="Quitter">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                         {@html icons.logout}
                     </svg>
+                    <span class="text-[10px] font-bold uppercase tracking-wider">Quitter</span>
                 </button>
             </nav>
         </footer>
