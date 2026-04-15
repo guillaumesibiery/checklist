@@ -3,7 +3,7 @@
     import { createChecklistState } from './page.svelte.ts';
     import { fade, fly, scale } from 'svelte/transition';
 
-    const state = createChecklistState(page.params.id);
+    const state = createChecklistState(page.params.id as string);
 
     // Icônes Heroicons Solid
     const icons = {
@@ -138,20 +138,20 @@
         <!-- Footer Menu -->
         <footer class="fixed bottom-0 left-0 right-0 p-4 bg-secondary/80 backdrop-blur-sm z-10" in:fly={{ y: 50 }}>
             <nav class="bg-primary h-24 flex justify-around items-center px-4 rounded-3xl shadow-xl">
-                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95" aria-label="Partager">
+                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" aria-label="Partager">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                         {@html icons.share}
                     </svg>
                     <span class="text-[10px] font-bold uppercase tracking-wider">Partager</span>
                 </button>
-                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95" 
+                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" 
                         onclick={state.openFinalizeModal} aria-label="Finaliser">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                         {@html icons.check}
                     </svg>
                     <span class="text-[10px] font-bold uppercase tracking-wider">Finaliser</span>
                 </button>
-                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95" 
+                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" 
                         onclick={state.quit} aria-label="Quitter">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                         {@html icons.logout}

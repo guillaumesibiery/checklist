@@ -2,7 +2,7 @@
     import { createAccueilState } from './page.svelte.ts';
     import { fade, scale } from 'svelte/transition';
     import { onMount } from 'svelte';
-    import { layoutState } from '$lib/layoutState.svelte.ts';
+    import { layoutState } from '$lib/layoutState.svelte';
 
     const state = createAccueilState();
 
