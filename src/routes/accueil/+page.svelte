@@ -1,6 +1,7 @@
 <script lang="ts">
     import { createAccueilState } from './page.svelte.ts';
     import { fade, scale } from 'svelte/transition';
+    import { goto } from '$app/navigation';
     const state = createAccueilState();
 
     // Formate la date en français (ex: 15/04/2026 à 17:00)
@@ -152,7 +153,10 @@
             <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Créer</span>
         </button>
 
-        <button class="flex flex-col items-center gap-1 group cursor-pointer">
+        <button 
+            onclick={() => goto('/historique')}
+            class="flex flex-col items-center gap-1 group cursor-pointer"
+        >
             <div class="p-2 text-primary group-active:scale-95 transition-transform">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                     <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
