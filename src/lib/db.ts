@@ -7,9 +7,9 @@ export interface User {
 
 export interface ChecklistItem {
     item: string;
-    quantity: string;
+    'wanted-quantity': string | number;
+    'added-quantity': string | number;
     disabled: string | boolean;
-    checked?: boolean;
 }
 
 export interface ChecklistElement {

@@ -89,6 +89,44 @@ describe('Database Operations', () => {
         expect(found).toBeUndefined();
     });
 
+    it('devrait mettre à jour une checklist avec des items et du progrès', async () => {
+        const userId = await db.users.add({ firstName: 'UserProgress' });
+        const checklist = {
+            checklistId: 'test-uuid-progress',
+            checklistName: 'Checklist Progrès',
+            userId,
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            modelName: 'Model',
+            elements: [
+                {
+                    category: 'Test Cat',
+                    progress: '0',
+                    items: [
+                        { item: 'Item 1', 'wanted-quantity': '2', 'added-quantity': '0', disabled: '' },
+                        { item: 'Item 2', 'wanted-quantity': '1', 'added-quantity': '0', disabled: '' }
+                    ]
+                }
+            ]
+        };
+        const id = await db.checklists.add(checklist as any);
+        
+        const c = await db.checklists.get(id);
+        if (c) {
+            c.elements[0].items[0]['added-quantity'] = '1';
+            c.elements[0].progress = '50';
+            c.progress = '33';
+            await db.checklists.update(id, c);
+        }
+
+        const updated = await db.checklists.get(id);
+        expect(updated?.elements[0].items[0]['added-quantity']).toBe('1');
+        expect(updated?.elements[0].progress).toBe('50');
+        expect(updated?.progress).toBe('33');
+    });
+
     it('devrait insérer un utilisateur (insert)', async () => {
         const id = await db.users.add({ firstName: 'Test' });
         expect(id).toBeDefined();
