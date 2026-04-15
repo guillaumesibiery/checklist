@@ -30,13 +30,13 @@
         <!-- Header (Bandeau personnalisé) style maquette -->
         {#if showHeader}
             <div class="sticky top-0 z-20 bg-white" transition:fade>
-                <header class="m-4 p-6 bg-primary text-text-inverse shadow-lg rounded-[2.5rem]">
+                <header class="m-2 sm:m-4 p-4 sm:p-6 bg-primary text-text-inverse shadow-lg rounded-[2rem] sm:rounded-[2.5rem]">
                     <div class="flex justify-between items-start">
                         {#if layoutState.user}
                             <div in:fade={{ duration: 300 }} class="flex flex-col gap-1">
                                 {#if page.url.pathname === '/accueil'}
-                                    <h1 class="text-2xl font-bold tracking-tight">Bonjour, {layoutState.user.firstName}</h1>
-                                    <p class="text-text-inverse/90 font-medium">Comment allez vous aujourd'hui ?</p>
+                                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Bonjour, {layoutState.user.firstName}</h1>
+                                    <p class="text-text-inverse/90 text-sm sm:text-base font-medium">Comment allez vous aujourd'hui ?</p>
                                     {#if layoutState.checklistsCount > 0}
                                         <div class="mt-1" transition:fade>
                                             <span class="bg-white/20 text-text-inverse px-3 py-1.5 rounded-full text-[10px] font-bold border border-white/10 backdrop-blur-sm inline-flex items-center">
@@ -44,18 +44,18 @@
                                             </span>
                                         </div>
                                     {/if}
-                                    {:else if page.url.pathname === '/historique'}
-                                        <h1 class="text-2xl font-bold tracking-tight">Historique</h1>
-                                        <p class="text-text-inverse/90 font-medium">Vos checklists terminées</p>
-                                        {#if layoutState.finishedChecklistsCount > 0}
-                                            <div class="mt-1" transition:fade>
-                                                <span class="bg-white/20 text-text-inverse px-3 py-1.5 rounded-full text-[10px] font-bold border border-white/10 backdrop-blur-sm inline-flex items-center">
-                                                    {layoutState.finishedChecklistsCount} {layoutState.finishedChecklistsCount > 1 ? 'checklists' : 'checklist'} terminée{layoutState.finishedChecklistsCount > 1 ? 's' : ''}
-                                                </span>
-                                            </div>
-                                        {/if}
-                                    {:else}
-                                    <h1 class="text-2xl font-bold tracking-tight">{layoutState.user.firstName}</h1>
+                                {:else if page.url.pathname === '/historique'}
+                                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Historique</h1>
+                                    <p class="text-text-inverse/90 text-sm sm:text-base font-medium">Vos checklists terminées</p>
+                                    {#if layoutState.finishedChecklistsCount > 0}
+                                        <div class="mt-1" transition:fade>
+                                            <span class="bg-white/20 text-text-inverse px-3 py-1.5 rounded-full text-[10px] font-bold border border-white/10 backdrop-blur-sm inline-flex items-center">
+                                                {layoutState.finishedChecklistsCount} {layoutState.finishedChecklistsCount > 1 ? 'checklists' : 'checklist'} terminée{layoutState.finishedChecklistsCount > 1 ? 's' : ''}
+                                            </span>
+                                        </div>
+                                    {/if}
+                                {:else}
+                                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">{layoutState.user.firstName}</h1>
                                 {/if}
                             </div>
                         {:else}
@@ -70,7 +70,7 @@
                             class="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer text-text-inverse mt-1"
                             aria-label="Déconnexion"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 sm:w-8 sm:h-8">
                                 <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                             </svg>
                         </button>
@@ -86,12 +86,13 @@
 
         <!-- Menu fixe en bas -->
         {#if showNav}
-            <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-secondary p-4 pb-6 flex justify-around items-center z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]" transition:fade>
+            <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-secondary px-8 pb-6 pt-2 flex justify-between items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]" transition:fade>
+                <!-- Accueil -->
                 <button 
                     onclick={() => goto('/accueil')}
-                    class="flex flex-col items-center gap-1 group cursor-pointer"
+                    class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
                 >
-                    <div class="p-2 {page.url.pathname === '/accueil' ? 'bg-primary text-text-inverse rounded-2xl shadow-lg shadow-primary/30' : 'text-primary'} group-active:scale-95 transition-transform">
+                    <div class="p-2 {page.url.pathname === '/accueil' ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                             <path d="M11.47 3.84a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 1-1.06 1.06l-1.06-1.06V18.3c0 .58-.45 1.06-1.03 1.06h-2.25c-.58 0-1.06-.48-1.06-1.06v-4.5c0-.58-.48-1.06-1.06-1.06h-1.5c-.58 0-1.06.48-1.06 1.06v4.5c0 .58-.48 1.06-1.06 1.06H6.75c-.58 0-1.06-.48-1.06-1.06v-5.75l-1.06 1.06a.75.75 0 0 1-1.06-1.06l8.69-8.69Z" />
                         </svg>
@@ -101,21 +102,22 @@
 
                 <button 
                     onclick={layoutState.toggleCreateModal}
-                    class="flex flex-col items-center gap-1 group cursor-pointer"
+                    class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
                 >
-                    <div class="p-2 text-primary group-active:scale-95 transition-transform">
+                    <div class="p-2 bg-primary text-text-inverse rounded-2xl group-active:scale-95 transition-transform shadow-lg shadow-primary/20">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
-                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
+                            <path d="M10.75 4.75a.75.75 0 0 1 1.5 0v5.25h5.25a.75.75 0 0 1 0 1.5h-5.25v5.25a.75.75 0 0 1-1.5 0v-5.25H5.25a.75.75 0 0 1 0-1.5h5.25V4.75Z" />
                         </svg>
                     </div>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Créer</span>
+                    <span class="text-[10px] font-black text-primary uppercase tracking-widest text-center leading-tight">Creer<br/>une checklist</span>
                 </button>
 
+                <!-- Historique -->
                 <button 
                     onclick={() => goto('/historique')}
-                    class="flex flex-col items-center gap-1 group cursor-pointer"
+                    class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
                 >
-                    <div class="p-2 {page.url.pathname === '/historique' ? 'bg-primary text-text-inverse rounded-2xl shadow-lg shadow-primary/30' : 'text-primary'} group-active:scale-95 transition-transform">
+                    <div class="p-2 {page.url.pathname === '/historique' ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                             <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
                         </svg>
