@@ -1,6 +1,7 @@
 import { liveQuery } from 'dexie';
 import { db, type User } from '$lib/db';
 import { goto } from '$app/navigation';
+import { layoutState } from '$lib/layoutState.svelte.ts';
 
 export function createPageState() {
   let users = liveQuery(() => db.users.toArray());
@@ -41,14 +42,16 @@ export function createPageState() {
       try {
           const user = await db.users.add({ firstName: firstName.trim() });
           localStorage.setItem('currentUserId', user.toString());
+          await layoutState.init();
           goto('/accueil');
       } catch (e) {
           console.error(e);
       }
   }
 
-  function login(userId: number) {
+  async function login(userId: number) {
       localStorage.setItem('currentUserId', userId.toString());
+      await layoutState.init();
       goto('/accueil');
   }
 
