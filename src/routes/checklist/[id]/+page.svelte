@@ -11,8 +11,7 @@
         check: `<path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />`,
         logout: `<path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a0 0 0 0 1 0 0H7.5a0 0 0 0 1 0 0V5.25a0 0 0 0 1 0 0h6a0 0 0 0 1 0 0V8.25a.75.75 0 0 0 1.5 0V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />`,
         plus: `<path d="M10.75 4.75a.75.75 0 0 1 1.5 0v5.25h5.25a.75.75 0 0 1 0 1.5h-5.25v5.25a.75.75 0 0 1-1.5 0v-5.25H5.25a.75.75 0 0 1 0-1.5h5.25V4.75Z" />`,
-        minus: `<path d="M5.25 10.75a.75.75 0 0 1 0-1.5h13.5a.75.75 0 0 1 0 1.5H5.25Z" />`,
-        disable: `<path d="M3.53 2.47a.75.75 0 0 0-1.06 1.06l18 18a.75.75 0 1 01.06-1.06l-18-18zM22.676 12.553a11.249 11.249 0 01-2.631 4.31l-3.099-3.099a5.25 5.25 0 0 0-6.71-6.71L7.759 4.577a11.217 11.217 0 014.242-.827c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113z" /><path d="M15.75 12c0 .18-.013.357-.037.53l-4.212-4.212a3.75 3.75 0 0 1 4.249 3.682zM13.5 15.75a3.75 3.75 0 0 1-3.682-4.249l-4.212-4.212a5.25 5.25 0 0 06.71 6.71l3.099 3.099a11.249 11.249 0 01-4.31 2.631 11.25 11.25 0 01-10.675-7.69.75.75 0 0 1 0-1.113c.993-2.982 2.926-5.446 5.444-6.927L13.5 15.75z" />`
+        minus: `<path d="M5.25 10.75a.75.75 0 0 1 0-1.5h13.5a.75.75 0 0 1 0 1.5H5.25Z" />`
     };
 
     function getIcon(name: keyof typeof icons) {
@@ -62,14 +61,11 @@
                             <div class="p-4 flex items-center gap-3 transition-opacity duration-300"
                                  class:opacity-40={isDisabled}>
                                 
-                                <!-- Disable button -->
-                                <button class="text-secondary-foreground/20 hover:text-primary transition-colors"
-                                        class:text-red-500={isDisabled}
-                                        onclick={() => state.toggleDisabled(catIndex, itemIndex)}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                        {@html icons.disable}
-                                    </svg>
-                                </button>
+                                <!-- Enable/Disable checkbox -->
+                                <input type="checkbox" 
+                                       class="w-6 h-6 rounded border-2 border-primary text-primary accent-primary focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all duration-200" 
+                                       checked={!isDisabled}
+                                       onchange={() => state.toggleDisabled(catIndex, itemIndex)}>
 
                                 <!-- Item Name & Quantity Info -->
                                 <div class="flex-grow flex flex-col min-w-0">
