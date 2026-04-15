@@ -29,7 +29,7 @@ test('Checklist life cycle', async ({ page }) => {
   await page.getByLabel('Modèle').selectOption('model-bebepack.json');
   await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
 
-  await expect(page.getByText(testChecklistName)).toBeVisible();
+  await expect(page.locator('h1')).toContainText(testChecklistName);
   await page.getByRole('button', { name: 'Quitter' }).click();
   await page.getByRole('button', { name: 'Supprimer la checklist' }).click();
   await page.getByRole('button', { name: 'Valider la suppression' }).click();
