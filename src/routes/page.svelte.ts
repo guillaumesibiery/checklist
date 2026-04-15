@@ -61,13 +61,15 @@ export function createPageState() {
 
   async function confirmDeleteUser() {
       if (userToDelete !== null) {
+          // Supprimer d'abord toutes les checklists de l'utilisateur
+          await db.checklists.where('userId').equals(userToDelete).delete();
+          // Puis supprimer l'utilisateur
           await db.users.delete(userToDelete);
           userToDelete = null;
           userToDeleteName = '';
           showDeleteModal = false;
       }
   }
-
   return {
     get users() { return users; },
     get showModal() { return showModal; },

@@ -168,4 +168,48 @@ describe('Database Operations', () => {
         
         await expect(db.users.add({ firstName: 'Eve' })).rejects.toThrow();
     });
+
+    it('devrait supprimer toutes les checklists associées lors de la suppression d\'un utilisateur', async () => {
+        // 1. Créer un utilisateur
+        const userId = await db.users.add({ firstName: 'UserToDelete' });
+
+        // 2. Lui associer des checklists
+        await db.checklists.add({
+            checklistId: 'c1',
+            checklistName: 'Checklist 1',
+            userId,
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            modelName: 'Model',
+            elements: []
+        });
+        await db.checklists.add({
+            checklistId: 'c2',
+            checklistName: 'Checklist 2',
+            userId,
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            modelName: 'Model',
+            elements: []
+        });
+
+        // Vérifier qu'elles sont là
+        const countBefore = await db.checklists.where('userId').equals(userId).count();
+        expect(countBefore).toBe(2);
+
+        // 3. Simuler la logique de suppression (celle implémentée dans page.svelte.ts)
+        await db.checklists.where('userId').equals(userId).delete();
+        await db.users.delete(userId);
+
+        // 4. Vérifier que tout est supprimé
+        const user = await db.users.get(userId);
+        const checklistsCount = await db.checklists.where('userId').equals(userId).count();
+
+        expect(user).toBeUndefined();
+        expect(checklistsCount).toBe(0);
+    });
 });
