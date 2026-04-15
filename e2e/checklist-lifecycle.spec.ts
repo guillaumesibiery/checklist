@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-test('cycle de vie utilisateur : création, déconnexion et suppression', async ({ page }) => {
+test('User and checklist life cycle', async ({ page }) => {
+  
   const testUserName = 'TestUser' + Math.floor(Math.random() * 1000);
+  const testChecklistName = 'TestChecklist' + Math.floor(Math.random() * 1000);
 
   // 1. Navigation vers la page d'accueil
   await page.goto('/');
@@ -23,12 +25,14 @@ test('cycle de vie utilisateur : création, déconnexion et suppression', async 
   await expect(page.getByText(`Bonjour, ${testUserName}`)).toBeVisible();
 
   await page.getByRole('button', { name: 'Créer une checklist' }).click();
-  await page.getByRole('textbox', { name: 'Nom de la checklist' }).click();
-  await page.getByRole('textbox', { name: 'Nom de la checklist' }).fill('test checklist');
+  await page.getByRole('textbox', { name: 'Nom de la checklist' }).fill(testChecklistName);
   await page.getByLabel('Modèle').selectOption('model-bebepack.json');
   await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
 
-  //TODO
+  await expect(page.locator('h1')).toContainText(testChecklistName);
+  await page.getByRole('button', { name: 'Quitter' }).click();
+  await page.getByRole('button', { name: 'Supprimer la checklist' }).click();
+  await page.getByRole('button', { name: 'Valider la suppression' }).click();
 
   // 4. Déconnexion
   await page.getByRole('button', { name: 'Déconnexion' }).click();
@@ -50,5 +54,5 @@ test('cycle de vie utilisateur : création, déconnexion et suppression', async 
 
   // 6. Vérification que l'utilisateur n'est plus présent
   await expect(page.getByText(testUserName)).toHaveCount(0);
-  
+
 });

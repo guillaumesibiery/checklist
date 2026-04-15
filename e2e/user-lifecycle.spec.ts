@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('cycle de vie utilisateur : création, déconnexion et suppression', async ({ page }) => {
+test('User life cycle', async ({ page }) => {
   const testUserName = 'TestUser' + Math.floor(Math.random() * 1000);
 
   // 1. Navigation vers la page d'accueil
