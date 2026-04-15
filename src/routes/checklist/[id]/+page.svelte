@@ -144,7 +144,8 @@
                     </svg>
                     <span class="text-[10px] font-bold uppercase tracking-wider">Partager</span>
                 </button>
-                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95" aria-label="Finaliser">
+                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95" 
+                        onclick={state.openFinalizeModal} aria-label="Finaliser">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                         {@html icons.check}
                     </svg>
@@ -159,6 +160,45 @@
                 </button>
             </nav>
         </footer>
+
+        <!-- Modal de confirmation de finalisation -->
+        {#if state.isFinalizeModalOpen}
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+                 transition:fade={{ duration: 200 }}>
+                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                     transition:scale={{ duration: 300, start: 0.9 }}>
+                    <div class="p-8 text-center">
+                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-primary">
+                                {@html icons.check}
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-text-main mb-4">Finaliser la checklist ?</h2>
+                        
+                        {#if state.checklist.progress !== '100'}
+                            <p class="text-text-main/60 mb-8 px-4">
+                                Attention : votre checklist n'est pas encore terminée (<span class="text-primary font-bold">{state.checklist.progress}%</span>). Voulez-vous tout de même la finaliser ?
+                            </p>
+                        {:else}
+                            <p class="text-text-main/60 mb-8 px-4">
+                                Félicitations ! Votre checklist est terminée à <span class="text-primary font-bold">100%</span>. Voulez-vous la classer dans l'historique ?
+                            </p>
+                        {/if}
+
+                        <div class="flex flex-col gap-3">
+                            <button class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform"
+                                    onclick={state.finalize}>
+                                Valider
+                            </button>
+                            <button class="w-full py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform"
+                                    onclick={state.closeFinalizeModal}>
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
     {:else}
         <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center" in:fade>
             <h1 class="text-2xl font-bold text-red-500">Checklist non trouvée</h1>

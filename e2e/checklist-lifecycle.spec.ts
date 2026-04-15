@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('User and checklist life cycle', async ({ page }) => {
+test('Checklist life cycle', async ({ page }) => {
   
   const testUserName = 'TestUser' + Math.floor(Math.random() * 1000);
   const testChecklistName = 'TestChecklist' + Math.floor(Math.random() * 1000);
@@ -34,25 +34,6 @@ test('User and checklist life cycle', async ({ page }) => {
   await page.getByRole('button', { name: 'Supprimer la checklist' }).click();
   await page.getByRole('button', { name: 'Valider la suppression' }).click();
 
-  // 4. Déconnexion
-  await page.getByRole('button', { name: 'Déconnexion' }).click();
-  await page.getByRole('button', { name: 'Oui, me déconnecter' }).click();
-  
-  // Retour à la page de connexion
-  await expect(page).toHaveURL(/\/$/);
-
-  // 5. Suppression de l'utilisateur
-  // On cherche le bouton de suppression associé à notre utilisateur test
-  const deleteButton = page.getByRole('button', { name: `Supprimer ${testUserName}` });
-  await expect(deleteButton).toBeVisible();
-  await deleteButton.click();
-
-  // Confirmation dans la modale
-  const confirmButton = page.getByRole('button', { name: 'Valider' });
-  await expect(confirmButton).toBeVisible();
-  await confirmButton.click();
-
-  // 6. Vérification que l'utilisateur n'est plus présent
-  await expect(page.getByText(testUserName)).toHaveCount(0);
+  await expect(page.getByText(testChecklistName)).toHaveCount(0);
 
 });

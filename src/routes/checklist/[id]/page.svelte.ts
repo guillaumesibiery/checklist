@@ -6,6 +6,7 @@ export function createChecklistState(id: string) {
     let checklist = $state<Checklist | null>(null);
     let loading = $state(true);
     let expandedCategories = $state(new Set<number>());
+    let isFinalizeModalOpen = $state(false);
 
     onMount(async () => {
         const c = await db.checklists.where('checklistId').equals(id).first();
@@ -132,14 +133,34 @@ export function createChecklistState(id: string) {
         goto('/accueil');
     }
 
+    function openFinalizeModal() {
+        isFinalizeModalOpen = true;
+    }
+
+    function closeFinalizeModal() {
+        isFinalizeModalOpen = false;
+    }
+
+    async function finalize() {
+        if (!checklist) return;
+        
+        checklist.status = 'FINISHED';
+        await save();
+        goto('/accueil');
+    }
+
     return {
         get checklist() { return checklist; },
         get loading() { return loading; },
         get expandedCategories() { return expandedCategories; },
+        get isFinalizeModalOpen() { return isFinalizeModalOpen; },
         updateQuantity,
         toggleItem,
         toggleDisabled,
         toggleCategory,
-        quit
+        quit,
+        openFinalizeModal,
+        closeFinalizeModal,
+        finalize
     };
 }
