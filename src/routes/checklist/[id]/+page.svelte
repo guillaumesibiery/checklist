@@ -166,7 +166,9 @@
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
                  transition:fade={{ duration: 200 }}>
                 <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
-                     transition:scale={{ duration: 300, start: 0.9 }}>
+                     transition:scale={{ duration: 300, start: 0.9 }}
+                     role="dialog"
+                     aria-modal="true">
                     <div class="p-8 text-center">
                         <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-primary">

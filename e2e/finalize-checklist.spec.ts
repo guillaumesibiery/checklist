@@ -24,6 +24,7 @@ test('Finalize checklist flow', async ({ page }) => {
 
   // 5. Vérifier la présence de l'alerte de progression < 100%
   await expect(page.getByText(/Attention : votre checklist n'est pas encore terminée/)).toBeVisible();
+  await expect(page.getByRole('dialog').getByText('0%')).toBeVisible();
 
   // 6. Cliquer sur Annuler
   await page.getByRole('button', { name: 'Annuler' }).click();
