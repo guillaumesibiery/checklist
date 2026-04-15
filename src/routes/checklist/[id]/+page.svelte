@@ -53,7 +53,7 @@
             {#each state.checklist.elements as element, catIndex}
                 {@const isExpanded = state.expandedCategories.has(catIndex)}
                 <section class="bg-white rounded-2xl shadow-sm overflow-hidden" in:fade={{ delay: catIndex * 100 }}>
-                    <button class="w-full p-4 bg-white flex justify-between items-center hover:bg-secondary/50 transition-colors"
+                    <button class="w-full p-4 bg-white flex justify-between items-center hover:bg-secondary/50 transition-colors cursor-pointer"
                             onclick={() => state.toggleCategory(catIndex)}>
                         <div class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 

@@ -2,6 +2,19 @@
     import { createAccueilState } from './page.svelte.ts';
     import { fade, scale } from 'svelte/transition';
     const state = createAccueilState();
+
+    // Formate la date en français (ex: 15/04/2026 à 17:00)
+    function formatDate(isoString: string) {
+        if (!isoString) return '';
+        const date = new Date(isoString);
+        return new Intl.DateTimeFormat('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(date).replace(',', ' à');
+    }
 </script>
 
 <div class="min-h-screen bg-white text-text-main flex flex-col relative">
@@ -65,7 +78,10 @@
                                         <div class="flex justify-between items-center pr-10">
                                             <div>
                                                 <h3 class="font-bold text-lg text-text-main group-hover:text-primary transition-colors">{checklist.checklistName}</h3>
-                                                <p class="text-sm text-text-main/50 font-medium">{checklist.modelName}</p>
+                                                <div class="flex flex-col">
+                                                    <p class="text-sm text-text-main/50 font-medium">{checklist.modelName}</p>
+                                                    <p class="text-[11px] text-text-main/40 font-medium">Modifiée le {formatDate(checklist.lastModifiedDate)}</p>
+                                                </div>
                                             </div>
                                             <div class="flex flex-col items-end gap-1">
                                                 <span class="text-primary font-bold">{checklist.progress}%</span>

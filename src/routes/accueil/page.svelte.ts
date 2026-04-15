@@ -40,10 +40,15 @@ export function createAccueilState() {
         if (!user || !user.id) return;
         isLoadingChecklists = true;
         try {
-            checklists = await db.checklists
+            const data = await db.checklists
                 .where('userId').equals(user.id)
                 .filter(c => c.status === 'IN_PROGRESS')
                 .toArray();
+            
+            // Tri par date de dernière modification décroissante
+            checklists = data.sort((a, b) => 
+                new Date(b.lastModifiedDate).getTime() - new Date(a.lastModifiedDate).getTime()
+            );
         } finally {
             isLoadingChecklists = false;
         }

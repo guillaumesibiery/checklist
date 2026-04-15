@@ -30,10 +30,28 @@ export function createChecklistState(id: string) {
     }
 
     async function save() {
-        if (!checklist || !checklist.id) return;
-        checklist.lastModifiedDate = new Date().toISOString();
+        if (!checklist) return;
+        
+        // 1. Recalculer le progrès (mise à jour du Proxy Svelte)
         updateAllProgress();
-        await db.checklists.update(checklist.id, checklist);
+        checklist.lastModifiedDate = new Date().toISOString();
+        
+        // 2. Récupérer l'enregistrement actuel en base pour garantir l'ID numérique
+        // 'id' est le checklistId (UUID) passé en paramètre de la fonction createChecklistState
+        const existing = await db.checklists.where('checklistId').equals(id).first();
+        
+        if (existing && existing.id) {
+            // 3. Créer un snapshot (objet brut) à partir de l'état réactif
+            const rawChecklist = $state.snapshot(checklist);
+            
+            if (rawChecklist) {
+                // 4. On s'assure que l'ID numérique interne est présent pour le 'put'
+                rawChecklist.id = existing.id;
+                
+                // 5. Sauvegarde complète de l'objet (écrase l'existant)
+                await db.checklists.put(rawChecklist);
+            }
+        }
     }
 
     function updateAllProgress() {
@@ -47,15 +65,23 @@ export function createChecklistState(id: string) {
             let catAdded = 0;
 
             element.items.forEach(item => {
-                const wanted = parseInt(item['wanted-quantity'].toString()) || 0;
-                const added = parseInt(item['added-quantity'].toString()) || 0;
+                // S'assurer que les valeurs existent avant de faire le calcul
+                const wantedVal = item['wanted-quantity'] ?? 0;
+                const addedVal = item['added-quantity'] ?? 0;
                 
-                if (item.disabled !== 'true' && item.disabled !== true) {
+                const wanted = parseInt(wantedVal.toString()) || 0;
+                const added = parseInt(addedVal.toString()) || 0;
+                
+                // Un item n'est compté dans le progrès que s'il n'est pas désactivé
+                const isDisabled = item.disabled === 'true' || item.disabled === true;
+                if (!isDisabled) {
                     catWanted += wanted;
+                    // On ne peut pas avoir ajouté plus que demandé pour le calcul du progrès (%)
                     catAdded += Math.min(added, wanted);
                 }
             });
 
+            // Calcul du progrès par catégorie
             const catProgress = catWanted > 0 ? Math.round((catAdded / catWanted) * 100) : 0;
             element.progress = catProgress.toString();
 
@@ -63,6 +89,7 @@ export function createChecklistState(id: string) {
             totalAdded += catAdded;
         });
 
+        // Calcul du progrès global de la checklist
         const totalProgress = totalWanted > 0 ? Math.round((totalAdded / totalWanted) * 100) : 0;
         checklist.progress = totalProgress.toString();
     }
