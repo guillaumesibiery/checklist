@@ -6,6 +6,8 @@
     import { fade, scale } from 'svelte/transition';
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
+    import { pwaInfo } from 'virtual:pwa-info';
+    import ReloadPrompt from '$lib/components/ReloadPrompt.svelte';
 
     let { children } = $props();
 
@@ -23,6 +25,8 @@
 <svelte:head>
     <title>Checklist</title>
     <link rel="icon" href={favicon} />
+    <meta name="theme-color" content="#9d50f8" />
+    {@html pwaInfo?.webManifest.linkTag}
 </svelte:head>
 
 {#if showLayout}
@@ -256,3 +260,5 @@
 {:else}
     {@render children()}
 {/if}
+
+<ReloadPrompt />
