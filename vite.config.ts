@@ -3,12 +3,16 @@ import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 
+const isDev = process.argv.includes('dev');
+const base = isDev ? '' : '/checklist';
+
 export default defineConfig({
 	plugins: [
 		tailwindcss(), 
 		sveltekit(),
 		SvelteKitPWA({
-			registerType: 'prompt',
+			registerType: 'autoUpdate',
+			base: isDev ? '/' : '/checklist/',
 			manifest: {
 				name: 'Checklist',
 				short_name: 'Checklist',
@@ -25,13 +29,20 @@ export default defineConfig({
 						src: 'logo.png',
 						sizes: '512x512',
 						type: 'image/png'
+					},
+					{
+						src: 'logo.png',
+						sizes: '512x512',
+						type: 'image/png',
+						purpose: 'maskable'
 					}
 				],
 				display: 'standalone',
-				start_url: '/'
+				start_url: isDev ? '/' : '/checklist/'
 			},
 			workbox: {
-				globPatterns: ['**/*.{js,css,html,ico,png,svg,json}']
+				globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+				cleanupOutdatedCaches: true
 			}
 		})
 	],
