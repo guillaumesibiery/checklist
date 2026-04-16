@@ -1,4 +1,5 @@
 import { goto } from '$app/navigation';
+import { base } from '$app/paths';
 import { db, type User } from '$lib/db';
 
 export function createLayoutState() {
@@ -76,7 +77,7 @@ export function createLayoutState() {
 
         isCreating = true;
         try {
-            const response = await fetch(`/models/${selectedModel}`);
+            const response = await fetch(`${base}/models/${selectedModel}`);
             const modelData = await response.json();
 
             const now = new Date().toISOString();
@@ -95,7 +96,7 @@ export function createLayoutState() {
             showCreateModal = false;
             checklistName = '';
             selectedModel = '';
-            goto(`/checklist/${newChecklist.checklistId}`);
+            goto(`${base}/checklist/${newChecklist.checklistId}`);
         } catch (error) {
             console.error('Erreur lors de la création de la checklist:', error);
         } finally {
@@ -107,7 +108,7 @@ export function createLayoutState() {
         localStorage.removeItem('currentUserId');
         user = null;
         showLogoutModal = false;
-        goto('/');
+        goto(`${base}/`);
     }
 
     return {

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { fade, scale, fly } from 'svelte/transition';
+  import { base } from '$app/paths';
   import { createPageState } from './page.svelte.ts';
 
   const state = createPageState();
@@ -9,7 +10,7 @@
 <div class="min-h-screen bg-white flex flex-col items-center justify-center p-4">
     <div class="w-full max-w-4xl" transition:fade>
         <div class="flex justify-center mb-12">
-            <img src="/img/CHECKLIST-png.png" alt="Checklist Logo" class="h-64 w-auto object-contain" />
+            <img src="{base}/img/CHECKLIST-png.png" alt="Checklist Logo" class="h-64 w-auto object-contain" />
         </div>
 
         {#if $users === undefined}

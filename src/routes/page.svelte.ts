@@ -1,6 +1,7 @@
 import { liveQuery } from 'dexie';
 import { db, type User } from '$lib/db';
 import { goto } from '$app/navigation';
+import { base } from '$app/paths';
 import { layoutState } from '$lib/layoutState.svelte.ts';
 
 export function createPageState() {
@@ -43,7 +44,7 @@ export function createPageState() {
           const user = await db.users.add({ firstName: firstName.trim() });
           localStorage.setItem('currentUserId', user.toString());
           await layoutState.init();
-          goto('/accueil');
+          goto(`${base}/accueil`);
       } catch (e) {
           console.error(e);
       }
@@ -52,7 +53,7 @@ export function createPageState() {
   async function login(userId: number) {
       localStorage.setItem('currentUserId', userId.toString());
       await layoutState.init();
-      goto('/accueil');
+      goto(`${base}/accueil`);
   }
 
   function promptDeleteUser(user: User, event: Event) {

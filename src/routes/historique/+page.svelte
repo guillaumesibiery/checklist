@@ -2,6 +2,7 @@
     import { createHistoriqueState } from './page.svelte.ts';
     import { fade, scale } from 'svelte/transition';
     import { goto } from '$app/navigation';
+    import { base } from '$app/paths';
     import { onMount } from 'svelte';
 
     const state = createHistoriqueState();
@@ -80,7 +81,7 @@
                 </div>
                 <p class="text-gray-500 font-medium text-center">Aucune checklist dans l'historique.</p>
                 <button 
-                    onclick={() => goto('/accueil')}
+                    onclick={() => goto(`${base}/accueil`)}
                     class="mt-6 px-6 py-3 bg-primary text-text-inverse font-bold rounded-2xl shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all cursor-pointer"
                 >
                     Retour à l'accueil

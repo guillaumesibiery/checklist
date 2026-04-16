@@ -2,6 +2,7 @@
     import { createAccueilState } from './page.svelte.ts';
     import { fade, scale } from 'svelte/transition';
     import { onMount } from 'svelte';
+    import { base } from '$app/paths';
     import { layoutState } from '$lib/layoutState.svelte';
 
     const state = createAccueilState();
@@ -41,7 +42,7 @@
                 {#each state.checklists as checklist}
                     <div class="relative group">
                         <a 
-                            href="/checklist/{checklist.checklistId}"
+                            href="{base}/checklist/{checklist.checklistId}"
                             class="block p-6 bg-white border-2 border-secondary rounded-[2rem] hover:border-primary/30 transition-all active:scale-[0.98]"
                         >
                             <div class="flex justify-between items-center pr-10">

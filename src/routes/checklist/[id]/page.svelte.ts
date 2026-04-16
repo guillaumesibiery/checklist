@@ -1,5 +1,6 @@
 import { db, type Checklist, type ChecklistItem } from '$lib/db';
 import { goto } from '$app/navigation';
+import { base } from '$app/paths';
 import { onMount } from 'svelte';
 
 export function createChecklistState(id: string) {
@@ -130,7 +131,7 @@ export function createChecklistState(id: string) {
     }
 
     function quit() {
-        goto('/accueil');
+        goto(`${base}/accueil`);
     }
 
     function openFinalizeModal() {
@@ -146,7 +147,7 @@ export function createChecklistState(id: string) {
         
         checklist.status = 'FINISHED';
         await save();
-        goto('/accueil');
+        goto(`${base}/accueil`);
     }
 
     return {
