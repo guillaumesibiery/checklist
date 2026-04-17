@@ -25,7 +25,7 @@
     <div class="mb-4">
       <p id="pwa-message" class="text-text-main font-bold">
         {#if $offlineReady}
-          L'application est prête à être utilisée hors-ligne.
+          L'application est installée et prête à être utilisée 100% hors-ligne !
         {:else}
           Une nouvelle version est disponible !
         {/if}
