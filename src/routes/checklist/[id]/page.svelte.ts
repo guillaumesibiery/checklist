@@ -131,7 +131,7 @@ export function createChecklistState(id: string) {
     }
 
     function quit() {
-        goto(`${base}/accueil`);
+        goto(`${base}/accueil/`);
     }
 
     function openFinalizeModal() {
@@ -147,7 +147,7 @@ export function createChecklistState(id: string) {
         
         checklist.status = 'FINISHED';
         await save();
-        goto(`${base}/accueil`);
+        goto(`${base}/accueil/`);
     }
 
     return {

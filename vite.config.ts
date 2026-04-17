@@ -13,6 +13,7 @@ export default defineConfig({
 		sveltekit(),
 		SvelteKitPWA({
 			registerType: 'autoUpdate',
+			includeAssets: ['favicon.svg', 'logo.png', 'robots.txt'],
 			base,
 			manifest: {
 				name: 'Checklist',
@@ -20,6 +21,9 @@ export default defineConfig({
 				description: 'Application de suivi de checklists hors-ligne',
 				theme_color: '#9d50f8',
 				background_color: '#ffffff',
+				display: 'standalone',
+				scope: base,
+				start_url: base,
 				icons: [
 					{
 						src: 'logo.png',
@@ -37,19 +41,45 @@ export default defineConfig({
 						type: 'image/png',
 						purpose: 'maskable'
 					}
-				],
-				display: 'standalone',
-				start_url: base
+				]
+			},
+			kit: {
+				adapterFallback: 'index.html',
 			},
 			workbox: {
-				globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+				globPatterns: ['**/*.{js,css,html,ico,png,svg,json,webmanifest}'],
 				cleanupOutdatedCaches: true,
-				navigateFallback: `${base}index.html`
+				navigateFallbackDenylist: [/^\/api/],
+				runtimeCaching: [
+					{
+						urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+						handler: 'CacheFirst',
+						options: {
+							cacheName: 'google-fonts-cache',
+							expiration: {
+								maxEntries: 10,
+								maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+							},
+							cacheableResponse: {
+								statuses: [0, 200]
+							}
+						}
+					}
+				]
+			},
+			devOptions: {
+				enabled: true,
+				suppressWarnings: true,
+				type: 'module'
 			}
 		})
 	],
 	define: {
-		__APP_VERSION__: JSON.stringify(new Date().toISOString())
+		__APP_VERSION__: JSON.stringify(new Intl.DateTimeFormat('en-CA', {
+			year: 'numeric', month: '2-digit', day: '2-digit',
+			hour: '2-digit', minute: '2-digit', second: '2-digit',
+			hour12: false, timeZone: 'Europe/Paris'
+		}).format(new Date()).replace(', ', 'T'))
 	},
 	test: {
 		expect: { requireAssertions: true },

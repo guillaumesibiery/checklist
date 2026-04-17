@@ -96,7 +96,7 @@ export function createLayoutState() {
             showCreateModal = false;
             checklistName = '';
             selectedModel = '';
-            goto(`${base}/checklist/${newChecklist.checklistId}`);
+            goto(`${base}/checklist/${newChecklist.checklistId}/`);
         } catch (error) {
             console.error('Erreur lors de la création de la checklist:', error);
         } finally {

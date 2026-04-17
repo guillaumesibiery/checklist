@@ -44,7 +44,7 @@ export function createPageState() {
           const user = await db.users.add({ firstName: firstName.trim() });
           localStorage.setItem('currentUserId', user.toString());
           await layoutState.init();
-          goto(`${base}/accueil`);
+          goto(`${base}/accueil/`);
       } catch (e) {
           console.error(e);
       }
@@ -53,7 +53,7 @@ export function createPageState() {
   async function login(userId: number) {
       localStorage.setItem('currentUserId', userId.toString());
       await layoutState.init();
-      goto(`${base}/accueil`);
+      goto(`${base}/accueil/`);
   }
 
   function promptDeleteUser(user: User, event: Event) {
