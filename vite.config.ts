@@ -4,15 +4,16 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 
 const isDev = process.argv.includes('dev');
-const base = isDev ? '' : '/checklist';
+const base = isDev ? '/' : '/checklist/';
 
 export default defineConfig({
+	base,
 	plugins: [
 		tailwindcss(), 
 		sveltekit(),
 		SvelteKitPWA({
 			registerType: 'autoUpdate',
-			base: isDev ? '/' : '/checklist/',
+			base,
 			manifest: {
 				name: 'Checklist',
 				short_name: 'Checklist',
@@ -38,15 +39,18 @@ export default defineConfig({
 					}
 				],
 				display: 'standalone',
-				start_url: isDev ? '/' : '/checklist/'
+				start_url: base
 			},
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
 				cleanupOutdatedCaches: true,
-				navigateFallback: isDev ? '/' : '/checklist/index.html'
+				navigateFallback: `${base}index.html`
 			}
 		})
 	],
+	define: {
+		__APP_VERSION__: JSON.stringify(new Date().toISOString())
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
