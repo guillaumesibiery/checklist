@@ -24,7 +24,7 @@
     }
 </script>
 
-<div class="min-h-screen bg-secondary pb-40">
+<div class="min-h-screen bg-secondary pb-24">
     {#if state.loading}
         <div class="fixed top-0 left-0 right-0 h-24 bg-primary p-4 z-10 shadow-lg flex flex-col justify-end">
             <div class="animate-pulse h-6 bg-white/20 rounded w-1/2 mb-4"></div>
@@ -141,8 +141,8 @@
         </main>
 
         <!-- Footer Menu -->
-        <footer class="fixed bottom-0 left-0 right-0 p-4 bg-secondary/80 backdrop-blur-sm z-10" in:fly={{ y: 50 }}>
-            <nav class="bg-primary h-24 flex justify-around items-center px-4 rounded-3xl shadow-xl">
+        <footer class="fixed bottom-0 left-0 right-0 p-4 z-10 pointer-events-none" in:fly={{ y: 50 }}>
+            <nav class="bg-primary h-16 flex justify-around items-center px-4 rounded-2xl shadow-xl pointer-events-auto">
                 {#if !state.readOnly}
                     <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" 
                             onclick={state.openShareModal} aria-label="Partager">
