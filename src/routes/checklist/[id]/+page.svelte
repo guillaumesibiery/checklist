@@ -3,14 +3,15 @@
     import { createChecklistState } from './page.svelte.ts';
     import { fade, fly, scale } from 'svelte/transition';
 
-    const state = createChecklistState(page.params.id as string);
+    const readOnly = page.url.searchParams.get('readOnly') === 'true';
+    const state = createChecklistState(page.params.id as string, readOnly);
 
     // Icônes Heroicons Solid
     const icons = {
         share: `<path fill-rule="evenodd" d="M15.75 4.5a3.75 3.75 0 1 1 .731 2.25l-6.45 3.518a3.75 3.75 0 0 1 0 3.464l6.45 3.518a3.75 3.75 0 1 1-.731 2.25c0-.188.014-.37.04-.548l-6.45-3.518a3.75 3.75 0 1 1 0-4.932l6.45-3.518a3.75 3.75 0 0 1-.04-.548Z" clip-rule="evenodd" />`,
         check: `<path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />`,
         logout: `<path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a0 0 0 0 1 0 0H7.5a0 0 0 0 1 0 0V5.25a0 0 0 0 1 0 0h6a0 0 0 0 1 0 0V8.25a.75.75 0 0 0 1.5 0V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />`,
-        plus: `<path d="M10.75 4.75a.75.75 0 0 1 1.5 0v5.25h5.25a.75.75 0 0 1 0 1.5h-5.25v5.25a.75.75 0 0 1-1.5 0v-5.25H5.25a.75.75 0 0 1 0-1.5h13.5a.75.75 0 0 1 0 1.5H5.25V4.75Z" />`,
+        plus: `<path d="M10.75 4.75a.75.75 0 00-1.5 0v5.25H4a.75.75 0 000 1.5h5.25v5.25a.75.75 0 001.5 0v-5.25H16a.75.75 0 000-1.5h-5.25V4.75z" />`,
         minus: `<path d="M5.25 10.75a.75.75 0 0 1 0-1.5h13.5a.75.75 0 0 1 0 1.5H5.25Z" />`,
         chevronDown: `<path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clip-rule="evenodd" />`,
         whatsapp: `<path d="M17.472 14.382c-.301-.15-1.767-.872-2.04-.971-.272-.1-.47-.15-.665.15-.197.3-.761.97-.933 1.163-.173.193-.346.216-.646.067-.3-.15-1.267-.467-2.414-1.492-.893-.795-1.495-1.777-1.67-2.078-.174-.3-.019-.463.13-.613.136-.134.3-.347.451-.52.15-.174.198-.298.299-.497.101-.199.05-.373-.025-.523-.075-.15-.665-1.603-.91-2.193-.24-.576-.48-.497-.665-.506-.172-.008-.37-.01-.568-.01-.198 0-.522.074-.795.373-.272.3-1.04 1.016-1.04 2.479 0 1.463 1.066 2.875 1.214 3.075.149.199 2.098 3.203 5.084 4.493.71.307 1.264.49 1.695.627.712.226 1.36.194 1.872.118.571-.085 1.767-.721 2.016-1.418.247-.697.247-1.294.173-1.418-.074-.124-.272-.198-.57-.348k.005 6.032m-2.924 1.782h-.011c-1.84 0-3.644-.496-5.216-1.434l-.373-.222-3.877 1.016 1.034-3.778-.244-.388a9.412 9.412 0 0 1-1.442-5.02c0-5.195 4.227-9.423 9.426-9.423 2.517 0 4.883.98 6.66 2.76a9.358 9.358 0 0 1 2.756 6.66c0 5.197-4.225 9.426-9.422 9.426m6.669-16.082A11.282 11.282 0 0 0 12.748 3.1c-6.248 0-11.335 5.087-11.335 11.335 0 2.0.521 3.951 1.512 5.672L1.25 24l4.004-1.05a11.246 11.246 0 0 0 5.49 1.428h.005c6.246 0 11.332-5.088 11.332-11.336a11.24 11.24 0 0 0-3.189-8.017" />`,
@@ -80,8 +81,9 @@
                                 
                                 <!-- Enable/Disable checkbox -->
                                 <input type="checkbox" 
-                                       class="w-6 h-6 rounded border-2 border-primary text-primary accent-primary focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all duration-200" 
+                                       class="w-6 h-6 rounded border-2 border-primary text-primary accent-primary focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all duration-200 disabled:opacity-50" 
                                        checked={!isDisabled}
+                                       disabled={state.readOnly}
                                        onchange={() => state.toggleDisabled(catIndex, itemIndex)}>
 
                                 <!-- Item Name & Quantity Info -->
@@ -98,7 +100,7 @@
                                 </div>
 
                                 <!-- Controls -->
-                                {#if !isDisabled}
+                                {#if !isDisabled && !state.readOnly}
                                     <div class="flex items-center gap-2" in:scale>
                                         {#if parseInt(item['wanted-quantity'].toString()) === 1}
                                             <button class="w-12 h-6 rounded-full relative transition-colors duration-300"
@@ -141,26 +143,28 @@
         <!-- Footer Menu -->
         <footer class="fixed bottom-0 left-0 right-0 p-4 bg-secondary/80 backdrop-blur-sm z-10" in:fly={{ y: 50 }}>
             <nav class="bg-primary h-24 flex justify-around items-center px-4 rounded-3xl shadow-xl">
-                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" 
-                        onclick={state.openShareModal} aria-label="Partager">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
-                        {@html icons.share}
-                    </svg>
-                    <span class="text-[10px] font-bold uppercase tracking-wider">Partager</span>
-                </button>
-                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" 
-                        onclick={state.openFinalizeModal} aria-label="Finaliser">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
-                        {@html icons.check}
-                    </svg>
-                    <span class="text-[10px] font-bold uppercase tracking-wider">Finaliser</span>
-                </button>
+                {#if !state.readOnly}
+                    <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" 
+                            onclick={state.openShareModal} aria-label="Partager">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                            {@html icons.share}
+                        </svg>
+                        <span class="text-[10px] font-bold uppercase tracking-wider">Partager</span>
+                    </button>
+                    <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" 
+                            onclick={state.openFinalizeModal} aria-label="Finaliser">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                            {@html icons.check}
+                        </svg>
+                        <span class="text-[10px] font-bold uppercase tracking-wider">Finaliser</span>
+                    </button>
+                {/if}
                 <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" 
                         onclick={state.quit} aria-label="Quitter">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                         {@html icons.logout}
                     </svg>
-                    <span class="text-[10px] font-bold uppercase tracking-wider">Quitter</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider">{state.readOnly ? 'Retour' : 'Quitter'}</span>
                 </button>
             </nav>
         </footer>

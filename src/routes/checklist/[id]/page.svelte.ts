@@ -3,7 +3,7 @@ import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { onMount } from 'svelte';
 
-export function createChecklistState(id: string) {
+export function createChecklistState(id: string, readOnly: boolean = false) {
     let checklist = $state<Checklist | null>(null);
     let loading = $state(true);
     let expandedCategories = $state(new Set<number>());
@@ -36,7 +36,7 @@ export function createChecklistState(id: string) {
     }
 
     async function save() {
-        if (!checklist) return;
+        if (!checklist || readOnly) return;
         
         // 1. Recalculer le progrès (mise à jour du Proxy Svelte)
         updateAllProgress();
@@ -101,7 +101,7 @@ export function createChecklistState(id: string) {
     }
 
     async function updateQuantity(categoryIndex: number, itemIndex: number, delta: number) {
-        if (!checklist) return;
+        if (!checklist || readOnly) return;
         const item = checklist.elements[categoryIndex].items[itemIndex];
         let added = parseInt(item['added-quantity'].toString()) || 0;
 
@@ -112,7 +112,7 @@ export function createChecklistState(id: string) {
     }
 
     async function toggleItem(categoryIndex: number, itemIndex: number) {
-        if (!checklist) return;
+        if (!checklist || readOnly) return;
         const item = checklist.elements[categoryIndex].items[itemIndex];
         const wanted = parseInt(item['wanted-quantity'].toString()) || 0;
         let added = parseInt(item['added-quantity'].toString()) || 0;
@@ -127,7 +127,7 @@ export function createChecklistState(id: string) {
     }
 
     async function toggleDisabled(categoryIndex: number, itemIndex: number) {
-        if (!checklist) return;
+        if (!checklist || readOnly) return;
         const item = checklist.elements[categoryIndex].items[itemIndex];
         item.disabled = (item.disabled === 'true' || item.disabled === true) ? '' : 'true';
         
@@ -135,10 +135,15 @@ export function createChecklistState(id: string) {
     }
 
     function quit() {
-        goto(`${base}/accueil/`);
+        if (readOnly) {
+            goto(`${base}/historique/`);
+        } else {
+            goto(`${base}/accueil/`);
+        }
     }
 
     function openFinalizeModal() {
+        if (readOnly) return;
         isFinalizeModalOpen = true;
     }
 
@@ -147,7 +152,7 @@ export function createChecklistState(id: string) {
     }
 
     async function finalize() {
-        if (!checklist) return;
+        if (!checklist || readOnly) return;
         
         checklist.status = 'FINISHED';
         await save();
@@ -230,6 +235,7 @@ export function createChecklistState(id: string) {
         get isShareModalOpen() { return isShareModalOpen; },
         get isShareOptionsModalOpen() { return isShareOptionsModalOpen; },
         get isMobile() { return isMobile; },
+        get readOnly() { return readOnly; },
         updateQuantity,
         toggleItem,
         toggleDisabled,

@@ -41,10 +41,13 @@
             <div class="grid gap-4">
                 {#each state.checklists as checklist}
                     <div class="relative group">
-                        <div class="block p-6 bg-white border-2 border-secondary rounded-[2rem] opacity-70">
+                        <button 
+                            class="w-full text-left p-6 bg-white border-2 border-secondary rounded-[2rem] hover:border-primary/30 transition-all active:scale-[0.98] cursor-pointer"
+                            onclick={() => goto(`${base}/checklist/${checklist.checklistId}/?readOnly=true`)}
+                        >
                             <div class="flex justify-between items-center pr-12">
                                 <div>
-                                    <h3 class="font-bold text-lg text-text-main">{checklist.checklistName}</h3>
+                                    <h3 class="font-bold text-lg text-text-main group-hover:text-primary transition-colors">{checklist.checklistName}</h3>
                                     <div class="flex flex-col">
                                         <p class="text-sm text-text-main/50 font-medium">{checklist.modelName}</p>
                                         <p class="text-[11px] text-text-main/40 font-medium">Terminée le {formatDate(checklist.lastModifiedDate)}</p>
@@ -57,11 +60,11 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </button>
                         <!-- Bouton restaurer -->
                         <button 
-                            onclick={() => state.confirmRestore(checklist)}
-                            class="absolute right-6 top-1/2 -translate-y-1/2 p-2 text-primary hover:bg-primary/10 rounded-xl transition-all cursor-pointer"
+                            onclick={(e) => { e.stopPropagation(); state.confirmRestore(checklist); }}
+                            class="absolute right-6 top-1/2 -translate-y-1/2 p-2 text-primary/40 hover:text-primary hover:bg-primary/10 rounded-xl transition-all cursor-pointer z-10"
                             aria-label="Restaurer la checklist"
                             title="Restaurer la checklist"
                         >
