@@ -8,8 +8,12 @@ export function createChecklistState(id: string) {
     let loading = $state(true);
     let expandedCategories = $state(new Set<number>());
     let isFinalizeModalOpen = $state(false);
+    let isShareModalOpen = $state(false);
+    let isShareOptionsModalOpen = $state(false);
+    let isMobile = $state(false);
 
     onMount(async () => {
+        isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         const c = await db.checklists.where('checklistId').equals(id).first();
         if (c) {
             checklist = c;
@@ -150,11 +154,82 @@ export function createChecklistState(id: string) {
         goto(`${base}/accueil/`);
     }
 
+    function openShareModal() {
+        isShareModalOpen = true;
+    }
+
+    function closeShareModal() {
+        isShareModalOpen = false;
+    }
+
+    function openShareOptionsModal() {
+        isShareModalOpen = false;
+        isShareOptionsModalOpen = true;
+    }
+
+    function closeShareOptionsModal() {
+        isShareOptionsModalOpen = false;
+    }
+
+    function getMissingItemsText() {
+        if (!checklist) return "";
+        let text = `Liste des éléments manquants pour ma checklist "${checklist.checklistName}" :\n\n`;
+        let hasMissing = false;
+
+        checklist.elements.forEach(element => {
+            const missingInCategory = element.items.filter(item => {
+                const isDisabled = item.disabled === 'true' || item.disabled === true;
+                if (isDisabled) return false;
+                
+                const wanted = parseInt(item['wanted-quantity'].toString()) || 0;
+                const added = parseInt(item['added-quantity'].toString()) || 0;
+                return added < wanted;
+            });
+
+            if (missingInCategory.length > 0) {
+                hasMissing = true;
+                text += `* ${element.category.toUpperCase()} *\n`;
+                missingInCategory.forEach(item => {
+                    const wanted = parseInt(item['wanted-quantity'].toString()) || 0;
+                    const added = parseInt(item['added-quantity'].toString()) || 0;
+                    const missing = wanted - added;
+                    text += `- ${item.item} (manque ${missing})\n`;
+                });
+                text += "\n";
+            }
+        });
+
+        if (!hasMissing) {
+            return `Tous les éléments de ma checklist "${checklist.checklistName}" sont complets !`;
+        }
+        return text;
+    }
+
+    function shareViaEmail() {
+        if (!checklist) return;
+        const subject = encodeURIComponent(`Checklist : ${checklist.checklistName} - Éléments manquants`);
+        const body = encodeURIComponent(getMissingItemsText());
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    }
+
+    function shareViaSMS() {
+        const body = encodeURIComponent(getMissingItemsText());
+        window.location.href = `sms:?body=${body}`;
+    }
+
+    function shareViaWhatsApp() {
+        const text = encodeURIComponent(getMissingItemsText());
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+
     return {
         get checklist() { return checklist; },
         get loading() { return loading; },
         get expandedCategories() { return expandedCategories; },
         get isFinalizeModalOpen() { return isFinalizeModalOpen; },
+        get isShareModalOpen() { return isShareModalOpen; },
+        get isShareOptionsModalOpen() { return isShareOptionsModalOpen; },
+        get isMobile() { return isMobile; },
         updateQuantity,
         toggleItem,
         toggleDisabled,
@@ -162,6 +237,13 @@ export function createChecklistState(id: string) {
         quit,
         openFinalizeModal,
         closeFinalizeModal,
-        finalize
+        finalize,
+        openShareModal,
+        closeShareModal,
+        openShareOptionsModal,
+        closeShareOptionsModal,
+        shareViaEmail,
+        shareViaSMS,
+        shareViaWhatsApp
     };
 }

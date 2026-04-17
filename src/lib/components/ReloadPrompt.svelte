@@ -32,7 +32,7 @@
           Une nouvelle version est disponible !
         {/if}
       </p>
-      <p class="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-widest">Version: {buildDate.split('T')[0]} @ {buildDate.split('T')[1].slice(0,5)}</p>
+      <p class="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-widest">Version: {buildDate}</p>
     </div>
     <div class="flex gap-2">
       {#if $needUpdate}

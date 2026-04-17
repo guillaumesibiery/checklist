@@ -80,7 +80,7 @@
     <!-- Numéro de version en bas de page -->
     <div class="fixed bottom-4 left-0 right-0 flex justify-center pointer-events-none">
         <span class="text-[10px] text-gray-300 uppercase font-bold tracking-[0.2em]">
-            Version: {__APP_VERSION__.split('T')[0]} @ {__APP_VERSION__.split('T')[1].slice(0,5)}
+            {__APP_VERSION__}
         </span>
     </div>
 </div>

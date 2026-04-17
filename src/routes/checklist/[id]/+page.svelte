@@ -10,9 +10,12 @@
         share: `<path fill-rule="evenodd" d="M15.75 4.5a3.75 3.75 0 1 1 .731 2.25l-6.45 3.518a3.75 3.75 0 0 1 0 3.464l6.45 3.518a3.75 3.75 0 1 1-.731 2.25c0-.188.014-.37.04-.548l-6.45-3.518a3.75 3.75 0 1 1 0-4.932l6.45-3.518a3.75 3.75 0 0 1-.04-.548Z" clip-rule="evenodd" />`,
         check: `<path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />`,
         logout: `<path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a0 0 0 0 1 0 0H7.5a0 0 0 0 1 0 0V5.25a0 0 0 0 1 0 0h6a0 0 0 0 1 0 0V8.25a.75.75 0 0 0 1.5 0V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />`,
-        plus: `<path d="M10.75 4.75a.75.75 0 0 1 1.5 0v5.25h5.25a.75.75 0 0 1 0 1.5h-5.25v5.25a.75.75 0 0 1-1.5 0v-5.25H5.25a.75.75 0 0 1 0-1.5h5.25V4.75Z" />`,
+        plus: `<path d="M10.75 4.75a.75.75 0 0 1 1.5 0v5.25h5.25a.75.75 0 0 1 0 1.5h-5.25v5.25a.75.75 0 0 1-1.5 0v-5.25H5.25a.75.75 0 0 1 0-1.5h13.5a.75.75 0 0 1 0 1.5H5.25V4.75Z" />`,
         minus: `<path d="M5.25 10.75a.75.75 0 0 1 0-1.5h13.5a.75.75 0 0 1 0 1.5H5.25Z" />`,
-        chevronDown: `<path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clip-rule="evenodd" />`
+        chevronDown: `<path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clip-rule="evenodd" />`,
+        whatsapp: `<path d="M17.472 14.382c-.301-.15-1.767-.872-2.04-.971-.272-.1-.47-.15-.665.15-.197.3-.761.97-.933 1.163-.173.193-.346.216-.646.067-.3-.15-1.267-.467-2.414-1.492-.893-.795-1.495-1.777-1.67-2.078-.174-.3-.019-.463.13-.613.136-.134.3-.347.451-.52.15-.174.198-.298.299-.497.101-.199.05-.373-.025-.523-.075-.15-.665-1.603-.91-2.193-.24-.576-.48-.497-.665-.506-.172-.008-.37-.01-.568-.01-.198 0-.522.074-.795.373-.272.3-1.04 1.016-1.04 2.479 0 1.463 1.066 2.875 1.214 3.075.149.199 2.098 3.203 5.084 4.493.71.307 1.264.49 1.695.627.712.226 1.36.194 1.872.118.571-.085 1.767-.721 2.016-1.418.247-.697.247-1.294.173-1.418-.074-.124-.272-.198-.57-.348k.005 6.032m-2.924 1.782h-.011c-1.84 0-3.644-.496-5.216-1.434l-.373-.222-3.877 1.016 1.034-3.778-.244-.388a9.412 9.412 0 0 1-1.442-5.02c0-5.195 4.227-9.423 9.426-9.423 2.517 0 4.883.98 6.66 2.76a9.358 9.358 0 0 1 2.756 6.66c0 5.197-4.225 9.426-9.422 9.426m6.669-16.082A11.282 11.282 0 0 0 12.748 3.1c-6.248 0-11.335 5.087-11.335 11.335 0 2.0.521 3.951 1.512 5.672L1.25 24l4.004-1.05a11.246 11.246 0 0 0 5.49 1.428h.005c6.246 0 11.332-5.088 11.332-11.336a11.24 11.24 0 0 0-3.189-8.017" />`,
+        sms: `<path d="M1.5 4.5a3 3 0 0 1 3-3h15a3 3 0 0 1 3 3v15a3 3 0 0 1-3 3h-15a3 3 0 0 1-3-3v-15ZM9 11.25a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25ZM12 11.25a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25ZM15 11.25a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25Z" />`,
+        email: `<path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" /><path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />`
     };
 
     function getIcon(name: keyof typeof icons) {
@@ -138,7 +141,8 @@
         <!-- Footer Menu -->
         <footer class="fixed bottom-0 left-0 right-0 p-4 bg-secondary/80 backdrop-blur-sm z-10" in:fly={{ y: 50 }}>
             <nav class="bg-primary h-24 flex justify-around items-center px-4 rounded-3xl shadow-xl">
-                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" aria-label="Partager">
+                <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" 
+                        onclick={state.openShareModal} aria-label="Partager">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                         {@html icons.share}
                     </svg>
@@ -197,6 +201,94 @@
                                 Annuler
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
+
+        <!-- Modal de confirmation de partage -->
+        {#if state.isShareModalOpen}
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+                 transition:fade={{ duration: 200 }}>
+                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                     transition:scale={{ duration: 300, start: 0.9 }}
+                     role="dialog"
+                     aria-modal="true">
+                    <div class="p-8 text-center">
+                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-primary">
+                                {@html icons.share}
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-text-main mb-4">Partager les éléments manquants ?</h2>
+                        <p class="text-text-main/60 mb-8 px-4">
+                            Souhaitez-vous partager la liste des éléments dont la quantité n'est pas encore atteinte ?
+                        </p>
+
+                        <div class="flex flex-col gap-3">
+                            <button class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform"
+                                    onclick={state.openShareOptionsModal}>
+                                Valider
+                            </button>
+                            <button class="w-full py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform"
+                                    onclick={state.closeShareModal}>
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
+
+        <!-- Modal d'options de partage -->
+        {#if state.isShareOptionsModalOpen}
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+                 transition:fade={{ duration: 200 }}>
+                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                     transition:scale={{ duration: 300, start: 0.9 }}
+                     role="dialog"
+                     aria-modal="true">
+                    <div class="p-8">
+                        <h2 class="text-2xl font-bold text-text-main mb-6 text-center">Partager via...</h2>
+                        
+                        <div class="grid gap-4" class:grid-cols-1={!state.isMobile} class:grid-cols-3={state.isMobile}>
+                            {#if state.isMobile}
+                                <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary transition-colors group"
+                                        onclick={state.shareViaWhatsApp}>
+                                    <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                                            {@html icons.whatsapp}
+                                        </svg>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-text-main uppercase tracking-tighter">WhatsApp</span>
+                                </button>
+
+                                <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary transition-colors group"
+                                        onclick={state.shareViaSMS}>
+                                    <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                                            {@html icons.sms}
+                                        </svg>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-text-main uppercase tracking-tighter">SMS</span>
+                                </button>
+                            {/if}
+
+                            <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary transition-colors group"
+                                    onclick={state.shareViaEmail}>
+                                <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                                        {@html icons.email}
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-bold text-text-main uppercase tracking-tighter">Email</span>
+                            </button>
+                        </div>
+
+                        <button class="w-full mt-8 py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform"
+                                onclick={state.closeShareOptionsModal}>
+                            Fermer
+                        </button>
                     </div>
                 </div>
             </div>

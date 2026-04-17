@@ -6,6 +6,17 @@ import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 const isDev = process.argv.includes('dev');
 const base = isDev ? '/' : '/checklist/';
 
+const getBuildVersion = () => {
+	const now = new Date();
+	const parts = new Intl.DateTimeFormat('fr-FR', {
+		year: 'numeric', month: '2-digit', day: '2-digit',
+		hour: '2-digit', minute: '2-digit', second: '2-digit',
+		hour12: false, timeZone: 'Europe/Paris'
+	}).formatToParts(now);
+	const p = (type: string) => parts.find(part => part.type === part.type && part.type === type)?.value || '';
+	return `BUILD ${p('year')}${p('month')}${p('day')}-${p('hour')}${p('minute')}${p('second')}`;
+};
+
 export default defineConfig({
 	base,
 	plugins: [
@@ -75,11 +86,7 @@ export default defineConfig({
 		})
 	],
 	define: {
-		__APP_VERSION__: JSON.stringify(new Intl.DateTimeFormat('en-CA', {
-			year: 'numeric', month: '2-digit', day: '2-digit',
-			hour: '2-digit', minute: '2-digit', second: '2-digit',
-			hour12: false, timeZone: 'Europe/Paris'
-		}).format(new Date()).replace(', ', 'T'))
+		__APP_VERSION__: JSON.stringify(getBuildVersion())
 	},
 	test: {
 		expect: { requireAssertions: true },
