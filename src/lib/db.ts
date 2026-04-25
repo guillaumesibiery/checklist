@@ -15,6 +15,7 @@ export interface ChecklistItem {
 export interface ChecklistElement {
     category: string;
     progress: string;
+    addedByUser?: string | boolean;
     items: ChecklistItem[];
 }
 

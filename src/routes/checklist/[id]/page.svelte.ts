@@ -10,6 +10,8 @@ export function createChecklistState(id: string, readOnly: boolean = false) {
     let isFinalizeModalOpen = $state(false);
     let isShareModalOpen = $state(false);
     let isShareOptionsModalOpen = $state(false);
+    let isAddCategoryModalOpen = $state(false);
+    let newCategoryName = $state("");
     let isMobile = $state(false);
 
     onMount(async () => {
@@ -134,6 +136,69 @@ export function createChecklistState(id: string, readOnly: boolean = false) {
         await save();
     }
 
+    function openAddCategoryModal() {
+        if (readOnly) return;
+        isAddCategoryModalOpen = true;
+        newCategoryName = "";
+    }
+
+    function closeAddCategoryModal() {
+        isAddCategoryModalOpen = false;
+    }
+
+    async function addCategory() {
+        if (!checklist || readOnly || !newCategoryName.trim()) return;
+
+        const nameToAdd = newCategoryName.trim();
+        const exists = checklist.elements.some(
+            e => e.category.toLowerCase() === nameToAdd.toLowerCase()
+        );
+
+        if (exists) {
+            return;
+        }
+
+        // On vide le champ immédiatement pour éviter le flash du message d'erreur "doublon" 
+        // pendant la transition de fermeture de la modale
+        newCategoryName = "";
+
+        checklist.elements.unshift({
+            category: nameToAdd,
+            progress: '0',
+            addedByUser: "true",
+            items: []
+        });
+
+        // Ouvrir la nouvelle catégorie (index 0) par défaut
+        const newExpanded = new Set([0]);
+        // On décale les autres catégories déjà ouvertes
+        expandedCategories.forEach(idx => newExpanded.add(idx + 1));
+        expandedCategories = newExpanded;
+
+        await save();
+        closeAddCategoryModal();
+    }
+
+    async function deleteCategory(index: number) {
+        if (!checklist || readOnly) return;
+        const element = checklist.elements[index];
+        
+        // Sécurité : on ne supprime que si c'est une catégorie ajoutée par l'utilisateur
+        if (element.addedByUser === "true" || element.addedByUser === true) {
+            checklist.elements.splice(index, 1);
+            
+            // Mise à jour des catégories dépliées
+            const newExpanded = new Set<number>();
+            expandedCategories.forEach(idx => {
+                if (idx < index) newExpanded.add(idx);
+                else if (idx > index) newExpanded.add(idx - 1);
+            });
+            expandedCategories = newExpanded;
+            
+            await save();
+        }
+    }
+
     function quit() {
         if (readOnly) {
             goto(`${base}/historique/`);
@@ -234,6 +299,15 @@ export function createChecklistState(id: string, readOnly: boolean = false) {
         get isFinalizeModalOpen() { return isFinalizeModalOpen; },
         get isShareModalOpen() { return isShareModalOpen; },
         get isShareOptionsModalOpen() { return isShareOptionsModalOpen; },
+        get isAddCategoryModalOpen() { return isAddCategoryModalOpen; },
+        get newCategoryName() { return newCategoryName; },
+        set newCategoryName(value: string) { newCategoryName = value; },
+        get categoryExists() {
+            if (!checklist || !newCategoryName.trim()) return false;
+            return checklist.elements.some(
+                e => e.category.toLowerCase() === newCategoryName.trim().toLowerCase()
+            );
+        },
         get isMobile() { return isMobile; },
         get readOnly() { return readOnly; },
         updateQuantity,
@@ -248,6 +322,10 @@ export function createChecklistState(id: string, readOnly: boolean = false) {
         closeShareModal,
         openShareOptionsModal,
         closeShareOptionsModal,
+        openAddCategoryModal,
+        closeAddCategoryModal,
+        addCategory,
+        deleteCategory,
         shareViaEmail,
         shareViaSMS,
         shareViaWhatsApp

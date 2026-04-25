@@ -16,7 +16,8 @@
         chevronDown: `<path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clip-rule="evenodd" />`,
         whatsapp: `<path d="M17.472 14.382c-.301-.15-1.767-.872-2.04-.971-.272-.1-.47-.15-.665.15-.197.3-.761.97-.933 1.163-.173.193-.346.216-.646.067-.3-.15-1.267-.467-2.414-1.492-.893-.795-1.495-1.777-1.67-2.078-.174-.3-.019-.463.13-.613.136-.134.3-.347.451-.52.15-.174.198-.298.299-.497.101-.199.05-.373-.025-.523-.075-.15-.665-1.603-.91-2.193-.24-.576-.48-.497-.665-.506-.172-.008-.37-.01-.568-.01-.198 0-.522.074-.795.373-.272.3-1.04 1.016-1.04 2.479 0 1.463 1.066 2.875 1.214 3.075.149.199 2.098 3.203 5.084 4.493.71.307 1.264.49 1.695.627.712.226 1.36.194 1.872.118.571-.085 1.767-.721 2.016-1.418.247-.697.247-1.294.173-1.418-.074-.124-.272-.198-.57-.348k.005 6.032m-2.924 1.782h-.011c-1.84 0-3.644-.496-5.216-1.434l-.373-.222-3.877 1.016 1.034-3.778-.244-.388a9.412 9.412 0 0 1-1.442-5.02c0-5.195 4.227-9.423 9.426-9.423 2.517 0 4.883.98 6.66 2.76a9.358 9.358 0 0 1 2.756 6.66c0 5.197-4.225 9.426-9.422 9.426m6.669-16.082A11.282 11.282 0 0 0 12.748 3.1c-6.248 0-11.335 5.087-11.335 11.335 0 2.0.521 3.951 1.512 5.672L1.25 24l4.004-1.05a11.246 11.246 0 0 0 5.49 1.428h.005c6.246 0 11.332-5.088 11.332-11.336a11.24 11.24 0 0 0-3.189-8.017" />`,
         sms: `<path d="M1.5 4.5a3 3 0 0 1 3-3h15a3 3 0 0 1 3 3v15a3 3 0 0 1-3 3h-15a3 3 0 0 1-3-3v-15ZM9 11.25a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25ZM12 11.25a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25ZM15 11.25a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25Z" />`,
-        email: `<path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" /><path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />`
+        email: `<path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" /><path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />`,
+        trash: `<path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Zm4.33.25a.75.75 0 0 0-1.5-.085l-.5 8.5a.75.75 0 0 0 1.5.085l.5-8.5Z" clip-rule="evenodd" />`
     };
 
     function getIcon(name: keyof typeof icons) {
@@ -54,6 +55,17 @@
 
         <!-- Content -->
         <main class="pt-36 px-4 space-y-6">
+            {#if !state.readOnly}
+                <button class="w-full py-4 bg-white rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors active:scale-95"
+                        onclick={state.openAddCategoryModal}
+                        in:fade>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        {@html icons.plus}
+                    </svg>
+                    Ajouter une catégorie
+                </button>
+            {/if}
+
             {#each state.checklist.elements as element, catIndex}
                 {@const isExpanded = state.expandedCategories.has(catIndex)}
                 <section class="bg-white rounded-2xl shadow-sm overflow-hidden" in:fade={{ delay: catIndex * 100 }}>
@@ -67,9 +79,20 @@
                             </svg>
                             <h2 class="text-lg font-bold text-text-main">{element.category}</h2>
                         </div>
-                        <span class="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
-                            {element.progress}%
-                        </span>
+                        <div class="flex items-center gap-2">
+                            {#if (element.addedByUser === "true" || element.addedByUser === true) && !state.readOnly}
+                                <button class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                        onclick={(e) => { e.stopPropagation(); state.deleteCategory(catIndex); }}
+                                        aria-label="Supprimer la catégorie">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                                        {@html icons.trash}
+                                    </svg>
+                                </button>
+                            {/if}
+                            <span class="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
+                                {element.progress}%
+                            </span>
+                        </div>
                     </button>
                     
                     {#if isExpanded}
@@ -293,6 +316,57 @@
                                 onclick={state.closeShareOptionsModal}>
                             Fermer
                         </button>
+                    </div>
+                </div>
+            </div>
+        {/if}
+
+        <!-- Modal d'ajout de catégorie -->
+        {#if state.isAddCategoryModalOpen}
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+                 transition:fade={{ duration: 200 }}>
+                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                     transition:scale={{ duration: 300, start: 0.9 }}
+                     role="dialog"
+                     aria-modal="true">
+                    <div class="p-8">
+                        <h2 class="text-2xl font-bold text-text-main mb-6 text-center">Nouvelle catégorie</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label for="categoryName" class="block text-sm font-medium text-text-main/60 mb-1 ml-1">Nom de la catégorie</label>
+                                <input type="text" 
+                                       id="categoryName"
+                                       value={state.newCategoryName}
+                                       oninput={(e) => {
+                                           const input = e.currentTarget;
+                                           const filtered = input.value.replace(/[^\p{L}\p{N}\s._'\-]/gu, '');
+                                           state.newCategoryName = filtered;
+                                           input.value = filtered;
+                                       }}
+                                       placeholder="Ex: Bagages, Accessoires..."
+                                       class="w-full px-4 py-3 bg-secondary rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main placeholder:text-text-main/30"
+                                       onkeydown={(e) => e.key === 'Enter' && state.newCategoryName.trim() && !state.categoryExists && state.addCategory()}
+                                       autofocus>
+                                {#if state.categoryExists}
+                                    <p class="mt-2 text-xs text-red-500 ml-1" transition:fade>
+                                        Une catégorie avec ce nom existe déjà
+                                    </p>
+                                {/if}
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-3 mt-8">
+                            <button class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50"
+                                    disabled={!state.newCategoryName.trim() || state.categoryExists}
+                                    onclick={state.addCategory}>
+                                Ajouter
+                            </button>
+                            <button class="w-full py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform"
+                                    onclick={state.closeAddCategoryModal}>
+                                Annuler
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
