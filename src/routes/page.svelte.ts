@@ -5,7 +5,7 @@ import { base } from '$app/paths';
 import { layoutState } from '$lib/layoutState.svelte.ts';
 
 export function createPageState() {
-  let users = liveQuery(() => db.users.toArray());
+  let users = liveQuery(() => db.users.orderBy('firstName').toArray());
   let showModal = $state(false);
   let firstName = $state('');
   let existingUserError = $state(false);
