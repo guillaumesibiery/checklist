@@ -12,6 +12,10 @@ export function createChecklistState(id: string, readOnly: boolean = false) {
     let isShareOptionsModalOpen = $state(false);
     let isAddCategoryModalOpen = $state(false);
     let newCategoryName = $state("");
+    let isAddItemModalOpen = $state(false);
+    let newItemName = $state("");
+    let newItemQuantity = $state(1);
+    let currentCategoryNameForNewItem = $state<string | null>(null);
     let isMobile = $state(false);
 
     onMount(async () => {
@@ -45,7 +49,6 @@ export function createChecklistState(id: string, readOnly: boolean = false) {
         checklist.lastModifiedDate = new Date().toISOString();
         
         // 2. Récupérer l'enregistrement actuel en base pour garantir l'ID numérique
-        // 'id' est le checklistId (UUID) passé en paramètre de la fonction createChecklistState
         const existing = await db.checklists.where('checklistId').equals(id).first();
         
         if (existing && existing.id) {
@@ -179,6 +182,63 @@ export function createChecklistState(id: string, readOnly: boolean = false) {
         closeAddCategoryModal();
     }
 
+    function openAddItemModal(categoryName: string) {
+        if (readOnly) return;
+        currentCategoryNameForNewItem = categoryName;
+        isAddItemModalOpen = true;
+        newItemName = "";
+        newItemQuantity = 1;
+    }
+
+    function closeAddItemModal() {
+        isAddItemModalOpen = false;
+        currentCategoryNameForNewItem = null;
+    }
+
+    async function addItem() {
+        if (!checklist || readOnly || currentCategoryNameForNewItem === null || !newItemName.trim()) return;
+
+        const nameToAdd = newItemName.trim();
+        const category = checklist.elements.find(e => e.category === currentCategoryNameForNewItem);
+        
+        if (!category) return;
+
+        const exists = category.items.some(
+            item => item.item.toLowerCase() === nameToAdd.toLowerCase()
+        );
+
+        if (exists) return;
+
+        // Vider le champ immédiatement pour éviter le flash du message d'erreur
+        const quantityToAdd = newItemQuantity;
+        newItemName = "";
+        newItemQuantity = 1;
+
+        category.items = [
+            {
+                item: nameToAdd,
+                'wanted-quantity': quantityToAdd,
+                'added-quantity': 0,
+                disabled: "",
+                addedByUser: "true"
+            },
+            ...category.items
+        ];
+
+        await save();
+        closeAddItemModal();
+    }
+
+    async function deleteItem(categoryIndex: number, itemIndex: number) {
+        if (!checklist || readOnly) return;
+        const item = checklist.elements[categoryIndex].items[itemIndex];
+
+        if (item.addedByUser === "true" || item.addedByUser === true) {
+            checklist.elements[categoryIndex].items.splice(itemIndex, 1);
+            await save();
+        }
+    }
+
     async function deleteCategory(index: number) {
         if (!checklist || readOnly) return;
         const element = checklist.elements[index];
@@ -302,6 +362,19 @@ export function createChecklistState(id: string, readOnly: boolean = false) {
         get isAddCategoryModalOpen() { return isAddCategoryModalOpen; },
         get newCategoryName() { return newCategoryName; },
         set newCategoryName(value: string) { newCategoryName = value; },
+        get isAddItemModalOpen() { return isAddItemModalOpen; },
+        get newItemName() { return newItemName; },
+        set newItemName(value: string) { newItemName = value; },
+        get newItemQuantity() { return newItemQuantity; },
+        set newItemQuantity(value: number) { newItemQuantity = value; },
+        get itemExists() {
+            if (!checklist || currentCategoryNameForNewItem === null || !newItemName.trim()) return false;
+            const category = checklist.elements.find(e => e.category === currentCategoryNameForNewItem);
+            if (!category) return false;
+            return category.items.some(
+                item => item.item.toLowerCase() === newItemName.trim().toLowerCase()
+            );
+        },
         get categoryExists() {
             if (!checklist || !newCategoryName.trim()) return false;
             return checklist.elements.some(
@@ -325,6 +398,10 @@ export function createChecklistState(id: string, readOnly: boolean = false) {
         openAddCategoryModal,
         closeAddCategoryModal,
         addCategory,
+        openAddItemModal,
+        closeAddItemModal,
+        addItem,
+        deleteItem,
         deleteCategory,
         shareViaEmail,
         shareViaSMS,

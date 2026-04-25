@@ -80,6 +80,9 @@
                             <h2 class="text-lg font-bold text-text-main">{element.category}</h2>
                         </div>
                         <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
+                                {element.progress}%
+                            </span>
                             {#if (element.addedByUser === "true" || element.addedByUser === true) && !state.readOnly}
                                 <button class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                         onclick={(e) => { e.stopPropagation(); state.deleteCategory(catIndex); }}
@@ -89,14 +92,21 @@
                                     </svg>
                                 </button>
                             {/if}
-                            <span class="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
-                                {element.progress}%
-                            </span>
                         </div>
                     </button>
                     
                     {#if isExpanded}
                         <div class="divide-y divide-secondary" transition:fade={{ duration: 200 }}>
+                            {#if (element.addedByUser === "true" || element.addedByUser === true) && !state.readOnly}
+                                <button class="w-full py-3 bg-secondary/30 text-primary text-sm font-bold flex items-center justify-center gap-2 hover:bg-secondary/50 transition-colors"
+                                        onclick={() => state.openAddItemModal(element.category)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                        {@html icons.plus}
+                                    </svg>
+                                    Ajouter un élément
+                                </button>
+                            {/if}
+
                             {#each element.items as item, itemIndex}
                                 {@const isDisabled = item.disabled === 'true' || item.disabled === true}
                             <div class="p-4 flex items-center gap-3 transition-opacity duration-300"
@@ -154,6 +164,17 @@
                                             </div>
                                         {/if}
                                     </div>
+                                {/if}
+
+                                <!-- Delete item button -->
+                                {#if (item.addedByUser === "true" || item.addedByUser === true) && !state.readOnly}
+                                    <button class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                                            onclick={() => state.deleteItem(catIndex, itemIndex)}
+                                            aria-label="Supprimer l'élément">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                            {@html icons.trash}
+                                        </svg>
+                                    </button>
                                 {/if}
                             </div>
                             {/each}
@@ -371,6 +392,80 @@
                 </div>
             </div>
         {/if}
+
+        <!-- Modal d'ajout d'élément -->
+        {#if state.isAddItemModalOpen}
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+                 transition:fade={{ duration: 200 }}>
+                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                     transition:scale={{ duration: 300, start: 0.9 }}
+                     role="dialog"
+                     aria-modal="true">
+                    <div class="p-8">
+                        <h2 class="text-2xl font-bold text-text-main mb-6 text-center">Nouvel élément</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label for="itemName" class="block text-sm font-medium text-text-main/60 mb-1 ml-1">Nom de l'élément</label>
+                                <input type="text" 
+                                       id="itemName"
+                                       value={state.newItemName}
+                                       oninput={(e) => {
+                                           const input = e.currentTarget;
+                                           const filtered = input.value.replace(/[^\p{L}\p{N}\s._'\-]/gu, '');
+                                           state.newItemName = filtered;
+                                           input.value = filtered;
+                                       }}
+                                       placeholder="Ex: T-shirts, Couches..."
+                                       class="w-full px-4 py-3 bg-secondary rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main placeholder:text-text-main/30"
+                                       onkeydown={(e) => e.key === 'Enter' && state.newItemName.trim() && !state.itemExists && state.addItem()}
+                                       autofocus>
+                                {#if state.itemExists}
+                                    <p class="mt-2 text-xs text-red-500 ml-1" transition:fade>
+                                        Un élément avec ce nom existe déjà
+                                    </p>
+                                {/if}
+                            </div>
+
+                            <div>
+                                <label for="itemQuantity" class="block text-sm font-medium text-text-main/60 mb-1 ml-1">Quantité attendue</label>
+                                <div class="flex items-center bg-secondary rounded-xl p-1 w-fit">
+                                    <button class="w-10 h-10 flex items-center justify-center text-text-main hover:text-primary active:scale-95 transition-all"
+                                            onclick={() => state.newItemQuantity = Math.max(1, state.newItemQuantity - 1)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                            {@html icons.minus}
+                                        </svg>
+                                    </button>
+                                    <input type="number" 
+                                           id="itemQuantity"
+                                           bind:value={state.newItemQuantity}
+                                           min="1"
+                                           class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-text-main">
+                                    <button class="w-10 h-10 flex items-center justify-center text-text-main hover:text-primary active:scale-95 transition-all"
+                                            onclick={() => state.newItemQuantity = state.newItemQuantity + 1}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                            {@html icons.plus}
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-3 mt-8">
+                            <button class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50"
+                                    disabled={!state.newItemName.trim() || state.itemExists}
+                                    onclick={state.addItem}>
+                                Ajouter
+                            </button>
+                            <button class="w-full py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform"
+                                    onclick={state.closeAddItemModal}>
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
     {:else}
         <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center" in:fade>
             <h1 class="text-2xl font-bold text-red-500">Checklist non trouvée</h1>
@@ -390,5 +485,16 @@
     }
     :global(body::-webkit-scrollbar) {
         display: none;
+    }
+
+    /* Supprimer les flèches par défaut des champs nombre */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type='number'] {
+        -moz-appearance: textfield;
+        appearance: textfield;
     }
 </style>

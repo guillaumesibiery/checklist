@@ -104,4 +104,130 @@ describe('Checklist State - Add Category', () => {
 
         expect(state.checklist?.elements.length).toBe(1);
     });
+
+    it('devrait ajouter un item dans une catégorie utilisateur', async () => {
+        const state = createChecklistState(checklistId);
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // On ajoute manuellement une catégorie utilisateur au state pour simplifier
+        if (state.checklist) {
+            state.checklist.elements.unshift({
+                category: 'UserCat',
+                progress: '0',
+                addedByUser: "true",
+                items: []
+            });
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        // Ajouter un item dans cette catégorie
+        state.openAddItemModal('UserCat');
+        state.newItemName = 'UserItem';
+        state.newItemQuantity = 3;
+        await state.addItem();
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const cat = state.checklist?.elements.find(e => e.category === 'UserCat');
+        expect(cat?.items.length).toBe(1);
+        expect(cat?.items[0].item).toBe('UserItem');
+        expect(cat?.items[0]['wanted-quantity']).toBe(3);
+    });
+
+    it('ne devrait pas ajouter un item déjà existant dans la même catégorie', async () => {
+        const state = createChecklistState(checklistId);
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        if (state.checklist) {
+            state.checklist.elements.unshift({
+                category: 'UserCat',
+                progress: '0',
+                addedByUser: "true",
+                items: [{
+                    item: 'UserItem',
+                    'wanted-quantity': 1,
+                    'added-quantity': 0,
+                    disabled: ""
+                }]
+            });
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        state.newItemName = 'useritem'; // Même nom, casse différente
+        state.openAddItemModal('UserCat');
+        await state.addItem();
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const cat = state.checklist?.elements.find(e => e.category === 'UserCat');
+        expect(cat?.items.length).toBe(1);
+    });
+
+    it('devrait supprimer un item ajouté par l\'utilisateur', async () => {
+        const state = createChecklistState(checklistId);
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        if (state.checklist) {
+            state.checklist.elements.unshift({
+                category: 'UserCat',
+                progress: '0',
+                addedByUser: "true",
+                items: [{
+                    item: 'UserItem',
+                    'wanted-quantity': 1,
+                    'added-quantity': 0,
+                    disabled: "",
+                    addedByUser: "true"
+                }]
+            });
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        const catIndex = state.checklist?.elements.findIndex(e => e.category === 'UserCat') ?? -1;
+        await state.deleteItem(catIndex, 0);
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const cat = state.checklist?.elements.find(e => e.category === 'UserCat');
+        expect(cat?.items.length).toBe(0);
+    });
+
+    it('devrait supprimer une catégorie et tous ses items', async () => {
+        const state = createChecklistState(checklistId);
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        if (state.checklist) {
+            state.checklist.elements.unshift({
+                category: 'UserCat',
+                progress: '0',
+                addedByUser: "true",
+                items: [{
+                    item: 'Item1',
+                    'wanted-quantity': 1,
+                    'added-quantity': 0,
+                    disabled: "",
+                    addedByUser: "true"
+                }, {
+                    item: 'Item2',
+                    'wanted-quantity': 1,
+                    'added-quantity': 0,
+                    disabled: "",
+                    addedByUser: "true"
+                }]
+            });
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 200));
+        expect(state.checklist?.elements[0].items.length).toBe(2);
+
+        await state.deleteCategory(0);
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const cat = state.checklist?.elements.find(e => e.category === 'UserCat');
+        expect(cat).toBeUndefined();
+        
+        // Vérifier en base
+        const updated = await db.checklists.where('checklistId').equals(checklistId).first();
+        expect(updated?.elements.find(e => e.category === 'UserCat')).toBeUndefined();
+    });
 });

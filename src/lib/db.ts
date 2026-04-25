@@ -10,6 +10,7 @@ export interface ChecklistItem {
     'wanted-quantity': string | number;
     'added-quantity': string | number;
     disabled: string | boolean;
+    addedByUser?: string | boolean;
 }
 
 export interface ChecklistElement {
