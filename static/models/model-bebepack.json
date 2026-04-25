@@ -11,6 +11,7 @@
         {
             "category":"Documents",
             "progress": "0",
+            "addedByUser":"false",
             "items":[
                 {
                     "item":"Carnet de santé",
@@ -36,6 +37,7 @@
         {
             "category":"Trousse à pharmacie",
             "progress": "0",
+            "addedByUser":"false",
             "items":[
                 {
                     "item":"Désinfectant",
@@ -108,6 +110,7 @@
         {
             "category":"Balade",
             "progress": "0",
+            "addedByUser":"false",
             "items":[
                 {
                     "item":"Poussete Yoyo",
@@ -180,6 +183,7 @@
         {
             "category":"Repas",
             "progress": "0",
+            "addedByUser":"false",
             "items":[
                 {
                     "item":"Bavoirs",
@@ -288,6 +292,7 @@
         {
             "category":"Dodo",
             "progress": "0",
+            "addedByUser":"false",
             "items":[
                 {
                     "item":"Veilleuse tortue",
@@ -331,6 +336,7 @@
         {
             "category":"Toilette",
             "progress": "0",
+            "addedByUser":"false",
             "items":[
                 {
                     "item":"Couches & sacs poubelle",
@@ -433,6 +439,7 @@
         {
             "category":"Jouer",
             "progress": "0",
+            "addedByUser":"false",
             "items":[
                 {
                     "item":"Maillot de bain",
@@ -499,6 +506,7 @@
         {
             "category":"Vêtements",
             "progress": "0",
+            "addedByUser":"false",
             "items":[
                 {
                     "item":"Tenues (pull/pantalons/shorts)",
@@ -547,6 +555,7 @@
         {
             "category":"Autres",
             "progress": "0",
+            "addedByUser":"false",
             "items":[
                 {
                     "item":"Lessives",
