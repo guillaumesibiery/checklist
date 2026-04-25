@@ -32,6 +32,7 @@
 - Utilise https://heroicons.com/solid pour les icones.
 - Utilise le système de validation des champs de Tailwind.
 4. **Code :** 
+- Analyse la base de code.
 - Respecte l'architecture logicielle existante.
 - Écris du code propre en TypeScript. 
 - Commente le code en français. 
