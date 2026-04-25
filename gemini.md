@@ -34,12 +34,13 @@
 4. **Code :** 
 - Écris du code propre en TypeScript. 
 - Commente le code en français. 
-- Respecte les principes SOLID, KISS, DRY. 
+- Tu dois respecter systématiquement les principes SOLID, KISS et DRY. 
 - Les méthodes ne doivent pas dépasser les 200 lignes. 
 - Implémente des tests unitaires pour vérifier le fonctionnement des requêtes select, insert, update et delete en base de données IndexedDB.
 - Les scripts TS sont isolés dans des fichiers .ts
-- Joue les tests Playwright existants à fin de développement.
+- Joue les tests unitaires après chaque modification.
 - Tu n'as pas le droit de créer de nouveaux test Playwright.
+- Build l'applicatif via un npm run build puis lance les tests Playwright après un npm run preview.
 5. **Git :** :
 - Tu n'as pas le droit de commiter les développements sur une branche.
 - Tu n'as pas le droit de merger une branche. 
