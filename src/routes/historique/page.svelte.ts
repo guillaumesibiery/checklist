@@ -6,6 +6,8 @@ export function createHistoriqueState() {
     let isLoadingChecklists = $state(true);
     let showRestoreModal = $state(false);
     let checklistToRestore = $state<Checklist | null>(null);
+    let showDeleteModal = $state(false);
+    let checklistToDelete = $state<Checklist | null>(null);
 
     async function loadChecklists() {
         if (!layoutState.user || !layoutState.user.id) return;
@@ -47,6 +49,25 @@ export function createHistoriqueState() {
         cancelRestore();
     }
 
+    function confirmDelete(checklist: Checklist) {
+        checklistToDelete = checklist;
+        showDeleteModal = true;
+    }
+
+    function cancelDelete() {
+        checklistToDelete = null;
+        showDeleteModal = false;
+    }
+
+    async function executeDelete() {
+        if (!checklistToDelete || !checklistToDelete.id) return;
+        
+        await db.checklists.delete(checklistToDelete.id);
+        
+        await loadChecklists();
+        cancelDelete();
+    }
+
     return {
         get user() { return layoutState.user; },
         get checklists() { return checklists; },
@@ -54,9 +75,14 @@ export function createHistoriqueState() {
         get isLoadingChecklists() { return isLoadingChecklists; },
         get showRestoreModal() { return showRestoreModal; },
         get checklistToRestore() { return checklistToRestore; },
+        get showDeleteModal() { return showDeleteModal; },
+        get checklistToDelete() { return checklistToDelete; },
         loadChecklists,
         confirmRestore,
         cancelRestore,
-        executeRestore
+        executeRestore,
+        confirmDelete,
+        cancelDelete,
+        executeDelete
     };
 }

@@ -45,7 +45,7 @@
                             class="w-full text-left p-6 bg-white border-2 border-secondary rounded-[2rem] hover:border-primary/30 transition-all active:scale-[0.98] cursor-pointer"
                             onclick={() => goto(`${base}/checklist/${checklist.checklistId}/?readOnly=true`)}
                         >
-                            <div class="flex justify-between items-center pr-12">
+                            <div class="flex justify-between items-center pr-24">
                                 <div>
                                     <h3 class="font-bold text-lg text-text-main group-hover:text-primary transition-colors">{checklist.checklistName}</h3>
                                     <div class="flex flex-col">
@@ -61,17 +61,32 @@
                                 </div>
                             </div>
                         </button>
-                        <!-- Bouton restaurer -->
-                        <button 
-                            onclick={(e) => { e.stopPropagation(); state.confirmRestore(checklist); }}
-                            class="absolute right-6 top-1/2 -translate-y-1/2 p-2 text-primary/40 hover:text-primary hover:bg-primary/10 rounded-xl transition-all cursor-pointer z-10"
-                            aria-label="Restaurer la checklist"
-                            title="Restaurer la checklist"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
-                                <path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
+                        
+                        <!-- Actions -->
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
+                            <!-- Bouton restaurer -->
+                            <button 
+                                onclick={(e) => { e.stopPropagation(); state.confirmRestore(checklist); }}
+                                class="p-2 text-primary/40 hover:text-primary hover:bg-primary/10 rounded-xl transition-all cursor-pointer"
+                                aria-label="Restaurer la checklist"
+                                title="Restaurer la checklist"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                                    <path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <!-- Bouton supprimer -->
+                            <button 
+                                onclick={(e) => { e.stopPropagation(); state.confirmDelete(checklist); }}
+                                class="p-2 text-red-500/40 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
+                                aria-label="Supprimer la checklist"
+                                title="Supprimer la checklist"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Zm4.33.25a.75.75 0 0 0-1.5-.085l-.5 8.5a.75.75 0 0 0 1.5.085l.5-8.5Z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 {/each}
             </div>
@@ -132,6 +147,53 @@
                 </button>
                 <button 
                     onclick={state.cancelRestore}
+                    class="w-full py-4 px-4 bg-secondary text-text-main rounded-2xl font-bold hover:bg-gray-200 transition-colors cursor-pointer"
+                >
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+{/if}
+
+<!-- Modal de confirmation de suppression -->
+{#if state.showDeleteModal && state.checklistToDelete}
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div 
+        class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+        transition:fade={{ duration: 200 }}
+        onclick={state.cancelDelete}
+    >
+        <div 
+            class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl"
+            transition:scale={{ duration: 200, start: 0.9 }}
+            onclick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            tabindex="-1"
+        >
+            <div class="flex flex-col items-center mb-6">
+                <div class="p-4 bg-red-500/10 text-red-500 rounded-full mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Zm4.33.25a.75.75 0 0 0-1.5-.085l-.5 8.5a.75.75 0 0 0 1.5.085l.5-8.5Z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-bold text-center text-text-main">Supprimer la checklist ?</h2>
+                <p class="text-text-main/60 text-center mt-2 font-medium">
+                    Attention : la suppression de la checklist <span class="text-text-main font-bold italic">"{state.checklistToDelete.checklistName}"</span> est définitive.
+                </p>
+            </div>
+            
+            <div class="flex flex-col gap-3">
+                <button 
+                    onclick={state.executeDelete}
+                    class="w-full py-4 px-4 bg-red-500 text-text-inverse rounded-2xl font-bold hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-red-500/20"
+                >
+                    Supprimer
+                </button>
+                <button 
+                    onclick={state.cancelDelete}
                     class="w-full py-4 px-4 bg-secondary text-text-main rounded-2xl font-bold hover:bg-gray-200 transition-colors cursor-pointer"
                 >
                     Annuler
