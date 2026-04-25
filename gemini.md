@@ -32,6 +32,7 @@
 - Utilise https://heroicons.com/solid pour les icones.
 - Utilise le système de validation des champs de Tailwind.
 4. **Code :** 
+- Respecte l'architecture logicielle existante.
 - Écris du code propre en TypeScript. 
 - Commente le code en français. 
 - Tu dois respecter systématiquement les principes SOLID, KISS et DRY. 
@@ -45,7 +46,5 @@
 - Tu n'as pas le droit de commiter les développements sur une branche.
 - Tu n'as pas le droit de merger une branche. 
 - Tu n'as pas le droit de supprimer une branche.
-- Créé une branche à chaque nouvelle feature depuis la branche main. Tu ne dois pas faire de modifications directement sur la branche main.
-
 ## Structure des données
 - Utilise un fichier `src/lib/db.ts` pour centraliser la configuration Dexie.
