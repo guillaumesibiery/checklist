@@ -379,7 +379,7 @@
                         </div>
 
                         <div class="flex flex-col gap-3 mt-8">
-                            <button class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50"
+                            <button data-testid="add-checklist-category" class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50"
                                     disabled={!state.newCategoryName.trim() || state.categoryExists}
                                     onclick={state.addCategory}>
                                 Ajouter
@@ -453,7 +453,7 @@
                         </div>
 
                         <div class="flex flex-col gap-3 mt-8">
-                            <button class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50"
+                            <button data-testid="add-checklist-item" class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50"
                                     disabled={!state.newItemName.trim() || state.itemExists}
                                     onclick={state.addItem}>
                                 Ajouter

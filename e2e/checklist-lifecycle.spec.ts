@@ -30,10 +30,38 @@ test('Checklist life cycle', async ({ page }) => {
   await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
 
   await expect(page.getByText(testChecklistName)).toBeVisible();
+
+  // Ajout de catégories et éléments
+  await page.getByRole('button', { name: 'Ajouter une catégorie' }).click();
+  await page.getByRole('textbox', { name: 'Nom de la catégorie' }).fill('Voiture');
+  await page.getByTestId('add-checklist-category').click();
+
+  await page.getByRole('button', { name: 'Ajouter un élément' }).click();
+  await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Gonflage pneus');
+  
+  await page.locator('.flex.items-center.bg-secondary.rounded-xl > button:nth-child(3)').click();
+  await page.locator('.flex.items-center.bg-secondary.rounded-xl > button:nth-child(3)').click();
+  await page.locator('.flex.items-center.bg-secondary.rounded-xl > button:nth-child(3)').click();
+
+  await page.getByTestId('add-checklist-item').click();
+
+  await page.getByRole('button', { name: 'Ajouter un élément' }).click();
+  await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Niveau d\'huile');
+  await page.getByTestId('add-checklist-item').click();
+
+  await page.getByRole('button').filter({ hasText: /^$/ }).nth(4).click();
+  await page.getByRole('button').filter({ hasText: /^$/ }).nth(4).click();
+  await page.getByRole('button').filter({ hasText: /^$/ }).nth(4).click();
+  await page.getByRole('button').filter({ hasText: /^$/ }).nth(4).click();
+
+  await expect(page.locator('body')).toContainText('Gonflage pneus Quantité : 4 4');
+  await page.getByRole('button', { name: 'Supprimer l\'élément' }).first().click();
+
+  await expect(page.getByText('Niveau d\'huile')).toHaveCount(0);
+
   await page.getByRole('button', { name: 'Quitter' }).click();
   await page.getByRole('button', { name: 'Supprimer la checklist' }).click();
   await page.getByRole('button', { name: 'Valider la suppression' }).click();
 
   await expect(page.getByText(testChecklistName)).toHaveCount(0);
-
 });
