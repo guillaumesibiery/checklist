@@ -20,6 +20,11 @@ export function createModelEditorState(modelId: string) {
     onMount(async () => {
         const m = await db.models.where('modelId').equals(modelId).first();
         if (m) {
+            // Vérifier que le modèle appartient bien à l'utilisateur
+            if (layoutState.user?.id && m.userId !== layoutState.user.id) {
+                goto(`${base}/modeles/`);
+                return;
+            }
             model = m;
             // Ouvrir toutes les catégories par défaut
             const initialSet = new Set<number>();

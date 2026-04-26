@@ -16,9 +16,13 @@ export function createModelesState() {
     let isCreating = $state(false);
 
     async function loadModels() {
+        if (!layoutState.user?.id) return;
         isLoadingModels = true;
         try {
-            const data = await db.models.toArray();
+            const data = await db.models
+                .where('userId')
+                .equals(layoutState.user.id)
+                .toArray();
             
             models = data.sort((a, b) => 
                 new Date(b.modelCreationDate).getTime() - new Date(a.modelCreationDate).getTime()

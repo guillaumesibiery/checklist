@@ -16,7 +16,11 @@ export function createLayoutState() {
     let finishedChecklistsCount = $state(0);
 
     async function loadAvailableModels() {
-        const customModels = await db.models.toArray();
+        if (!user) {
+            availableModels = [{ name: 'Bébé pack', file: 'model-bebepack.json' }];
+            return;
+        }
+        const customModels = await db.models.where('userId').equals(user.id!).toArray();
         availableModels = [
             { name: 'Bébé pack', file: 'model-bebepack.json' },
             ...customModels.map(m => ({ name: m.modelName, id: m.id }))
