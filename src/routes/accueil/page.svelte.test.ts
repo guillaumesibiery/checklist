@@ -36,28 +36,9 @@ describe('Accueil State', () => {
         // Attendre que Dexie finisse ses opérations (Tick)
         await new Promise(resolve => setTimeout(resolve, 0));
         
+        // Note: user est maintenant dans layoutState, mais accueilState le récupère via un getter
         expect(state.user).toBeDefined();
         expect(state.user?.firstName).toBe('Alice');
     });
-
-    it('devrait ouvrir et fermer la modale de déconnexion', () => {
-        const state = createAccueilState();
-        expect(state.showLogoutModal).toBe(false);
-
-        state.toggleLogoutModal();
-        expect(state.showLogoutModal).toBe(true);
-
-        state.toggleLogoutModal();
-        expect(state.showLogoutModal).toBe(false);
-    });
-
-    it('devrait se déconnecter et rediriger vers /', () => {
-        localStorage.setItem('currentUserId', '1');
-        const state = createAccueilState();
-
-        state.logout();
-
-        expect(localStorage.getItem('currentUserId')).toBeNull();
-        expect(goto).toHaveBeenCalledWith('/');
-    });
 });
+

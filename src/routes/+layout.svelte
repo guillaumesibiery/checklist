@@ -283,9 +283,13 @@
                 >
                     <h2 class="text-2xl font-bold mb-6 text-center text-text-main dark:text-white">Paramètres</h2>
                     
-                    <div class="space-y-6">
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-text-main dark:text-gray-200">Mode sombre</span>
+                    <div class="space-y-4">
+                        <!-- Mode sombre -->
+                        <div class="flex items-center justify-between p-4 bg-secondary dark:bg-gray-700/50 rounded-2xl transition-colors">
+                            <div class="flex flex-col">
+                                <span class="font-bold text-text-main dark:text-gray-200">Mode sombre</span>
+                                <span class="text-xs text-text-main/50 dark:text-gray-400">Activer le thème noir</span>
+                            </div>
                             <button 
                                 onclick={layoutState.toggleDarkMode}
                                 class="relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none {layoutState.isDarkMode ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'}"
@@ -298,13 +302,31 @@
                             </button>
                         </div>
 
-                        <button 
-                            onclick={layoutState.toggleSettingsModal}
-                            class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
-                        >
-                            Fermer
-                        </button>
+                        <!-- Informations de version -->
+                        <div class="p-4 bg-secondary dark:bg-gray-700/50 rounded-2xl space-y-4 transition-colors">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-primary uppercase tracking-wider mb-1">Version du logiciel</span>
+                                <span class="text-sm font-medium text-text-main dark:text-white transition-colors">v{__PACKAGE_VERSION__}</span>
+                            </div>
+                            
+                            <div class="flex flex-col pt-3 border-t border-gray-200 dark:border-gray-600 transition-colors">
+                                <span class="text-xs font-bold text-primary uppercase tracking-wider mb-1">Numéro de build</span>
+                                <span class="text-[11px] font-mono text-text-main/70 dark:text-gray-400 break-all transition-colors">
+                                    {__APP_VERSION__}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button 
+                                onclick={layoutState.toggleSettingsModal}
+                                class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+                            >
+                                Fermer
+                            </button>
+                        </div>
                     </div>
+
                 </div>
             </div>
         {/if}

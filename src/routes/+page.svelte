@@ -80,9 +80,10 @@
     <!-- Numéro de version en bas de page -->
     <div class="fixed bottom-4 left-0 right-0 flex justify-center pointer-events-none">
         <span class="text-[10px] text-gray-300 uppercase font-bold tracking-[0.2em]">
-            {__APP_VERSION__}
+            v{__PACKAGE_VERSION__}
         </span>
     </div>
+
 </div>
 
 <!-- Modal Creation -->

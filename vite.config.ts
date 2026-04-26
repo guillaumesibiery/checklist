@@ -2,6 +2,9 @@ import { defineConfig } from 'vitest/config';
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { SvelteKitPWA } from '@vite-pwa/sveltekit';
+import { readFileSync } from 'fs';
+
+const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf-8'));
 
 const isDev = process.argv.includes('dev');
 // Pour GitHub Pages, la base doit être le nom du dépôt. 
@@ -15,7 +18,7 @@ const getBuildVersion = () => {
 		hour: '2-digit', minute: '2-digit', second: '2-digit',
 		hour12: false, timeZone: 'Europe/Paris'
 	}).formatToParts(now);
-	const p = (type: string) => parts.find(part => part.type === part.type && part.type === type)?.value || '';
+	const p = (type: string) => parts.find(part => part.type === type)?.value || '';
 	return `BUILD ${p('year')}${p('month')}${p('day')}-${p('hour')}${p('minute')}${p('second')}`;
 };
 
@@ -90,7 +93,8 @@ export default defineConfig({
 		})
 	],
 	define: {
-		__APP_VERSION__: JSON.stringify(getBuildVersion())
+		__APP_VERSION__: JSON.stringify(getBuildVersion()),
+		__PACKAGE_VERSION__: JSON.stringify(pkg.version)
 	},
 	test: {
 		expect: { requireAssertions: true },
@@ -99,3 +103,4 @@ export default defineConfig({
 		exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
 	},
 });
+
