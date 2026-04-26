@@ -164,12 +164,14 @@
                     >
                         <div class="p-2 {page.url.pathname === `${base}/historique` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} group-active:scale-95 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
-                                <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
+                                <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
+                                <path fill-rule="evenodd" d="m3.087 9 .54 9.17c.108 1.837 1.631 3.255 3.473 3.255h9.799c1.844 0 3.367-1.42 3.473-3.255l.54-9.17H3.087ZM10 12.25a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5h-4Z" clip-rule="evenodd" />
                             </svg>
                         </div>
                         <span class="text-[10px] font-bold {page.url.pathname === `${base}/historique` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} uppercase tracking-widest">Historique</span>
                     </button>
                 </div>
+
             </nav>
         {/if}
 
