@@ -184,7 +184,7 @@
                         </div>
 
                         <div class="flex flex-col gap-3 mt-8">
-                            <button class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50 cursor-pointer"
+                            <button data-testid="add-model-category" class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50 cursor-pointer"
                                     disabled={!state.newCategoryName.trim() || state.categoryExists}
                                     onclick={state.addCategory}>
                                 Ajouter
@@ -266,7 +266,7 @@
                         </div>
 
                         <div class="flex flex-col gap-3 mt-8">
-                            <button class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50 cursor-pointer"
+                            <button data-testid="add-model-item" class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50 cursor-pointer"
                                     disabled={!state.newItemName.trim() || state.itemExists}
                                     onclick={state.addItem}>
                                 Ajouter
