@@ -7,8 +7,108 @@ describe('Database Operations', () => {
         // Clear the database avant chaque test pour avoir un environnement propre
         await db.users.clear();
         await db.checklists.clear();
+        await db.models.clear();
     });
 
+    // --- Tests pour les Modèles ---
+    it('devrait insérer un modèle (insert)', async () => {
+        const model = {
+            modelName: 'Mon Modèle',
+            modelCreationDate: new Date().toISOString(),
+            modelLastModifiedDate: new Date().toISOString(),
+            checklistId: '',
+            checklistName: '',
+            userId: '',
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: "0",
+            status: "IN_PROGRESS",
+            elements: []
+        };
+        const id = await db.models.add(model);
+        expect(id).toBeDefined();
+
+        const inserted = await db.models.get(id);
+        expect(inserted?.modelName).toBe('Mon Modèle');
+        expect(inserted?.userId).toBe('');
+    });
+
+    it('devrait récupérer tous les modèles (select)', async () => {
+        await db.models.add({
+            modelName: 'Modèle 1',
+            modelCreationDate: '2026-01-01T10:00:00Z',
+            modelLastModifiedDate: '2026-01-01T10:00:00Z',
+            checklistId: '',
+            checklistName: '',
+            userId: '',
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            elements: []
+        });
+
+        await db.models.add({
+            modelName: 'Modèle 2',
+            modelCreationDate: '2026-01-02T10:00:00Z',
+            modelLastModifiedDate: '2026-01-02T10:00:00Z',
+            checklistId: '',
+            checklistName: '',
+            userId: '',
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            elements: []
+        });
+
+        const allModels = await db.models.toArray();
+        expect(allModels.length).toBe(2);
+    });
+
+    it('devrait mettre à jour un modèle (update)', async () => {
+        const id = await db.models.add({
+            modelName: 'Ancien Nom',
+            modelCreationDate: '',
+            modelLastModifiedDate: '',
+            checklistId: '',
+            checklistName: '',
+            userId: 1,
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            elements: []
+        });
+        
+        await db.models.update(id, { modelName: 'Nouveau Nom' });
+
+        const updated = await db.models.get(id);
+        expect(updated?.modelName).toBe('Nouveau Nom');
+    });
+
+    it('devrait supprimer un modèle (delete)', async () => {
+        const id = await db.models.add({
+            modelName: 'A supprimer',
+            modelCreationDate: '',
+            modelLastModifiedDate: '',
+            checklistId: '',
+            checklistName: '',
+            userId: 1,
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            elements: []
+        });
+
+        await db.models.delete(id);
+
+        const found = await db.models.get(id);
+        expect(found).toBeUndefined();
+    });
+
+    // --- Tests pour les Checklists ---
     it('devrait insérer une checklist (insert)', async () => {
         const userId = await db.users.add({ firstName: 'Test' });
         const checklist = {

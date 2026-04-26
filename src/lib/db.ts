@@ -33,15 +33,32 @@ export interface Checklist {
     elements: ChecklistElement[];
 }
 
+export interface Model {
+    id?: number;
+    modelName: string;
+    modelCreationDate: string;
+    modelLastModifiedDate: string;
+    checklistId: string;
+    checklistName: string;
+    userId: number | string;
+    creationDate: string;
+    lastModifiedDate: string;
+    progress: string;
+    status: string;
+    elements: ChecklistElement[];
+}
+
 export class ChecklistDatabase extends Dexie {
     users!: Table<User, number>;
     checklists!: Table<Checklist, number>;
+    models!: Table<Model, number>;
 
     constructor() {
         super('ChecklistDB');
-        this.version(2).stores({
+        this.version(3).stores({
             users: '++id, &firstName',
-            checklists: '++id, checklistId, userId, checklistName'
+            checklists: '++id, checklistId, userId, checklistName',
+            models: '++id, userId, modelName'
         });
     }
 }

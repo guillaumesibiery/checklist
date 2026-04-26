@@ -9,11 +9,19 @@ export function createLayoutState() {
     
     let checklistName = $state('');
     let selectedModel = $state('');
-    let availableModels = $state<{ name: string, file: string }[]>([]);
+    let availableModels = $state<{ name: string, file?: string, id?: number }[]>([]);
     let nameError = $state('');
     let isCreating = $state(false);
     let checklistsCount = $state(0);
     let finishedChecklistsCount = $state(0);
+
+    async function loadAvailableModels() {
+        const customModels = await db.models.toArray();
+        availableModels = [
+            { name: 'Bébé pack', file: 'model-bebepack.json' },
+            ...customModels.map(m => ({ name: m.modelName, id: m.id }))
+        ];
+    }
 
     async function init() {
         const idStr = localStorage.getItem('currentUserId');
@@ -27,9 +35,8 @@ export function createLayoutState() {
         } else {
             user = null;
         }
-        availableModels = [
-            { name: 'Bébé pack', file: 'model-bebepack.json' }
-        ];
+        
+        await loadAvailableModels();
         return user;
     }
 
@@ -65,7 +72,10 @@ export function createLayoutState() {
 
     function toggleCreateModal() {
         showCreateModal = !showCreateModal;
-        if (!showCreateModal) {
+        if (showCreateModal) {
+            // Recharger les modèles au cas où un nouveau a été créé
+            loadAvailableModels();
+        } else {
             checklistName = '';
             selectedModel = '';
             nameError = '';
@@ -77,12 +87,27 @@ export function createLayoutState() {
 
         isCreating = true;
         try {
-            const response = await fetch(`${base}/models/${selectedModel}`);
-            const modelData = await response.json();
+            let modelData;
+            const modelOption = availableModels.find(m => 
+                (m.file && m.file === selectedModel) || (m.id && m.id.toString() === selectedModel)
+            );
+
+            if (modelOption?.file) {
+                const response = await fetch(`${base}/models/${modelOption.file}`);
+                modelData = await response.json();
+            } else if (modelOption?.id) {
+                modelData = await db.models.get(modelOption.id);
+            }
+
+            if (!modelData) throw new Error('Modèle non trouvé');
 
             const now = new Date().toISOString();
+            // On retire les champs spécifiques au modèle pour la checklist
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { id: modelId, modelCreationDate, modelLastModifiedDate, ...rest } = modelData;
+
             const newChecklist = {
-                ...modelData,
+                ...rest,
                 checklistId: crypto.randomUUID(),
                 checklistName: checklistName,
                 userId: user.id!,
@@ -131,7 +156,8 @@ export function createLayoutState() {
         logout,
         toggleLogoutModal,
         toggleCreateModal,
-        createChecklist
+        createChecklist,
+        loadAvailableModels
     };
 }
 

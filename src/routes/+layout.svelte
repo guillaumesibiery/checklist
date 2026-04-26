@@ -213,7 +213,7 @@
                             >
                                 <option value="" disabled selected>Choisir un modèle</option>
                                 {#each layoutState.availableModels as model}
-                                    <option value={model.file}>{model.name}</option>
+                                    <option value={model.file || model.id}>{model.name}</option>
                                 {/each}
                             </select>
                         </div>

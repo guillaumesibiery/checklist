@@ -1,15 +1,10 @@
+import { db, type Model } from '$lib/db';
 import { layoutState } from '$lib/layoutState.svelte.ts';
-
-export interface Model {
-    id: string;
-    name: string;
-    description: string;
-    createdAt: string;
-}
+import { base } from '$app/paths';
 
 export function createModelesState() {
     let models = $state<Model[]>([]);
-    let isLoadingModels = $state(false);
+    let isLoadingModels = $state(true);
     let showDeleteModal = $state(false);
     let modelToDelete = $state<Model | null>(null);
 
@@ -20,14 +15,16 @@ export function createModelesState() {
     let isCreating = $state(false);
 
     async function loadModels() {
-        if (!layoutState.user || !layoutState.user.id) return;
         isLoadingModels = true;
-        
-        // Simulation d'un chargement différé
-        setTimeout(() => {
-            models = []; 
+        try {
+            const data = await db.models.toArray();
+            
+            models = data.sort((a, b) => 
+                new Date(b.modelCreationDate).getTime() - new Date(a.modelCreationDate).getTime()
+            );
+        } finally {
             isLoadingModels = false;
-        }, 500);
+        }
     }
 
     function toggleCreateModal() {
@@ -57,14 +54,30 @@ export function createModelesState() {
         
         isCreating = true;
         try {
-            // Sera implémenté avec Dexie.js plus tard
-            console.log('Création du modèle:', modelName);
+            // Charger le modèle de base
+            const response = await fetch(`${base}/models/model-custom.json`);
+            const template = await response.json();
             
-            // Simulation
-            await new Promise(resolve => setTimeout(resolve, 500));
+            const now = new Date().toISOString();
+            const newModel: Model = {
+                ...template,
+                modelName: modelName.trim(),
+                modelCreationDate: now,
+                modelLastModifiedDate: now,
+                // On s'assure que les champs checklist et userId restent vides
+                checklistId: "",
+                checklistName: "",
+                userId: "",
+                creationDate: "",
+                lastModifiedDate: ""
+            };
+
+            await db.models.add(newModel);
             
             toggleCreateModal();
             await loadModels();
+        } catch (error) {
+            console.error('Erreur lors de la création du modèle:', error);
         } finally {
             isCreating = false;
         }
@@ -83,8 +96,7 @@ export function createModelesState() {
     async function executeDelete() {
         if (!modelToDelete || !modelToDelete.id) return;
         
-        // Sera implémenté plus tard avec IndexedDB
-        console.log('Suppression du modèle:', modelToDelete.id);
+        await db.models.delete(modelToDelete.id);
         
         await loadModels();
         cancelDelete();

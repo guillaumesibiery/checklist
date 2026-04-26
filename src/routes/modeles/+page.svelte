@@ -57,9 +57,8 @@
                         >
                             <div class="flex justify-between items-center pr-12">
                                 <div>
-                                    <h3 class="font-bold text-lg text-text-main group-hover:text-primary transition-colors">{model.name}</h3>
-                                    <p class="text-sm text-text-main/50 font-medium">{model.description || 'Pas de description'}</p>
-                                    <p class="text-[11px] text-text-main/40 font-medium mt-1">Créé le {formatDate(model.createdAt)}</p>
+                                    <h3 class="font-bold text-lg text-text-main group-hover:text-primary transition-colors">{model.modelName}</h3>
+                                    <p class="text-[11px] text-text-main/40 font-medium mt-1">Créé le {formatDate(model.modelCreationDate)}</p>
                                 </div>
                             </div>
                         </button>
@@ -199,7 +198,7 @@
                 </div>
                 <h2 class="text-xl font-bold text-center text-text-main">Supprimer le modèle ?</h2>
                 <p class="text-text-main/60 text-center mt-2 font-medium">
-                    Attention : la suppression du modèle <span class="text-text-main font-bold italic">"{state.modelToDelete.name}"</span> est définitive.
+                    Attention : la suppression du modèle <span class="text-text-main font-bold italic">"{state.modelToDelete.modelName}"</span> est définitive.
                 </p>
             </div>
             
