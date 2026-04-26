@@ -4,6 +4,8 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 
 const isDev = process.argv.includes('dev');
+// Pour GitHub Pages, la base doit être le nom du dépôt. 
+// SvelteKit gère le trailing slash différemment de Vite PWA.
 const base = isDev ? '/' : '/checklist/';
 
 const getBuildVersion = () => {
@@ -18,14 +20,13 @@ const getBuildVersion = () => {
 };
 
 export default defineConfig({
-	base,
 	plugins: [
 		tailwindcss(), 
 		sveltekit(),
 		SvelteKitPWA({
 			registerType: 'autoUpdate',
-			includeAssets: ['favicon.svg', 'logo.png', 'robots.txt'],
-			base,
+			injectRegister: 'auto',
+			includeAssets: ['favicon.svg', 'logo.png', 'robots.txt', 'models/*.json'],
 			manifest: {
 				name: 'Checklist',
 				short_name: 'Checklist',
@@ -60,6 +61,8 @@ export default defineConfig({
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,json,webmanifest}'],
 				cleanupOutdatedCaches: true,
+				clientsClaim: true,
+				skipWaiting: true,
 				navigateFallback: `${base}index.html`,
 				navigateFallbackDenylist: [/^\/api/],
 				runtimeCaching: [
@@ -70,7 +73,7 @@ export default defineConfig({
 							cacheName: 'google-fonts-cache',
 							expiration: {
 								maxEntries: 10,
-								maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+								maxAgeSeconds: 60 * 60 * 24 * 365
 							},
 							cacheableResponse: {
 								statuses: [0, 200]

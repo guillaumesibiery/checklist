@@ -1,12 +1,13 @@
 <script lang="ts">
   import { useRegisterSW } from 'virtual:pwa-register/svelte';
+  import { onMount } from 'svelte';
 
   const { offlineReady, needUpdate, updateServiceWorker } = useRegisterSW({
     onRegistered(swr) {
-      console.log('SW Registered: ', swr);
+      console.log('SW Registered');
     },
     onRegisterError(error) {
-      console.log('SW registration error', error);
+      console.error('SW registration error', error);
     },
   });
 
@@ -14,6 +15,16 @@
     offlineReady.set(false);
     needUpdate.set(false);
   };
+
+  // Auto-fermeture du message de succès offline après 5 secondes
+  $effect(() => {
+    if ($offlineReady) {
+      const timer = setTimeout(() => {
+        offlineReady.set(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  });
 
   const buildDate = __APP_VERSION__;
 </script>
@@ -27,7 +38,7 @@
     <div class="mb-4">
       <p id="pwa-message" class="text-text-main font-bold">
         {#if $offlineReady}
-          L'application fonctionne 100% hors-ligne !
+          Application prête pour une utilisation hors-ligne
         {:else}
           Une nouvelle version est disponible !
         {/if}
