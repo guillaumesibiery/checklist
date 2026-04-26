@@ -1,4 +1,5 @@
 import { db, type Model } from '$lib/db';
+import { layoutState } from '$lib/layoutState.svelte.ts';
 import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { onMount } from 'svelte';
@@ -42,6 +43,9 @@ export function createModelEditorState(modelId: string) {
         if (!model) return;
         
         model.modelLastModifiedDate = new Date().toISOString();
+        if (layoutState.user?.id) {
+            model.userId = layoutState.user.id;
+        }
 
         // On s'assure que addedByUser est à false pour toutes les catégories du modèle
         model.elements.forEach(el => {

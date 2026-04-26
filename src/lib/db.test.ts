@@ -254,7 +254,7 @@ describe('Database Operations', () => {
         await expect(db.users.add({ firstName: 'Bob' })).rejects.toThrow();
     });
 
-    it('devrait supprimer un utilisateur et ses checklists (simulé)', async () => {
+    it('devrait supprimer un utilisateur, ses checklists et ses modèles (simulé)', async () => {
         const userId = await db.users.add({ firstName: 'Charlie' });
         await db.checklists.add({
             checklistId: 'uuid-5',
@@ -268,15 +268,33 @@ describe('Database Operations', () => {
             elements: []
         });
 
+        await db.models.add({
+            modelName: 'Modèle Charlie',
+            modelId: 'uuid-6',
+            modelCreationDate: '',
+            modelLastModifiedDate: '',
+            checklistId: '',
+            checklistName: '',
+            userId,
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            elements: []
+        });
+
         // Suppression de l'utilisateur
         await db.users.delete(userId);
-        // Suppression manuelle des checklists (ce que fait l'app)
+        // Suppression manuelle des checklists et modèles (ce que fait l'app)
         await db.checklists.where('userId').equals(userId).delete();
+        await db.models.where('userId').equals(userId).delete();
 
         const user = await db.users.get(userId);
         const checklistsCount = await db.checklists.where('userId').equals(userId).count();
+        const modelsCount = await db.models.where('userId').equals(userId).count();
 
         expect(user).toBeUndefined();
         expect(checklistsCount).toBe(0);
+        expect(modelsCount).toBe(0);
     });
 });

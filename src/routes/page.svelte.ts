@@ -67,6 +67,8 @@ export function createPageState() {
       if (userToDelete !== null) {
           // Supprimer d'abord toutes les checklists de l'utilisateur
           await db.checklists.where('userId').equals(userToDelete).delete();
+          // Supprimer aussi tous les modèles de l'utilisateur
+          await db.models.where('userId').equals(userToDelete).delete();
           // Puis supprimer l'utilisateur
           await db.users.delete(userToDelete);
           userToDelete = null;

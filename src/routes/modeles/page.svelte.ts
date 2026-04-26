@@ -77,7 +77,7 @@ export function createModelesState() {
                 ...template,
                 modelName: modelName.trim(),
                 modelId: newModelId,
-                userId: "",
+                userId: layoutState.user!.id!,
                 modelCreationDate: now,
                 modelLastModifiedDate: now,
                 // On s'assure que les champs checklist restent vides
