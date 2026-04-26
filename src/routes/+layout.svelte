@@ -18,8 +18,8 @@
     });
 
     const isLoginPage = $derived(page.url.pathname === base || page.url.pathname === `${base}/`);
-    const isChecklistEditPage = $derived(page.url.pathname.startsWith(`${base}/checklist/`) && page.url.pathname !== `${base}/checklist/`);
-    const isModelEditPage = $derived(page.url.pathname.startsWith(`${base}/modeles/`) && page.url.pathname !== `${base}/modeles/` && page.url.pathname !== `${base}/modeles`);
+    const isChecklistEditPage = $derived(!!page.params.id && page.url.pathname.includes('/checklist/'));
+    const isModelEditPage = $derived(!!page.params.id && page.url.pathname.includes('/modeles/'));
     const showLayout = $derived(!isLoginPage && !!layoutState.user);
     const showHeader = $derived(!isChecklistEditPage && !isModelEditPage);
     const showNav = $derived(!isChecklistEditPage && !isModelEditPage);
@@ -41,7 +41,7 @@
                     <div class="flex justify-between items-start">
                         {#if layoutState.user}
                             <div in:fade={{ duration: 300 }} class="flex flex-col gap-1">
-                                {#if page.url.pathname === `${base}/accueil/`}
+                                {#if page.url.pathname === `${base}/accueil`}
                                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Bonjour, {layoutState.user.firstName}</h1>
                                     <p class="text-text-inverse/90 text-sm sm:text-base font-medium">Comment allez vous aujourd'hui ?</p>
                                     {#if layoutState.checklistsCount > 0}
@@ -51,7 +51,7 @@
                                             </span>
                                         </div>
                                     {/if}
-                                {:else if page.url.pathname === `${base}/historique/`}
+                                {:else if page.url.pathname === `${base}/historique`}
                                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Historique</h1>
                                     <p class="text-text-inverse/90 text-sm sm:text-base font-medium">Vos checklists terminées</p>
                                     {#if layoutState.finishedChecklistsCount > 0}
@@ -61,7 +61,7 @@
                                             </span>
                                         </div>
                                     {/if}
-                                {:else if page.url.pathname === `${base}/modeles/`}
+                                {:else if page.url.pathname === `${base}/modeles`}
                                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Modèles</h1>
                                     <p class="text-text-inverse/90 text-sm sm:text-base font-medium">Gérez vos propres modèles</p>
                                     {#if layoutState.createdModelsCount > 0}
@@ -107,15 +107,15 @@
                 <!-- Accueil -->
                 <div class="flex justify-center">
                     <button 
-                        onclick={() => goto(`${base}/accueil/`)}
+                        onclick={() => goto(`${base}/accueil`)}
                         class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
                     >
-                        <div class="p-2 {page.url.pathname === `${base}/accueil/` ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
+                        <div class="p-2 {page.url.pathname === `${base}/accueil` ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                                 <path d="M11.47 3.84a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 1-1.06 1.06l-1.06-1.06V18.3c0 .58-.45 1.06-1.03 1.06h-2.25c-.58 0-1.06-.48-1.06-1.06v-4.5c0-.58-.48-1.06-1.06-1.06h-1.5c-.58 0-1.06.48-1.06 1.06v4.5c0 .58-.48 1.06-1.06 1.06H6.75c-.58 0-1.06-.48-1.06-1.06v-5.75l-1.06 1.06a.75.75 0 0 1-1.06-1.06l8.69-8.69Z" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/accueil/` ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Accueil</span>
+                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/accueil` ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Accueil</span>
                     </button>
                 </div>
 
@@ -136,31 +136,31 @@
                 <!-- Modèles -->
                 <div class="flex justify-center">
                     <button 
-                        onclick={() => goto(`${base}/modeles/`)}
+                        onclick={() => goto(`${base}/modeles`)}
                         class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
                     >
-                        <div class="p-2 {page.url.pathname === `${base}/modeles/` ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
+                        <div class="p-2 {page.url.pathname === `${base}/modeles` ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                                 <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
                                 <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/modeles/` ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Modèles</span>
+                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/modeles` ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Modèles</span>
                     </button>
                 </div>
 
                 <!-- Historique -->
                 <div class="flex justify-center">
                     <button 
-                        onclick={() => goto(`${base}/historique/`)}
+                        onclick={() => goto(`${base}/historique`)}
                         class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
                     >
-                        <div class="p-2 {page.url.pathname === `${base}/historique/` ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
+                        <div class="p-2 {page.url.pathname === `${base}/historique` ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                                 <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/historique/` ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Historique</span>
+                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/historique` ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Historique</span>
                     </button>
                 </div>
             </nav>
