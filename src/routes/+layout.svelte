@@ -305,19 +305,18 @@
                         </div>
 
                         <!-- Informations de version -->
-                        <div class="p-4 bg-secondary dark:bg-gray-700/50 rounded-2xl space-y-4 transition-colors">
+                        <div class="p-4 bg-secondary dark:bg-gray-700/50 rounded-2xl transition-colors">
                             <div class="flex flex-col">
-                                <span class="text-xs font-bold text-primary uppercase tracking-wider mb-1">Version du logiciel</span>
-                                <span class="text-sm font-medium text-text-main dark:text-white transition-colors">v{__PACKAGE_VERSION__}</span>
-                            </div>
-                            
-                            <div class="flex flex-col pt-3 border-t border-gray-200 dark:border-gray-600 transition-colors">
                                 <span class="text-xs font-bold text-primary uppercase tracking-wider mb-1">Numéro de build</span>
-                                <span class="text-[11px] font-mono text-text-main/70 dark:text-gray-400 break-all transition-colors">
+                                <span class="text-xs font-bold text-text-main dark:text-white break-all transition-colors">
                                     {__APP_VERSION__}
                                 </span>
                             </div>
                         </div>
+
+
+
+
 
                         <div class="pt-4">
                             <button 
