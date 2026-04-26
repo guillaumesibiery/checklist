@@ -60,6 +60,31 @@ test('Checklist life cycle', async ({ page }) => {
   await expect(page.getByText('Niveau d\'huile')).toHaveCount(0);
 
   await page.getByRole('button', { name: 'Quitter' }).click();
+  
+  // Modification
+  await page.getByRole('link', { name: testChecklistName+' Bébé pack Cr' }).click();
+  await expect(page.getByText(testChecklistName)).toBeVisible();
+
+  await page.getByRole('button', { name: 'Ajouter une catégorie' }).click();
+  await page.getByRole('textbox', { name: 'Nom de la catégorie' }).fill('Maison');
+  await page.getByTestId('add-checklist-category').click();
+
+  await page.getByRole('button', { name: 'Ajouter un élément' }).first().click();
+  await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Mettre alarme en route');
+  await page.getByTestId('add-checklist-item').click();
+
+  await expect(page.locator('body')).toContainText('Maison 0%');
+  await expect(page.locator('body')).toContainText('Mettre alarme en route');
+
+  await expect(page.locator('body')).toContainText('Voiture 100%');
+  await expect(page.locator('body')).toContainText('Gonflage pneus Quantité : 4 4');
+
+  await page.getByRole('button', { name: 'Quitter' }).click();
+
+  await expect(page).toHaveURL(/\/accueil/);
+  await expect(page.getByText(`Bonjour, ${testUserName}`)).toBeVisible();
+
+  //Suppression
   await page.getByRole('button', { name: 'Supprimer la checklist' }).click();
   await page.getByRole('button', { name: 'Valider la suppression' }).click();
 
