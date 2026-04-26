@@ -89,7 +89,7 @@ export function createLayoutState() {
         try {
             let modelData;
             const modelOption = availableModels.find(m => 
-                (m.file && m.file === selectedModel) || (m.id && m.id.toString() === selectedModel)
+                (m.file && m.file === selectedModel) || (m.id && String(m.id) === String(selectedModel))
             );
 
             if (modelOption?.file) {

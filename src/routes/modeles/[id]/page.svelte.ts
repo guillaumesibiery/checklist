@@ -42,6 +42,11 @@ export function createModelEditorState(modelId: string) {
         if (!model) return;
         
         model.modelLastModifiedDate = new Date().toISOString();
+
+        // On s'assure que addedByUser est à false pour toutes les catégories du modèle
+        model.elements.forEach(el => {
+            el.addedByUser = "false";
+        });
         
         const existing = await db.models.where('modelId').equals(modelId).first();
         if (existing && existing.id) {
@@ -77,7 +82,7 @@ export function createModelEditorState(modelId: string) {
         model.elements.unshift({
             category: nameToAdd,
             progress: '0',
-            addedByUser: true,
+            addedByUser: "false",
             items: []
         });
 
@@ -124,8 +129,7 @@ export function createModelEditorState(modelId: string) {
                 item: nameToAdd,
                 'wanted-quantity': quantityToAdd,
                 'added-quantity': 0,
-                disabled: false,
-                addedByUser: true
+                disabled: false
             },
             ...category.items
         ];
