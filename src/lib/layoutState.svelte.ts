@@ -17,11 +17,15 @@ export function createLayoutState() {
 
     async function loadAvailableModels() {
         if (!user) {
-            availableModels = [{ name: 'Bébé pack', file: 'model-bebepack.json' }];
+            availableModels = [
+                { name: 'Modèle vide', file: 'model-vide.json' },
+                { name: 'Bébé pack', file: 'model-bebepack.json' }
+            ];
             return;
         }
         const customModels = await db.models.where('userId').equals(user.id!).toArray();
         availableModels = [
+            { name: 'Modèle vide', file: 'model-vide.json' },
             { name: 'Bébé pack', file: 'model-bebepack.json' },
             ...customModels.map(m => ({ name: m.modelName, id: m.id }))
         ];
