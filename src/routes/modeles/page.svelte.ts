@@ -88,6 +88,7 @@ export function createModelesState() {
             };
 
             await db.models.add(newModel);
+            await layoutState.loadAvailableModels();
             
             toggleCreateModal();
             // Redirection vers l'éditeur de modèle
@@ -115,6 +116,7 @@ export function createModelesState() {
         await db.models.delete(modelToDelete.id);
         
         await loadModels();
+        await layoutState.loadAvailableModels();
         cancelDelete();
     }
 
