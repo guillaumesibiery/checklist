@@ -59,6 +59,9 @@
                                             </span>
                                         </div>
                                     {/if}
+                                {:else if page.url.pathname === `${base}/modeles/`}
+                                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Modèles</h1>
+                                    <p class="text-text-inverse/90 text-sm sm:text-base font-medium">Gérez vos propres modèles</p>
                                 {:else}
                                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">{layoutState.user.firstName}</h1>
                                 {/if}

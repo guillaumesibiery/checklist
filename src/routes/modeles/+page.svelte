@@ -1,0 +1,147 @@
+<script lang="ts">
+    import { createModelesState } from './page.svelte.ts';
+    import { fade, scale } from 'svelte/transition';
+    import { goto } from '$app/navigation';
+    import { base } from '$app/paths';
+    import { onMount } from 'svelte';
+
+    const state = createModelesState();
+
+    onMount(async () => {
+        await state.loadModels();
+    });
+
+    // Formate la date en français
+    function formatDate(isoString: string) {
+        if (!isoString) return '';
+        const date = new Date(isoString);
+        return new Intl.DateTimeFormat('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        }).format(date);
+    }
+</script>
+
+<div in:fade={{ duration: 300 }} class="p-6">
+    <div class="mt-4">
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-text-main uppercase tracking-wider text-sm opacity-60 mb-4">Mes modèles de checklist</h2>
+            
+            {#if !state.isLoadingModels && state.models.length > 0}
+                <button class="w-full py-4 bg-white rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors active:scale-95 cursor-pointer"
+                        onclick={() => console.log('Créer un modèle')}
+                        in:fade>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v5.25H4a.75.75 0 000 1.5h5.25v5.25a.75.75 0 001.5 0v-5.25H16a.75.75 0 000-1.5h-5.25V4.75z" />
+                    </svg>
+                    Créer un modèle
+                </button>
+            {/if}
+        </div>
+        
+        {#if state.isLoadingModels}
+            <div class="space-y-4">
+                {#each Array(3) as _}
+                    <div class="h-24 bg-secondary rounded-[2rem] animate-pulse"></div>
+                {/each}
+            </div>
+        {:else if state.models.length > 0}
+            <div class="grid gap-4">
+                {#each state.models as model}
+                    <div class="relative group">
+                        <button 
+                            class="w-full text-left p-6 bg-white border-2 border-secondary rounded-[2rem] hover:border-primary/30 transition-all active:scale-[0.98] cursor-pointer"
+                            onclick={() => console.log('Éditer le modèle', model.id)}
+                        >
+                            <div class="flex justify-between items-center pr-12">
+                                <div>
+                                    <h3 class="font-bold text-lg text-text-main group-hover:text-primary transition-colors">{model.name}</h3>
+                                    <p class="text-sm text-text-main/50 font-medium">{model.description || 'Pas de description'}</p>
+                                    <p class="text-[11px] text-text-main/40 font-medium mt-1">Créé le {formatDate(model.createdAt)}</p>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <!-- Actions -->
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
+                            <!-- Bouton supprimer -->
+                            <button 
+                                onclick={(e) => { e.stopPropagation(); state.confirmDelete(model); }}
+                                class="p-2 text-red-500/40 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
+                                aria-label="Supprimer le modèle"
+                                title="Supprimer le modèle"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Zm4.33.25a.75.75 0 0 0-1.5-.085l-.5 8.5a.75.75 0 0 0 1.5.085l.5-8.5Z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                {/each}
+            </div>
+        {:else}
+            <div class="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed border-secondary rounded-3xl">
+                <div class="p-4 bg-secondary rounded-full mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-primary opacity-40">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                    </svg>
+                </div>
+                <p class="text-gray-500 font-medium text-center">Vous n'avez pas encore créé de modèle.</p>
+                <button 
+                    onclick={() => console.log('Créer un modèle')}
+                    class="mt-6 px-6 py-3 bg-primary text-text-inverse font-bold rounded-2xl shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                >
+                    Créer un modèle
+                </button>
+            </div>
+        {/if}
+    </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+{#if state.showDeleteModal && state.modelToDelete}
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div 
+        class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+        transition:fade={{ duration: 200 }}
+        onclick={state.cancelDelete}
+    >
+        <div 
+            class="bg-white rounded-[2rem] p-8 w-full max-sm shadow-2xl"
+            transition:scale={{ duration: 200, start: 0.9 }}
+            onclick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            tabindex="-1"
+        >
+            <div class="flex flex-col items-center mb-6">
+                <div class="p-4 bg-red-500/10 text-red-500 rounded-full mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991 2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Zm4.33.25a.75.75 0 0 0-1.5-.085l-.5 8.5a.75.75 0 0 0 1.5.085l.5-8.5Z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-bold text-center text-text-main">Supprimer le modèle ?</h2>
+                <p class="text-text-main/60 text-center mt-2 font-medium">
+                    Attention : la suppression du modèle <span class="text-text-main font-bold italic">"{state.modelToDelete.name}"</span> est définitive.
+                </p>
+            </div>
+            
+            <div class="flex flex-col gap-3">
+                <button 
+                    onclick={state.executeDelete}
+                    class="w-full py-4 px-4 bg-red-500 text-text-inverse rounded-2xl font-bold hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-red-500/20"
+                >
+                    Supprimer
+                </button>
+                <button 
+                    onclick={state.cancelDelete}
+                    class="w-full py-4 px-4 bg-secondary text-text-main rounded-2xl font-bold hover:bg-gray-200 transition-colors cursor-pointer"
+                >
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+{/if}
