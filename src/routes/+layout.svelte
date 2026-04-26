@@ -124,12 +124,12 @@
                         onclick={layoutState.toggleCreateModal}
                         class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
                     >
-                        <div class="p-2 {layoutState.showCreateModal ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
-                                <path d="M10.75 4.75a.75.75 0 0 1 1.5 0v5.25h5.25a.75.75 0 0 1 0 1.5h-5.25v5.25a.75.75 0 0 1-1.5 0v-5.25H5.25a.75.75 0 0 1 0-1.5h5.25V4.75Z" />
+                        <div class="p-1 text-primary group-active:scale-95 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-9 h-9">
+                                <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-bold {layoutState.showCreateModal ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Créer</span>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Créer</span>
                     </button>
                 </div>
 

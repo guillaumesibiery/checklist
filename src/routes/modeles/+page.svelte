@@ -29,7 +29,7 @@
 <div in:fade={{ duration: 300 }} class="p-6">
     <div class="mt-4">
         <div class="mb-6">
-            <h2 class="text-lg font-bold text-text-main uppercase tracking-wider text-sm opacity-60 mb-4">Mes modèles de checklist</h2>
+            <h2 class="text-lg font-bold text-text-main uppercase tracking-wider text-sm opacity-60 mb-4">Modèles de checklist</h2>
             
             {#if !state.isLoadingModels && state.models.length > 0}
                 <button class="w-full py-4 bg-white rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors active:scale-95 cursor-pointer"
