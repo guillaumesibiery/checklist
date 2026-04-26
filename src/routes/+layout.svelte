@@ -64,6 +64,13 @@
                                 {:else if page.url.pathname === `${base}/modeles/`}
                                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Modèles</h1>
                                     <p class="text-text-inverse/90 text-sm sm:text-base font-medium">Gérez vos propres modèles</p>
+                                    {#if layoutState.createdModelsCount > 0}
+                                        <div class="mt-1" transition:fade>
+                                            <span class="bg-white/20 text-text-inverse px-3 py-1.5 rounded-full text-[10px] font-bold border border-white/10 backdrop-blur-sm inline-flex items-center">
+                                                {layoutState.createdModelsCount} {layoutState.createdModelsCount > 1 ? 'modèles créés' : 'modèle créé'}
+                                            </span>
+                                        </div>
+                                    {/if}
                                 {:else}
                                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">{layoutState.user.firstName}</h1>
                                 {/if}

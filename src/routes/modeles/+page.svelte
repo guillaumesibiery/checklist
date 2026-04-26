@@ -12,15 +12,17 @@
         await state.loadModels();
     });
 
-    // Formate la date en français
+    // Formate la date en français (ex: 15/04/2026 à 17:00)
     function formatDate(isoString: string) {
         if (!isoString) return '';
         const date = new Date(isoString);
         return new Intl.DateTimeFormat('fr-FR', {
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
-        }).format(date);
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(date).replace(',', ' à');
     }
 </script>
 
@@ -58,7 +60,10 @@
                             <div class="flex justify-between items-center pr-12">
                                 <div>
                                     <h3 class="font-bold text-lg text-text-main group-hover:text-primary transition-colors">{model.modelName}</h3>
-                                    <p class="text-[11px] text-text-main/40 font-medium mt-1">Créé le {formatDate(model.modelCreationDate)}</p>
+                                    <div class="flex flex-col">
+                                        <p class="text-[11px] text-text-main/40 font-medium">Créé le {formatDate(model.modelCreationDate)}</p>
+                                        <p class="text-[11px] text-text-main/40 font-medium">Modifié le {formatDate(model.modelLastModifiedDate)}</p>
+                                    </div>
                                 </div>
                             </div>
                         </button>

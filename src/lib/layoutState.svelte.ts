@@ -150,6 +150,7 @@ export function createLayoutState() {
         set checklistsCount(val: number) { checklistsCount = val; },
         get finishedChecklistsCount() { return finishedChecklistsCount; },
         set finishedChecklistsCount(val: number) { finishedChecklistsCount = val; },
+        get createdModelsCount() { return availableModels.filter(m => m.id).length; },
         set checklistName(val: string) { handleNameChange(val); },
         set selectedModel(val: string) { selectedModel = val; },
         init,

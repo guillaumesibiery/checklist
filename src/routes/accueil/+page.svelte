@@ -50,14 +50,12 @@
                                     <h3 class="font-bold text-lg text-text-main group-hover:text-primary transition-colors">{checklist.checklistName}</h3>
                                     <div class="flex flex-col">
                                         <p class="text-sm text-text-main/50 font-medium">{checklist.modelName}</p>
+                                        <p class="text-[11px] text-text-main/40 font-medium">Créée le {formatDate(checklist.creationDate)}</p>
                                         <p class="text-[11px] text-text-main/40 font-medium">Modifiée le {formatDate(checklist.lastModifiedDate)}</p>
                                     </div>
                                 </div>
-                                <div class="flex flex-col items-end gap-1">
-                                    <span class="text-primary font-bold">{checklist.progress}%</span>
-                                    <div class="w-16 h-1.5 bg-secondary rounded-full overflow-hidden">
-                                        <div class="h-full bg-primary" style="width: {checklist.progress}%"></div>
-                                    </div>
+                                <div class="flex flex-col items-end justify-center">
+                                    <span class="text-primary font-bold text-lg">{checklist.progress}%</span>
                                 </div>
                             </div>
                         </a>
