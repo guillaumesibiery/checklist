@@ -66,6 +66,30 @@ describe('Database Operations', () => {
         expect(allModels.length).toBe(2);
     });
 
+    it('devrait échouer si on insère un modèle avec le même nom (case insensitive)', async () => {
+        const name = 'Unique Model';
+        await db.models.add({
+            modelName: name,
+            modelId: 'uuid-1',
+            modelCreationDate: new Date().toISOString(),
+            modelLastModifiedDate: new Date().toISOString(),
+            checklistId: '',
+            checklistName: '',
+            userId: '',
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            elements: []
+        });
+
+        // La contrainte est gérée au niveau applicatif (validateModelName)
+        // On vérifie ici que equalsIgnoreCase fonctionne comme prévu pour notre logique
+        const duplicate = await db.models.where('modelName').equalsIgnoreCase('unique model').first();
+        expect(duplicate).toBeDefined();
+        expect(duplicate?.modelName).toBe(name);
+    });
+
     it('devrait mettre à jour un modèle (update)', async () => {
         const id = await db.models.add({
             modelName: 'Ancien Nom',

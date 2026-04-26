@@ -1,6 +1,7 @@
 import { db, type Model } from '$lib/db';
 import { layoutState } from '$lib/layoutState.svelte.ts';
 import { base } from '$app/paths';
+import { goto } from '$app/navigation';
 
 export function createModelesState() {
     let models = $state<Model[]>([]);
@@ -35,7 +36,7 @@ export function createModelesState() {
         }
     }
 
-    function validateModelName() {
+    async function validateModelName() {
         const regex = /^[a-zA-Z0-9àâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ\s\-_'.]+$/;
         if (!modelName.trim()) {
             nameError = 'Le nom est obligatoire';
@@ -45,12 +46,24 @@ export function createModelesState() {
             nameError = 'Caractères spéciaux non autorisés';
             return false;
         }
+
+        // Vérifier si le nom existe déjà (insensible à la casse)
+        const existing = await db.models
+            .where('modelName')
+            .equalsIgnoreCase(modelName.trim())
+            .first();
+        
+        if (existing) {
+            nameError = 'Ce nom de modèle existe déjà';
+            return false;
+        }
+
         nameError = '';
         return true;
     }
 
     async function createModel() {
-        if (!validateModelName()) return;
+        if (!(await validateModelName())) return;
         
         isCreating = true;
         try {
@@ -59,15 +72,17 @@ export function createModelesState() {
             const template = await response.json();
             
             const now = new Date().toISOString();
+            const newModelId = crypto.randomUUID();
             const newModel: Model = {
                 ...template,
                 modelName: modelName.trim(),
+                modelId: newModelId,
+                userId: "",
                 modelCreationDate: now,
                 modelLastModifiedDate: now,
-                // On s'assure que les champs checklist et userId restent vides
+                // On s'assure que les champs checklist restent vides
                 checklistId: "",
                 checklistName: "",
-                userId: "",
                 creationDate: "",
                 lastModifiedDate: ""
             };
@@ -75,7 +90,8 @@ export function createModelesState() {
             await db.models.add(newModel);
             
             toggleCreateModal();
-            await loadModels();
+            // Redirection vers l'éditeur de modèle
+            goto(`${base}/modeles/${newModelId}/`);
         } catch (error) {
             console.error('Erreur lors de la création du modèle:', error);
         } finally {

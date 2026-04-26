@@ -19,9 +19,10 @@
 
     const isLoginPage = $derived(page.url.pathname === base || page.url.pathname === `${base}/`);
     const isChecklistEditPage = $derived(page.url.pathname.startsWith(`${base}/checklist/`));
+    const isModelEditPage = $derived(page.url.pathname.startsWith(`${base}/modeles/`) && page.url.pathname.split('/').filter(Boolean).length > 1);
     const showLayout = $derived(!isLoginPage && !!layoutState.user);
-    const showHeader = $derived(!isChecklistEditPage);
-    const showNav = $derived(!isChecklistEditPage);
+    const showHeader = $derived(!isChecklistEditPage && !isModelEditPage);
+    const showNav = $derived(!isChecklistEditPage && !isModelEditPage);
 </script>
 
 <svelte:head>

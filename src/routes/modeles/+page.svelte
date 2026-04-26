@@ -53,7 +53,7 @@
                     <div class="relative group">
                         <button 
                             class="w-full text-left p-6 bg-white border-2 border-secondary rounded-[2rem] hover:border-primary/30 transition-all active:scale-[0.98] cursor-pointer"
-                            onclick={() => console.log('Éditer le modèle', model.id)}
+                            onclick={() => goto(`${base}/modeles/${model.modelId}/`)}
                         >
                             <div class="flex justify-between items-center pr-12">
                                 <div>
