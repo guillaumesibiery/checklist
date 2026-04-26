@@ -110,12 +110,12 @@
         </main>
 
         {#if showNav}
-            <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-secondary dark:border-gray-800 pb-6 pt-2 grid grid-cols-4 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] transition-colors duration-300" transition:fade>
+            <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-secondary dark:border-gray-800 pb-5 pt-2 grid grid-cols-4 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] transition-colors duration-300" transition:fade>
                 <!-- Accueil -->
                 <div class="flex justify-center">
                     <button 
                         onclick={() => goto(`${base}/accueil`)}
-                        class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
+                        class="flex flex-col items-center gap-1 group cursor-pointer"
                     >
                         <div class="p-2 {page.url.pathname === `${base}/accueil` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} group-active:scale-95 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
@@ -129,14 +129,14 @@
                 <div class="flex justify-center">
                     <button 
                         onclick={layoutState.toggleCreateModal}
-                        class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
+                        class="flex flex-col items-center group cursor-pointer"
                     >
-                        <div class="p-1 text-primary group-active:scale-95 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-9 h-9">
-                                <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
+                        <div class="flex flex-col items-center gap-0.5 px-4 py-2.5 bg-primary text-text-inverse rounded-2xl group-active:scale-95 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                                <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
                             </svg>
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Créer</span>
                         </div>
-                        <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Créer</span>
                     </button>
                 </div>
 
@@ -144,7 +144,7 @@
                 <div class="flex justify-center">
                     <button 
                         onclick={() => goto(`${base}/modeles`)}
-                        class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
+                        class="flex flex-col items-center gap-1 group cursor-pointer"
                     >
                         <div class="p-2 {page.url.pathname === `${base}/modeles` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} group-active:scale-95 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
@@ -160,7 +160,7 @@
                 <div class="flex justify-center">
                     <button 
                         onclick={() => goto(`${base}/historique`)}
-                        class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
+                        class="flex flex-col items-center gap-1 group cursor-pointer"
                     >
                         <div class="p-2 {page.url.pathname === `${base}/historique` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} group-active:scale-95 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
