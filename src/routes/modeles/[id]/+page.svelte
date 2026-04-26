@@ -16,17 +16,17 @@
     };
 </script>
 
-<div class="min-h-screen bg-secondary pb-24">
+<div class="min-h-screen bg-secondary dark:bg-gray-900 pb-24 transition-colors duration-300">
     {#if state.loading}
         <div class="fixed top-0 left-0 right-0 h-20 bg-primary p-4 z-10 shadow-lg flex flex-col justify-end">
             <div class="animate-pulse h-6 bg-white/20 rounded w-1/2 mb-4"></div>
         </div>
         <div class="pt-28 px-4 space-y-6">
             {#each Array(3) as _}
-                <div class="bg-white rounded-2xl p-4 shadow-sm animate-pulse">
-                    <div class="h-6 bg-secondary rounded w-1/3 mb-4"></div>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm animate-pulse transition-colors">
+                    <div class="h-6 bg-secondary dark:bg-gray-700 rounded w-1/3 mb-4 transition-colors"></div>
                     {#each Array(4) as _}
-                        <div class="h-12 bg-secondary rounded w-full mt-2"></div>
+                        <div class="h-12 bg-secondary dark:bg-gray-700 rounded w-full mt-2 transition-colors"></div>
                     {/each}
                 </div>
             {/each}
@@ -39,7 +39,7 @@
 
         <!-- Content -->
         <main class="pt-28 px-4 space-y-6">
-            <button class="w-full py-4 bg-white rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors active:scale-95 cursor-pointer"
+            <button class="w-full py-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors active:scale-95 cursor-pointer"
                     onclick={state.openAddCategoryModal}
                     in:fade>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6" aria-hidden="true">
@@ -50,8 +50,8 @@
 
             {#each state.model.elements as element, catIndex}
                 {@const isExpanded = state.expandedCategories.has(catIndex)}
-                <section class="bg-white rounded-2xl shadow-sm overflow-hidden" in:fade={{ delay: catIndex * 100 }}>
-                    <div class="w-full p-4 bg-white flex justify-between items-center hover:bg-secondary/50 transition-colors">
+                <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden transition-colors" in:fade={{ delay: catIndex * 100 }}>
+                    <div class="w-full p-4 bg-white dark:bg-gray-800 flex justify-between items-center hover:bg-secondary/50 dark:hover:bg-gray-700 transition-colors">
                         <!-- svelte-ignore a11y_click_events_have_key_events -->
                         <!-- svelte-ignore a11y_no_static_element_interactions -->
                         <div class="flex items-center gap-2 flex-1 cursor-pointer" onclick={() => state.toggleCategory(catIndex)}>
@@ -61,9 +61,9 @@
                                  aria-hidden="true">
                                 {@html icons.chevronDown}
                             </svg>
-                            <h2 class="text-lg font-bold text-text-main">{element.category}</h2>
+                            <h2 class="text-lg font-bold text-text-main dark:text-white transition-colors">{element.category}</h2>
                         </div>
-                        <button class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                        <button class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
                                 onclick={(e) => { e.stopPropagation(); state.deleteCategory(catIndex); }}
                                 aria-label="Supprimer la catégorie"
                                 title="Supprimer la catégorie">
@@ -74,8 +74,8 @@
                     </div>
                     
                     {#if isExpanded}
-                        <div class="divide-y divide-secondary" transition:fade={{ duration: 200 }}>
-                            <button class="w-full py-3 bg-secondary/30 text-primary text-sm font-bold flex items-center justify-center gap-2 hover:bg-secondary/50 transition-colors cursor-pointer"
+                        <div class="divide-y divide-secondary dark:divide-gray-700 transition-colors" transition:fade={{ duration: 200 }}>
+                            <button class="w-full py-3 bg-secondary/30 dark:bg-gray-700/30 text-primary text-sm font-bold flex items-center justify-center gap-2 hover:bg-secondary/50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
                                     onclick={() => state.openAddItemModal(element.category)}>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4" aria-hidden="true">
                                     {@html icons.plus}
@@ -86,14 +86,14 @@
                             {#each element.items as item, itemIndex}
                             <div class="p-4 flex items-center gap-3">
                                 <div class="flex-grow flex flex-col min-w-0">
-                                    <span class="text-text-main font-medium truncate">
+                                    <span class="text-text-main dark:text-white font-medium truncate transition-colors">
                                         {item.item}
                                     </span>
                                 </div>
 
                                 <!-- Controls -->
-                                <div class="flex items-center bg-secondary rounded-lg p-1">
-                                    <button class="w-8 h-8 flex items-center justify-center text-text-main hover:text-primary active:scale-95 transition-all cursor-pointer"
+                                <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-lg p-1 transition-colors">
+                                    <button class="w-8 h-8 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
                                             onclick={() => state.updateItemQuantity(catIndex, itemIndex, -1)}
                                             aria-label="Diminuer la quantité"
                                             title="Diminuer la quantité">
@@ -101,10 +101,10 @@
                                             {@html icons.minus}
                                         </svg>
                                     </button>
-                                    <span class="w-8 text-center font-bold text-text-main">
+                                    <span class="w-8 text-center font-bold text-text-main dark:text-white transition-colors">
                                         {item['wanted-quantity']}
                                     </span>
-                                    <button class="w-8 h-8 flex items-center justify-center text-text-main hover:text-primary active:scale-95 transition-all cursor-pointer"
+                                    <button class="w-8 h-8 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
                                             onclick={() => state.updateItemQuantity(catIndex, itemIndex, 1)}
                                             aria-label="Augmenter la quantité"
                                             title="Augmenter la quantité">
@@ -115,7 +115,7 @@
                                 </div>
 
                                 <!-- Delete item button -->
-                                <button class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0 cursor-pointer"
+                                <button class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0 cursor-pointer"
                                         onclick={() => state.deleteItem(catIndex, itemIndex)}
                                         aria-label="Supprimer l'élément"
                                         title="Supprimer l'élément">
@@ -151,18 +151,18 @@
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
                  transition:fade={{ duration: 200 }}
                  onclick={state.closeAddCategoryModal}>
-                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
                      transition:scale={{ duration: 300, start: 0.9 }}
                      onclick={(e) => e.stopPropagation()}
                      role="dialog"
                      aria-modal="true"
                      tabindex="-1">
                     <div class="p-8">
-                        <h2 class="text-2xl font-bold text-text-main mb-6 text-center">Nouvelle catégorie</h2>
+                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-6 text-center transition-colors">Nouvelle catégorie</h2>
                         
                         <div class="space-y-4">
                             <div>
-                                <label for="categoryName" class="block text-sm font-medium text-text-main/60 mb-1 ml-1 uppercase tracking-wider">Nom de la catégorie</label>
+                                <label for="categoryName" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider transition-colors">Nom de la catégorie</label>
                                 <input type="text" 
                                        id="categoryName"
                                        value={state.newCategoryName}
@@ -173,7 +173,7 @@
                                            input.value = filtered;
                                        }}
                                        placeholder="Ex: Bagages, Accessoires..."
-                                       class="w-full px-4 py-3 bg-secondary rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main placeholder:text-text-main/30"
+                                       class="w-full px-4 py-3 bg-secondary dark:bg-gray-700 rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main dark:text-white placeholder:text-text-main/30 dark:placeholder:text-gray-500 transition-colors"
                                        onkeydown={(e) => e.key === 'Enter' && state.newCategoryName.trim() && !state.categoryExists && state.addCategory()}>
                                 {#if state.categoryExists}
                                     <p class="mt-2 text-xs text-red-500 ml-1 font-medium" transition:fade>
@@ -189,7 +189,7 @@
                                     onclick={state.addCategory}>
                                 Ajouter
                             </button>
-                            <button class="w-full py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform cursor-pointer"
+                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform cursor-pointer transition-colors"
                                     onclick={state.closeAddCategoryModal}>
                                 Annuler
                             </button>
@@ -206,18 +206,18 @@
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
                  transition:fade={{ duration: 200 }}
                  onclick={state.closeAddItemModal}>
-                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
                      transition:scale={{ duration: 300, start: 0.9 }}
                      onclick={(e) => e.stopPropagation()}
                      role="dialog"
                      aria-modal="true"
                      tabindex="-1">
                     <div class="p-8">
-                        <h2 class="text-2xl font-bold text-text-main mb-6 text-center">Nouvel élément</h2>
+                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-6 text-center transition-colors">Nouvel élément</h2>
                         
                         <div class="space-y-4">
                             <div>
-                                <label for="itemName" class="block text-sm font-medium text-text-main/60 mb-1 ml-1 uppercase tracking-wider">Nom de l'élément</label>
+                                <label for="itemName" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider transition-colors">Nom de l'élément</label>
                                 <input type="text" 
                                        id="itemName"
                                        value={state.newItemName}
@@ -228,7 +228,7 @@
                                            input.value = filtered;
                                        }}
                                        placeholder="Ex: T-shirts, Couches..."
-                                       class="w-full px-4 py-3 bg-secondary rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main placeholder:text-text-main/30"
+                                       class="w-full px-4 py-3 bg-secondary dark:bg-gray-700 rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main dark:text-white placeholder:text-text-main/30 dark:placeholder:text-gray-500 transition-colors"
                                        onkeydown={(e) => e.key === 'Enter' && state.newItemName.trim() && !state.itemExists && state.addItem()}>
                                 {#if state.itemExists}
                                     <p class="mt-2 text-xs text-red-500 ml-1 font-medium" transition:fade>
@@ -238,9 +238,9 @@
                             </div>
 
                             <div>
-                                <label for="itemQuantity" class="block text-sm font-medium text-text-main/60 mb-1 ml-1 uppercase tracking-wider">Quantité par défaut</label>
-                                <div class="flex items-center bg-secondary rounded-xl p-1 w-fit">
-                                    <button class="w-10 h-10 flex items-center justify-center text-text-main hover:text-primary active:scale-95 transition-all cursor-pointer"
+                                <label for="itemQuantity" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider transition-colors">Quantité par défaut</label>
+                                <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-xl p-1 w-fit transition-colors">
+                                    <button class="w-10 h-10 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
                                             onclick={() => state.newItemQuantity = Math.max(1, state.newItemQuantity - 1)}
                                             aria-label="Diminuer la quantité"
                                             title="Diminuer la quantité">
@@ -252,8 +252,8 @@
                                            id="itemQuantity"
                                            bind:value={state.newItemQuantity}
                                            min="1"
-                                           class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-text-main">
-                                    <button class="w-10 h-10 flex items-center justify-center text-text-main hover:text-primary active:scale-95 transition-all cursor-pointer"
+                                           class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-text-main dark:text-white transition-colors">
+                                    <button class="w-10 h-10 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
                                             onclick={() => state.newItemQuantity = state.newItemQuantity + 1}
                                             aria-label="Augmenter la quantité"
                                             title="Augmenter la quantité">
@@ -271,7 +271,7 @@
                                     onclick={state.addItem}>
                                 Ajouter
                             </button>
-                            <button class="w-full py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform cursor-pointer"
+                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform cursor-pointer transition-colors"
                                     onclick={state.closeAddItemModal}>
                                 Annuler
                             </button>
@@ -283,7 +283,7 @@
     {:else}
         <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center" in:fade>
             <h1 class="text-2xl font-bold text-red-500">Modèle non trouvé</h1>
-            <p class="mt-2 text-text-main/60">Nous n'avons pas pu charger votre modèle.</p>
+            <p class="mt-2 text-text-main/60 dark:text-gray-400 transition-colors">Nous n'avons pas pu charger votre modèle.</p>
             <button onclick={state.quit} class="mt-8 px-6 py-3 bg-primary text-text-inverse rounded-xl font-bold shadow-lg active:scale-95 transition-transform cursor-pointer">
                 Retour aux modèles
             </button>

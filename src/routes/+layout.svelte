@@ -33,10 +33,11 @@
 </svelte:head>
 
 {#if showLayout}
-    <div class="min-h-screen bg-white text-text-main flex flex-col relative">
+    <div class="min-h-screen bg-white dark:bg-gray-900 text-text-main dark:text-white flex flex-col relative transition-colors duration-300">
         <!-- Header (Bandeau personnalisé) style maquette -->
         {#if showHeader}
-            <div class="sticky top-0 z-20 bg-white" transition:fade>
+            <div class="sticky top-0 z-20 bg-white dark:bg-gray-900" transition:fade>
+
                 <header class="m-2 sm:m-4 p-4 sm:p-6 bg-primary text-text-inverse shadow-lg rounded-[2rem] sm:rounded-[2.5rem]">
                     <div class="flex justify-between items-start">
                         {#if layoutState.user}
@@ -75,22 +76,29 @@
                                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">{layoutState.user.firstName}</h1>
                                 {/if}
                             </div>
-                        {:else}
-                            <div class="animate-pulse space-y-2">
-                                <div class="h-8 bg-white/20 rounded w-40"></div>
-                                <div class="h-4 bg-white/10 rounded w-56"></div>
-                            </div>
                         {/if}
 
-                        <button 
-                            onclick={layoutState.toggleLogoutModal}
-                            class="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer text-text-inverse mt-1"
-                            aria-label="Déconnexion"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 sm:w-8 sm:h-8">
-                                <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
+                        <div class="flex gap-1 items-center mt-1">
+                            <button 
+                                onclick={layoutState.toggleSettingsModal}
+                                class="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer text-text-inverse"
+                                aria-label="Paramètres"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 sm:w-8 sm:h-8">
+                                    <path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 0 0-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 0 0-2.282.819l-.922 1.597a1.875 1.875 0 0 0 .432 2.385l1.09.845c.12.093.18.232.193.376.016.182.024.367.024.553 0 .186-.008.37-.024.552-.013.145-.073.284-.193.377l-1.09.845a1.875 1.875 0 0 0-.432 2.385l.922 1.597a1.875 1.875 0 0 0 2.282.818l1.019-.382c.115-.043.283-.031.45.082.31.214.641.405.986.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.345-.165.675-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 0 0 2.28-.819l.923-1.597a1.875 1.875 0 0 0-.432-2.385l-1.09-.845c-.12-.093-.18-.232-.193-.377a7.483 7.483 0 0 0 0-1.104c.013-.145.073-.284.193-.377l1.09-.845a1.875 1.875 0 0 0 .432-2.385l-.923-1.597a1.875 1.875 0 0 0-2.28-.818l-1.02.382c-.115.043-.283.032-.45-.082a7.49 7.49 0 0 0-.985-.57c-.183-.088-.277-.228-.297-.349l-.178-1.071a1.875 1.875 0 0 0-1.85-1.567h-1.844ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <button 
+                                onclick={layoutState.toggleLogoutModal}
+                                class="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer text-text-inverse"
+                                aria-label="Déconnexion"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 sm:w-8 sm:h-8">
+                                    <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+
                     </div>
                 </header>
             </div>
@@ -101,21 +109,20 @@
             {@render children()}
         </main>
 
-        <!-- Menu fixe en bas -->
         {#if showNav}
-            <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-secondary pb-6 pt-2 grid grid-cols-4 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]" transition:fade>
+            <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-secondary dark:border-gray-800 pb-6 pt-2 grid grid-cols-4 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] transition-colors duration-300" transition:fade>
                 <!-- Accueil -->
                 <div class="flex justify-center">
                     <button 
                         onclick={() => goto(`${base}/accueil`)}
                         class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
                     >
-                        <div class="p-2 {page.url.pathname === `${base}/accueil` ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
+                        <div class="p-2 {page.url.pathname === `${base}/accueil` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} group-active:scale-95 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                                 <path d="M11.47 3.84a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 1-1.06 1.06l-1.06-1.06V18.3c0 .58-.45 1.06-1.03 1.06h-2.25c-.58 0-1.06-.48-1.06-1.06v-4.5c0-.58-.48-1.06-1.06-1.06h-1.5c-.58 0-1.06.48-1.06 1.06v4.5c0 .58-.48 1.06-1.06 1.06H6.75c-.58 0-1.06-.48-1.06-1.06v-5.75l-1.06 1.06a.75.75 0 0 1-1.06-1.06l8.69-8.69Z" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/accueil` ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Accueil</span>
+                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/accueil` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} uppercase tracking-widest">Accueil</span>
                     </button>
                 </div>
 
@@ -129,7 +136,7 @@
                                 <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Créer</span>
+                        <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Créer</span>
                     </button>
                 </div>
 
@@ -139,13 +146,13 @@
                         onclick={() => goto(`${base}/modeles`)}
                         class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
                     >
-                        <div class="p-2 {page.url.pathname === `${base}/modeles` ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
+                        <div class="p-2 {page.url.pathname === `${base}/modeles` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} group-active:scale-95 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                                 <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
                                 <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/modeles` ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Modèles</span>
+                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/modeles` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} uppercase tracking-widest">Modèles</span>
                     </button>
                 </div>
 
@@ -155,16 +162,17 @@
                         onclick={() => goto(`${base}/historique`)}
                         class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
                     >
-                        <div class="p-2 {page.url.pathname === `${base}/historique` ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
+                        <div class="p-2 {page.url.pathname === `${base}/historique` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} group-active:scale-95 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                                 <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/historique` ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Historique</span>
+                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/historique` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} uppercase tracking-widest">Historique</span>
                     </button>
                 </div>
             </nav>
         {/if}
+
 
         <!-- Modals Globaux -->
         <!-- Modal de création de checklist -->
@@ -177,18 +185,18 @@
                 onclick={layoutState.toggleCreateModal}
             >
                 <div 
-                    class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl"
+                    class="bg-white dark:bg-gray-800 rounded-[2rem] p-8 w-full max-w-sm shadow-2xl transition-colors duration-300"
                     transition:scale={{ duration: 200, start: 0.9 }}
                     onclick={(e) => e.stopPropagation()}
                     role="dialog"
                     aria-modal="true"
                     tabindex="-1"
                 >
-                    <h2 class="text-2xl font-bold mb-6 text-center text-text-main">Nouvelle checklist</h2>
+                    <h2 class="text-2xl font-bold mb-6 text-center text-text-main dark:text-white">Nouvelle checklist</h2>
                     
                     <div class="space-y-4">
                         <div>
-                            <label for="checklistName" class="block text-sm font-bold text-text-main/60 mb-1 ml-1 uppercase tracking-wider">
+                            <label for="checklistName" class="block text-sm font-bold text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider">
                                 Nom de la checklist
                             </label>
                             <input 
@@ -202,7 +210,7 @@
                                     input.value = filtered;
                                 }}
                                 placeholder="Ex: Vacances d'été"
-                                class="w-full p-4 bg-secondary rounded-2xl border-2 border-transparent focus:border-primary outline-none transition-all font-medium"
+                                class="w-full p-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl border-2 border-transparent focus:border-primary outline-none transition-all font-medium"
                                 maxlength="50"
                             />
                             {#if layoutState.nameError}
@@ -211,13 +219,13 @@
                         </div>
 
                         <div>
-                            <label for="model" class="block text-sm font-bold text-text-main/60 mb-1 ml-1 uppercase tracking-wider">
+                            <label for="model" class="block text-sm font-bold text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider">
                                 Modèle
                             </label>
                             <select 
                                 id="model"
                                 bind:value={layoutState.selectedModel}
-                                class="w-full p-4 bg-secondary rounded-2xl border-2 border-transparent focus:border-primary outline-none transition-all font-medium appearance-none"
+                                class="w-full p-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl border-2 border-transparent focus:border-primary outline-none transition-all font-medium appearance-none"
                             >
                                 <option value="" disabled selected>Choisir un modèle</option>
                                 {#each layoutState.availableModels as model}
@@ -246,11 +254,56 @@
                             </button>
                             <button 
                                 onclick={layoutState.toggleCreateModal}
-                                class="w-full py-4 px-4 bg-secondary text-text-main rounded-2xl font-bold hover:bg-gray-200 transition-colors cursor-pointer"
+                                class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
                             >
                                 Annuler
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
+
+        <!-- Modal de paramètres -->
+        {#if layoutState.showSettingsModal}
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <div 
+                class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+                transition:fade={{ duration: 200 }}
+                onclick={layoutState.toggleSettingsModal}
+            >
+                <div 
+                    class="bg-white dark:bg-gray-800 rounded-[2rem] p-8 w-full max-w-sm shadow-2xl transition-colors duration-300"
+                    transition:scale={{ duration: 200, start: 0.9 }}
+                    onclick={(e) => e.stopPropagation()}
+                    role="dialog"
+                    aria-modal="true"
+                    tabindex="-1"
+                >
+                    <h2 class="text-2xl font-bold mb-6 text-center text-text-main dark:text-white">Paramètres</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-text-main dark:text-gray-200">Mode sombre</span>
+                            <button 
+                                onclick={layoutState.toggleDarkMode}
+                                class="relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none {layoutState.isDarkMode ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'}"
+                                aria-label="Basculer le mode sombre"
+                            >
+                                <span class="sr-only">Mode sombre</span>
+                                <span 
+                                    class="inline-block h-5 w-5 transform rounded-full bg-white transition-transform {layoutState.isDarkMode ? 'translate-x-6' : 'translate-x-1'}"
+                                ></span>
+                            </button>
+                        </div>
+
+                        <button 
+                            onclick={layoutState.toggleSettingsModal}
+                            class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+                        >
+                            Fermer
+                        </button>
                     </div>
                 </div>
             </div>
@@ -266,14 +319,14 @@
                 onclick={layoutState.toggleLogoutModal}
             >
                 <div 
-                    class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl"
+                    class="bg-white dark:bg-gray-800 rounded-[2rem] p-8 w-full max-w-sm shadow-2xl transition-colors duration-300"
                     transition:scale={{ duration: 200, start: 0.9 }}
                     onclick={(e) => e.stopPropagation()}
                     role="dialog"
                     aria-modal="true"
                     tabindex="-1"
                 >
-                    <h2 class="text-2xl font-bold mb-2 text-center text-text-main">Se déconnecter ?</h2>
+                    <h2 class="text-2xl font-bold mb-2 text-center text-text-main dark:text-white">Se déconnecter ?</h2>
                     <div class="flex flex-col gap-3">
                         <button 
                             onclick={layoutState.logout}
@@ -283,7 +336,7 @@
                         </button>
                         <button 
                             onclick={layoutState.toggleLogoutModal}
-                            class="w-full py-4 px-4 bg-secondary text-text-main rounded-2xl font-bold hover:bg-gray-200 transition-colors cursor-pointer"
+                            class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
                         >
                             Annuler
                         </button>
@@ -291,6 +344,7 @@
                 </div>
             </div>
         {/if}
+
     </div>
 {:else}
     {@render children()}

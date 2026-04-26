@@ -26,13 +26,13 @@
     }
 </script>
 
-<div in:fade={{ duration: 300 }} class="p-6">
+<div in:fade={{ duration: 300 }} class="p-6 transition-colors duration-300">
     <div class="mt-4">
         <div class="mb-6">
-            <h2 class="text-lg font-bold text-text-main uppercase tracking-wider text-sm opacity-60 mb-4">Modèles de checklist</h2>
+            <h2 class="text-lg font-bold text-text-main dark:text-white uppercase tracking-wider text-sm opacity-60 mb-4 transition-colors">Modèles de checklist</h2>
             
             {#if !state.isLoadingModels && state.models.length > 0}
-                <button class="w-full py-4 bg-white rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors active:scale-95 cursor-pointer"
+                <button class="w-full py-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors active:scale-95 cursor-pointer"
                         onclick={state.toggleCreateModal}
                         in:fade>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
@@ -46,7 +46,7 @@
         {#if state.isLoadingModels}
             <div class="space-y-4">
                 {#each Array(3) as _}
-                    <div class="h-24 bg-secondary rounded-[2rem] animate-pulse"></div>
+                    <div class="h-24 bg-secondary dark:bg-gray-800 rounded-[2rem] animate-pulse transition-colors"></div>
                 {/each}
             </div>
         {:else if state.models.length > 0}
@@ -54,15 +54,15 @@
                 {#each state.models as model}
                     <div class="relative group">
                         <button 
-                            class="w-full text-left p-6 bg-white border-2 border-secondary rounded-[2rem] hover:border-primary/30 transition-all active:scale-[0.98] cursor-pointer"
+                            class="w-full text-left p-6 bg-white dark:bg-gray-800 border-2 border-secondary dark:border-gray-700 rounded-[2rem] hover:border-primary/30 dark:hover:border-primary/50 transition-all active:scale-[0.98] cursor-pointer"
                             onclick={() => goto(`${base}/modeles/${model.modelId}/`)}
                         >
                             <div class="flex justify-between items-center pr-12">
                                 <div>
-                                    <h3 class="font-bold text-lg text-text-main group-hover:text-primary transition-colors">{model.modelName}</h3>
+                                    <h3 class="font-bold text-lg text-text-main dark:text-white group-hover:text-primary transition-colors">{model.modelName}</h3>
                                     <div class="flex flex-col">
-                                        <p class="text-[11px] text-text-main/40 font-medium">Créé le {formatDate(model.modelCreationDate)}</p>
-                                        <p class="text-[11px] text-text-main/40 font-medium">Modifié le {formatDate(model.modelLastModifiedDate)}</p>
+                                        <p class="text-[11px] text-text-main/40 dark:text-gray-500 font-medium transition-colors">Créé le {formatDate(model.modelCreationDate)}</p>
+                                        <p class="text-[11px] text-text-main/40 dark:text-gray-500 font-medium transition-colors">Modifié le {formatDate(model.modelLastModifiedDate)}</p>
                                     </div>
                                 </div>
                             </div>
@@ -86,13 +86,13 @@
                 {/each}
             </div>
         {:else}
-            <div class="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed border-secondary rounded-3xl">
-                <div class="p-4 bg-secondary rounded-full mb-4">
+            <div class="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed border-secondary dark:border-gray-700 rounded-3xl transition-colors">
+                <div class="p-4 bg-secondary dark:bg-gray-800 rounded-full mb-4 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-primary opacity-40">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                     </svg>
                 </div>
-                <p class="text-gray-500 font-medium text-center">Aucun modèle de checklist pour le moment.</p>
+                <p class="text-gray-500 dark:text-gray-400 font-medium text-center transition-colors">Aucun modèle de checklist pour le moment.</p>
                 <button 
                     onclick={state.toggleCreateModal}
                     class="mt-6 px-6 py-3 bg-primary text-text-inverse font-bold rounded-2xl shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all cursor-pointer"
@@ -114,18 +114,18 @@
         onclick={state.toggleCreateModal}
     >
         <div 
-            class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl"
+            class="bg-white dark:bg-gray-800 rounded-[2rem] p-8 w-full max-w-sm shadow-2xl transition-colors duration-300"
             transition:scale={{ duration: 200, start: 0.9 }}
             onclick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             tabindex="-1"
         >
-            <h2 class="text-2xl font-bold mb-6 text-center text-text-main">Nouveau modèle</h2>
+            <h2 class="text-2xl font-bold mb-6 text-center text-text-main dark:text-white transition-colors">Nouveau modèle</h2>
             
             <div class="space-y-4">
                 <div>
-                    <label for="modelName" class="block text-sm font-bold text-text-main/60 mb-1 ml-1 uppercase tracking-wider">
+                    <label for="modelName" class="block text-sm font-bold text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider transition-colors">
                         Nom du modèle
                     </label>
                     <input 
@@ -139,7 +139,7 @@
                             input.value = filtered;
                         }}
                         placeholder="Ex: Voyage Pro"
-                        class="w-full p-4 bg-secondary rounded-2xl border-2 border-transparent focus:border-primary outline-none transition-all font-medium"
+                        class="w-full p-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl border-2 border-transparent focus:border-primary outline-none transition-all font-medium"
                         maxlength="50"
                         onkeydown={(e) => e.key === 'Enter' && state.createModel()}
                     />
@@ -168,7 +168,7 @@
                     </button>
                     <button 
                         onclick={state.toggleCreateModal}
-                        class="w-full py-4 px-4 bg-secondary text-text-main rounded-2xl font-bold hover:bg-gray-200 transition-colors cursor-pointer"
+                        class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
                     >
                         Annuler
                     </button>
@@ -188,7 +188,7 @@
         onclick={state.cancelDelete}
     >
         <div 
-            class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl"
+            class="bg-white dark:bg-gray-800 rounded-[2rem] p-8 w-full max-w-sm shadow-2xl transition-colors duration-300"
             transition:scale={{ duration: 200, start: 0.9 }}
             onclick={(e) => e.stopPropagation()}
             role="dialog"
@@ -196,14 +196,14 @@
             tabindex="-1"
         >
             <div class="flex flex-col items-center mb-6">
-                <div class="p-4 bg-red-500/10 text-red-500 rounded-full mb-4">
+                <div class="p-4 bg-red-500/10 text-red-500 rounded-full mb-4 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
                         <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Zm4.33.25a.75.75 0 0 0-1.5-.085l-.5 8.5a.75.75 0 0 0 1.5.085l.5-8.5Z" clip-rule="evenodd" />
                     </svg>
                 </div>
-                <h2 class="text-xl font-bold text-center text-text-main">Supprimer le modèle ?</h2>
-                <p class="text-text-main/60 text-center mt-2 font-medium">
-                    Attention : la suppression du modèle <span class="text-text-main font-bold italic">"{state.modelToDelete.modelName}"</span> est définitive.
+                <h2 class="text-xl font-bold text-center text-text-main dark:text-white transition-colors">Supprimer le modèle ?</h2>
+                <p class="text-text-main/60 dark:text-gray-400 text-center mt-2 font-medium transition-colors">
+                    Attention : la suppression du modèle <span class="text-text-main dark:text-white font-bold italic transition-colors">"{state.modelToDelete.modelName}"</span> est définitive.
                 </p>
             </div>
             
@@ -216,7 +216,7 @@
                 </button>
                 <button 
                     onclick={state.cancelDelete}
-                    class="w-full py-4 px-4 bg-secondary text-text-main rounded-2xl font-bold hover:bg-gray-200 transition-colors cursor-pointer"
+                    class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
                 >
                     Annuler
                 </button>

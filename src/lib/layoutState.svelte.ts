@@ -6,8 +6,11 @@ export function createLayoutState() {
     let user = $state<User | null>(null);
     let showLogoutModal = $state(false);
     let showCreateModal = $state(false);
+    let showSettingsModal = $state(false);
+    let isDarkMode = $state(false);
     
     let checklistName = $state('');
+
     let selectedModel = $state('');
     let availableModels = $state<{ name: string, file?: string, id?: number }[]>([]);
     let nameError = $state('');
@@ -35,20 +38,48 @@ export function createLayoutState() {
         const idStr = localStorage.getItem('currentUserId');
         if (!idStr) {
             user = null;
+            applyDarkMode(false);
             return null;
         }
         const u = await db.users.get(parseInt(idStr));
         if (u) {
             user = u;
+            // Charger la préférence de mode sombre
+            const savedDarkMode = localStorage.getItem(`darkMode_${user.id}`);
+            isDarkMode = savedDarkMode === 'true';
+            applyDarkMode(isDarkMode);
         } else {
             user = null;
+            applyDarkMode(false);
         }
         
         await loadAvailableModels();
         return user;
     }
 
+    function applyDarkMode(enabled: boolean) {
+        if (typeof document !== 'undefined') {
+            if (enabled) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+    }
+
+    function toggleSettingsModal() {
+        showSettingsModal = !showSettingsModal;
+    }
+
+    function toggleDarkMode() {
+        if (!user) return;
+        isDarkMode = !isDarkMode;
+        localStorage.setItem(`darkMode_${user.id}`, String(isDarkMode));
+        applyDarkMode(isDarkMode);
+    }
+
     async function checkNameExists(name: string) {
+
         if (!user) return false;
         const count = await db.checklists
             .where({ userId: user.id, checklistName: name })
@@ -141,6 +172,9 @@ export function createLayoutState() {
         localStorage.removeItem('currentUserId');
         user = null;
         showLogoutModal = false;
+        showSettingsModal = false;
+        isDarkMode = false;
+        applyDarkMode(false);
         goto(`${base}/`);
     }
 
@@ -149,7 +183,10 @@ export function createLayoutState() {
         set user(val) { user = val; },
         get showLogoutModal() { return showLogoutModal; },
         get showCreateModal() { return showCreateModal; },
+        get showSettingsModal() { return showSettingsModal; },
+        get isDarkMode() { return isDarkMode; },
         get checklistName() { return checklistName; },
+
         get selectedModel() { return selectedModel; },
         get availableModels() { return availableModels; },
         get nameError() { return nameError; },
@@ -165,9 +202,12 @@ export function createLayoutState() {
         logout,
         toggleLogoutModal,
         toggleCreateModal,
+        toggleSettingsModal,
+        toggleDarkMode,
         createChecklist,
         loadAvailableModels
     };
 }
+
 
 export const layoutState = createLayoutState();

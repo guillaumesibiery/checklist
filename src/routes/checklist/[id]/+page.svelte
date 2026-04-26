@@ -26,7 +26,7 @@
     }
 </script>
 
-<div class="min-h-screen bg-secondary pb-24">
+<div class="min-h-screen bg-secondary dark:bg-gray-900 pb-24 transition-colors duration-300">
     {#if state.loading}
         <div class="fixed top-0 left-0 right-0 h-24 bg-primary p-4 z-10 shadow-lg flex flex-col justify-end">
             <div class="animate-pulse h-6 bg-white/20 rounded w-1/2 mb-4"></div>
@@ -34,10 +34,10 @@
         </div>
         <div class="pt-28 px-4 space-y-6">
             {#each Array(3) as _}
-                <div class="bg-white rounded-2xl p-4 shadow-sm animate-pulse">
-                    <div class="h-6 bg-secondary rounded w-1/3 mb-4"></div>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm animate-pulse transition-colors">
+                    <div class="h-6 bg-secondary dark:bg-gray-700 rounded w-1/3 mb-4 transition-colors"></div>
                     {#each Array(4) as _}
-                        <div class="h-12 bg-secondary rounded w-full mt-2"></div>
+                        <div class="h-12 bg-secondary dark:bg-gray-700 rounded w-full mt-2 transition-colors"></div>
                     {/each}
                 </div>
             {/each}
@@ -57,7 +57,7 @@
         <!-- Content -->
         <main class="pt-36 px-4 space-y-6">
             {#if !state.readOnly}
-                <button class="w-full py-4 bg-white rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors active:scale-95"
+                <button class="w-full py-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors active:scale-95"
                         onclick={state.openAddCategoryModal}
                         in:fade>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
@@ -69,8 +69,12 @@
 
             {#each state.checklist.elements as element, catIndex}
                 {@const isExpanded = state.expandedCategories.has(catIndex)}
-                <section class="bg-white rounded-2xl shadow-sm overflow-hidden" in:fade={{ delay: catIndex * 100 }}>
-                    <button class="w-full p-4 bg-white flex justify-between items-center hover:bg-secondary/50 transition-colors cursor-pointer"
+                <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden transition-colors" in:fade={{ delay: catIndex * 100 }}>
+                    <!-- svelte-ignore a11y_no_static_element_interactions -->
+                    <!-- svelte-ignore a11y_click_events_have_key_events -->
+                    <div class="w-full p-4 bg-white dark:bg-gray-800 flex justify-between items-center hover:bg-secondary/50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                            role="button"
+                            tabindex="0"
                             onclick={() => state.toggleCategory(catIndex)}>
                         <div class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
@@ -78,14 +82,14 @@
                                  class:rotate-180={!isExpanded}>
                                 {@html icons.chevronDown}
                             </svg>
-                            <h2 class="text-lg font-bold text-text-main">{element.category}</h2>
+                            <h2 class="text-lg font-bold text-text-main dark:text-white transition-colors">{element.category}</h2>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
                                 {element.progress}%
                             </span>
                             {#if (element.addedByUser === "true" || element.addedByUser === true) && !state.readOnly}
-                                <button class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                <button class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
                                         onclick={(e) => { e.stopPropagation(); state.deleteCategory(catIndex); }}
                                         aria-label="Supprimer la catégorie">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
@@ -94,12 +98,12 @@
                                 </button>
                             {/if}
                         </div>
-                    </button>
+                    </div>
                     
                     {#if isExpanded}
-                        <div class="divide-y divide-secondary" transition:fade={{ duration: 200 }}>
+                        <div class="divide-y divide-secondary dark:divide-gray-700 transition-colors" transition:fade={{ duration: 200 }}>
                             {#if (element.addedByUser === "true" || element.addedByUser === true) && !state.readOnly}
-                                <button class="w-full py-3 bg-secondary/30 text-primary text-sm font-bold flex items-center justify-center gap-2 hover:bg-secondary/50 transition-colors"
+                                <button class="w-full py-3 bg-secondary/30 dark:bg-gray-700/30 text-primary text-sm font-bold flex items-center justify-center gap-2 hover:bg-secondary/50 dark:hover:bg-gray-700/50 transition-colors"
                                         onclick={() => state.openAddItemModal(element.category)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                         {@html icons.plus}
@@ -122,12 +126,12 @@
 
                                 <!-- Item Name & Quantity Info -->
                                 <div class="flex-grow flex flex-col min-w-0">
-                                    <span class="text-text-main font-medium truncate" 
+                                    <span class="text-text-main dark:text-white font-medium truncate transition-colors" 
                                           class:line-through={isDisabled}>
                                         {item.item}
                                     </span>
                                     {#if parseInt(item['wanted-quantity'].toString()) > 1}
-                                        <span class="text-xs text-text-main/50" class:line-through={isDisabled}>
+                                        <span class="text-xs text-text-main/50 dark:text-gray-400 transition-colors" class:line-through={isDisabled}>
                                             Quantité : {item['wanted-quantity']}
                                         </span>
                                     {/if}
@@ -137,28 +141,32 @@
                                 {#if !isDisabled && !state.readOnly}
                                     <div class="flex items-center gap-2" in:scale>
                                         {#if parseInt(item['wanted-quantity'].toString()) === 1}
-                                            <button class="w-12 h-6 rounded-full relative transition-colors duration-300"
+                                            <button class="w-12 h-6 rounded-full relative transition-colors duration-300 cursor-pointer"
                                                     class:bg-primary={parseInt(item['added-quantity'].toString()) === 1}
                                                     class:bg-secondary={parseInt(item['added-quantity'].toString()) === 0}
-                                                    onclick={() => state.toggleItem(catIndex, itemIndex)}>
+                                                    class:dark:bg-gray-700={parseInt(item['added-quantity'].toString()) === 0}
+                                                    onclick={() => state.toggleItem(catIndex, itemIndex)}
+                                                    aria-label="Cocher l'élément">
                                                 <div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 shadow-sm"
                                                      class:translate-x-6={parseInt(item['added-quantity'].toString()) === 1}>
                                                 </div>
                                             </button>
                                         {:else}
-                                            <div class="flex items-center bg-secondary rounded-lg p-1">
-                                                <button class="w-8 h-8 flex items-center justify-center text-text-main hover:text-primary active:scale-95 transition-all"
-                                                        onclick={() => state.updateQuantity(catIndex, itemIndex, -1)}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                                            <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-lg p-1 transition-colors">
+                                                <button class="w-8 h-8 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
+                                                        onclick={() => state.updateQuantity(catIndex, itemIndex, -1)}
+                                                        aria-label="Diminuer la quantité">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" aria-hidden="true">
                                                         {@html icons.minus}
                                                     </svg>
                                                 </button>
-                                                <span class="w-8 text-center font-bold text-text-main">
+                                                <span class="w-8 text-center font-bold text-text-main dark:text-white transition-colors">
                                                     {item['added-quantity']}
                                                 </span>
-                                                <button class="w-8 h-8 flex items-center justify-center text-text-main hover:text-primary active:scale-95 transition-all"
-                                                        onclick={() => state.updateQuantity(catIndex, itemIndex, 1)}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                                                <button class="w-8 h-8 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
+                                                        onclick={() => state.updateQuantity(catIndex, itemIndex, 1)}
+                                                        aria-label="Augmenter la quantité">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" aria-hidden="true">
                                                         {@html icons.plus}
                                                     </svg>
                                                 </button>
@@ -169,7 +177,7 @@
 
                                 <!-- Delete item button -->
                                 {#if (item.addedByUser === "true" || item.addedByUser === true) && !state.readOnly}
-                                    <button class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                                    <button class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0"
                                             onclick={() => state.deleteItem(catIndex, itemIndex)}
                                             aria-label="Supprimer l'élément">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
@@ -218,7 +226,7 @@
         {#if state.isFinalizeModalOpen}
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
                  transition:fade={{ duration: 200 }}>
-                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
                      transition:scale={{ duration: 300, start: 0.9 }}
                      role="dialog"
                      aria-modal="true">
@@ -228,14 +236,14 @@
                                 {@html icons.check}
                             </svg>
                         </div>
-                        <h2 class="text-2xl font-bold text-text-main mb-4">Finaliser la checklist ?</h2>
+                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-4 transition-colors">Finaliser la checklist ?</h2>
                         
                         {#if state.checklist.progress !== '100'}
-                            <p class="text-text-main/60 mb-8 px-4">
+                            <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 transition-colors">
                                 Attention : votre checklist n'est pas encore terminée (<span class="text-primary font-bold">{state.checklist.progress}%</span>). Voulez-vous tout de même la finaliser ?
                             </p>
                         {:else}
-                            <p class="text-text-main/60 mb-8 px-4">
+                            <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 transition-colors">
                                 Félicitations ! Votre checklist est terminée à <span class="text-primary font-bold">100%</span>. Voulez-vous la classer dans l'historique ?
                             </p>
                         {/if}
@@ -245,7 +253,7 @@
                                     onclick={state.finalize}>
                                 Valider
                             </button>
-                            <button class="w-full py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform"
+                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform transition-colors"
                                     onclick={state.closeFinalizeModal}>
                                 Annuler
                             </button>
@@ -259,7 +267,7 @@
         {#if state.isShareModalOpen}
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
                  transition:fade={{ duration: 200 }}>
-                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
                      transition:scale={{ duration: 300, start: 0.9 }}
                      role="dialog"
                      aria-modal="true">
@@ -269,8 +277,8 @@
                                 {@html icons.share}
                             </svg>
                         </div>
-                        <h2 class="text-2xl font-bold text-text-main mb-4">Partager les éléments manquants ?</h2>
-                        <p class="text-text-main/60 mb-8 px-4">
+                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-4 transition-colors">Partager les éléments manquants ?</h2>
+                        <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 transition-colors">
                             Souhaitez-vous partager la liste des éléments dont la quantité n'est pas encore atteinte ?
                         </p>
 
@@ -279,7 +287,7 @@
                                     onclick={state.openShareOptionsModal}>
                                 Valider
                             </button>
-                            <button class="w-full py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform"
+                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform transition-colors"
                                     onclick={state.closeShareModal}>
                                 Annuler
                             </button>
@@ -293,48 +301,48 @@
         {#if state.isShareOptionsModalOpen}
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
                  transition:fade={{ duration: 200 }}>
-                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
                      transition:scale={{ duration: 300, start: 0.9 }}
                      role="dialog"
                      aria-modal="true">
                     <div class="p-8">
-                        <h2 class="text-2xl font-bold text-text-main mb-6 text-center">Partager via...</h2>
+                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-6 text-center transition-colors">Partager via...</h2>
                         
                         <div class="grid gap-4" class:grid-cols-1={!state.isMobile} class:grid-cols-3={state.isMobile}>
                             {#if state.isMobile}
-                                <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary transition-colors group"
+                                <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group"
                                         onclick={state.shareViaWhatsApp}>
                                     <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
                                             {@html icons.whatsapp}
                                         </svg>
                                     </div>
-                                    <span class="text-[10px] font-bold text-text-main uppercase tracking-tighter">WhatsApp</span>
+                                    <span class="text-[10px] font-bold text-text-main dark:text-gray-300 uppercase tracking-tighter transition-colors">WhatsApp</span>
                                 </button>
 
-                                <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary transition-colors group"
+                                <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group"
                                         onclick={state.shareViaSMS}>
                                     <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
                                             {@html icons.sms}
                                         </svg>
                                     </div>
-                                    <span class="text-[10px] font-bold text-text-main uppercase tracking-tighter">SMS</span>
+                                    <span class="text-[10px] font-bold text-text-main dark:text-gray-300 uppercase tracking-tighter transition-colors">SMS</span>
                                 </button>
                             {/if}
 
-                            <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary transition-colors group"
+                            <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group"
                                     onclick={state.shareViaEmail}>
                                 <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
                                         {@html icons.email}
                                     </svg>
                                 </div>
-                                <span class="text-[10px] font-bold text-text-main uppercase tracking-tighter">Email</span>
+                                <span class="text-[10px] font-bold text-text-main dark:text-gray-300 uppercase tracking-tighter transition-colors">Email</span>
                             </button>
                         </div>
 
-                        <button class="w-full mt-8 py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform"
+                        <button class="w-full mt-8 py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform transition-colors"
                                 onclick={state.closeShareOptionsModal}>
                             Fermer
                         </button>
@@ -347,16 +355,16 @@
         {#if state.isAddCategoryModalOpen}
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
                  transition:fade={{ duration: 200 }}>
-                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
                      transition:scale={{ duration: 300, start: 0.9 }}
                      role="dialog"
                      aria-modal="true">
                     <div class="p-8">
-                        <h2 class="text-2xl font-bold text-text-main mb-6 text-center">Nouvelle catégorie</h2>
+                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-6 text-center transition-colors">Nouvelle catégorie</h2>
                         
                         <div class="space-y-4">
                             <div>
-                                <label for="categoryName" class="block text-sm font-medium text-text-main/60 mb-1 ml-1">Nom de la catégorie</label>
+                                <label for="categoryName" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 transition-colors">Nom de la catégorie</label>
                                 <input type="text" 
                                        id="categoryName"
                                        value={state.newCategoryName}
@@ -367,7 +375,7 @@
                                            input.value = filtered;
                                        }}
                                        placeholder="Ex: Bagages, Accessoires..."
-                                       class="w-full px-4 py-3 bg-secondary rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main placeholder:text-text-main/30"
+                                       class="w-full px-4 py-3 bg-secondary dark:bg-gray-700 rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main dark:text-white placeholder:text-text-main/30 dark:placeholder:text-gray-500 transition-colors"
                                        onkeydown={(e) => e.key === 'Enter' && state.newCategoryName.trim() && !state.categoryExists && state.addCategory()}
                                        autofocus>
                                 {#if state.categoryExists}
@@ -384,7 +392,7 @@
                                     onclick={state.addCategory}>
                                 Ajouter
                             </button>
-                            <button class="w-full py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform"
+                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform transition-colors"
                                     onclick={state.closeAddCategoryModal}>
                                 Annuler
                             </button>
@@ -398,16 +406,16 @@
         {#if state.isAddItemModalOpen}
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
                  transition:fade={{ duration: 200 }}>
-                <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
+                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
                      transition:scale={{ duration: 300, start: 0.9 }}
                      role="dialog"
                      aria-modal="true">
                     <div class="p-8">
-                        <h2 class="text-2xl font-bold text-text-main mb-6 text-center">Nouvel élément</h2>
+                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-6 text-center transition-colors">Nouvel élément</h2>
                         
                         <div class="space-y-4">
                             <div>
-                                <label for="itemName" class="block text-sm font-medium text-text-main/60 mb-1 ml-1">Nom de l'élément</label>
+                                <label for="itemName" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 transition-colors">Nom de l'élément</label>
                                 <input type="text" 
                                        id="itemName"
                                        value={state.newItemName}
@@ -418,7 +426,7 @@
                                            input.value = filtered;
                                        }}
                                        placeholder="Ex: T-shirts, Couches..."
-                                       class="w-full px-4 py-3 bg-secondary rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main placeholder:text-text-main/30"
+                                       class="w-full px-4 py-3 bg-secondary dark:bg-gray-700 rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main dark:text-white placeholder:text-text-main/30 dark:placeholder:text-gray-500 transition-colors"
                                        onkeydown={(e) => e.key === 'Enter' && state.newItemName.trim() && !state.itemExists && state.addItem()}
                                        autofocus>
                                 {#if state.itemExists}
@@ -429,9 +437,9 @@
                             </div>
 
                             <div>
-                                <label for="itemQuantity" class="block text-sm font-medium text-text-main/60 mb-1 ml-1">Quantité attendue</label>
-                                <div class="flex items-center bg-secondary rounded-xl p-1 w-fit">
-                                    <button class="w-10 h-10 flex items-center justify-center text-text-main hover:text-primary active:scale-95 transition-all"
+                                <label for="itemQuantity" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 transition-colors">Quantité attendue</label>
+                                <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-xl p-1 w-fit transition-colors">
+                                    <button class="w-10 h-10 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all"
                                             onclick={() => state.newItemQuantity = Math.max(1, state.newItemQuantity - 1)}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                             {@html icons.minus}
@@ -441,8 +449,8 @@
                                            id="itemQuantity"
                                            bind:value={state.newItemQuantity}
                                            min="1"
-                                           class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-text-main">
-                                    <button class="w-10 h-10 flex items-center justify-center text-text-main hover:text-primary active:scale-95 transition-all"
+                                           class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-text-main dark:text-white transition-colors">
+                                    <button class="w-10 h-10 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all"
                                             onclick={() => state.newItemQuantity = state.newItemQuantity + 1}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                             {@html icons.plus}
@@ -458,7 +466,7 @@
                                     onclick={state.addItem}>
                                 Ajouter
                             </button>
-                            <button class="w-full py-4 bg-secondary text-text-main rounded-2xl font-bold text-lg active:scale-95 transition-transform"
+                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform transition-colors"
                                     onclick={state.closeAddItemModal}>
                                 Annuler
                             </button>
@@ -470,7 +478,7 @@
     {:else}
         <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center" in:fade>
             <h1 class="text-2xl font-bold text-red-500">Checklist non trouvée</h1>
-            <p class="mt-2 text-text-main/60">Nous n'avons pas pu charger votre checklist.</p>
+            <p class="mt-2 text-text-main/60 dark:text-gray-400 transition-colors">Nous n'avons pas pu charger votre checklist.</p>
             <button onclick={state.quit} class="mt-8 px-6 py-3 bg-primary text-text-inverse rounded-xl font-bold shadow-lg active:scale-95 transition-transform">
                 Retour à l'accueil
             </button>
