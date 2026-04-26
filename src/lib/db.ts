@@ -35,6 +35,7 @@ export interface Checklist {
 
 export interface Model {
     id?: number;
+    modelId: string;
     modelName: string;
     modelCreationDate: string;
     modelLastModifiedDate: string;
@@ -55,10 +56,10 @@ export class ChecklistDatabase extends Dexie {
 
     constructor() {
         super('ChecklistDB');
-        this.version(3).stores({
+        this.version(4).stores({
             users: '++id, &firstName',
             checklists: '++id, checklistId, userId, checklistName',
-            models: '++id, userId, modelName'
+            models: '++id, modelId, userId, modelName'
         });
     }
 }

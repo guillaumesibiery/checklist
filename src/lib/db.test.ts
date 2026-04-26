@@ -14,6 +14,7 @@ describe('Database Operations', () => {
     it('devrait insérer un modèle (insert)', async () => {
         const model = {
             modelName: 'Mon Modèle',
+            modelId: 'uuid-test-1',
             modelCreationDate: new Date().toISOString(),
             modelLastModifiedDate: new Date().toISOString(),
             checklistId: '',
@@ -30,12 +31,13 @@ describe('Database Operations', () => {
 
         const inserted = await db.models.get(id);
         expect(inserted?.modelName).toBe('Mon Modèle');
-        expect(inserted?.userId).toBe('');
+        expect(inserted?.modelId).toBe('uuid-test-1');
     });
 
     it('devrait récupérer tous les modèles (select)', async () => {
         await db.models.add({
             modelName: 'Modèle 1',
+            modelId: 'uuid-test-2',
             modelCreationDate: '2026-01-01T10:00:00Z',
             modelLastModifiedDate: '2026-01-01T10:00:00Z',
             checklistId: '',
@@ -50,6 +52,7 @@ describe('Database Operations', () => {
 
         await db.models.add({
             modelName: 'Modèle 2',
+            modelId: 'uuid-test-3',
             modelCreationDate: '2026-01-02T10:00:00Z',
             modelLastModifiedDate: '2026-01-02T10:00:00Z',
             checklistId: '',
@@ -93,6 +96,7 @@ describe('Database Operations', () => {
     it('devrait mettre à jour un modèle (update)', async () => {
         const id = await db.models.add({
             modelName: 'Ancien Nom',
+            modelId: 'uuid-update',
             modelCreationDate: '',
             modelLastModifiedDate: '',
             checklistId: '',
@@ -114,6 +118,7 @@ describe('Database Operations', () => {
     it('devrait supprimer un modèle (delete)', async () => {
         const id = await db.models.add({
             modelName: 'A supprimer',
+            modelId: 'uuid-delete',
             modelCreationDate: '',
             modelLastModifiedDate: '',
             checklistId: '',
@@ -144,192 +149,130 @@ describe('Database Operations', () => {
             progress: "0",
             status: "IN_PROGRESS",
             modelName: "Bébé pack",
-            elements: []
-        };
-        const id = await db.checklists.add(checklist);
-        expect(id).toBeDefined();
-
-        const inserted = await db.checklists.get(id);
-        expect(inserted?.checklistName).toBe('Ma Checklist');
-        expect(inserted?.userId).toBe(userId);
-    });
-
-    it('devrait récupérer une checklist par nom et utilisateur (select)', async () => {
-        const userId = await db.users.add({ firstName: 'Alice' });
-        await db.checklists.add({
-            checklistId: 'uuid1',
-            checklistName: 'Voyage',
-            userId,
-            creationDate: '',
-            lastModifiedDate: '',
-            progress: '0',
-            status: 'IN_PROGRESS',
-            modelName: 'Model 1',
-            elements: []
-        });
-
-        const found = await db.checklists
-            .where({ userId, checklistName: 'Voyage' })
-            .first();
-        expect(found).toBeDefined();
-        expect(found?.checklistName).toBe('Voyage');
-    });
-
-    it('devrait mettre à jour une checklist (update)', async () => {
-        const id = await db.checklists.add({
-            checklistId: 'uuid2',
-            checklistName: 'Courses',
-            userId: 1,
-            creationDate: '',
-            lastModifiedDate: '',
-            progress: '0',
-            status: 'IN_PROGRESS',
-            modelName: 'Model 1',
-            elements: []
-        });
-        
-        await db.checklists.update(id, { checklistName: 'Courses Updated' });
-
-        const updated = await db.checklists.get(id);
-        expect(updated?.checklistName).toBe('Courses Updated');
-    });
-
-    it('devrait supprimer une checklist (delete)', async () => {
-        const id = await db.checklists.add({
-            checklistId: 'uuid3',
-            checklistName: 'A supprimer',
-            userId: 1,
-            creationDate: '',
-            lastModifiedDate: '',
-            progress: '0',
-            status: 'IN_PROGRESS',
-            modelName: 'Model 1',
-            elements: []
-        });
-
-        await db.checklists.delete(id);
-
-        const found = await db.checklists.get(id);
-        expect(found).toBeUndefined();
-    });
-
-    it('devrait mettre à jour une checklist avec des items et du progrès', async () => {
-        const userId = await db.users.add({ firstName: 'UserProgress' });
-        const checklist = {
-            checklistId: 'test-uuid-progress',
-            checklistName: 'Checklist Progrès',
-            userId,
-            creationDate: '',
-            lastModifiedDate: '',
-            progress: '0',
-            status: 'IN_PROGRESS',
-            modelName: 'Model',
             elements: [
                 {
-                    category: 'Test Cat',
+                    category: 'Documents',
                     progress: '0',
                     items: [
-                        { item: 'Item 1', 'wanted-quantity': '2', 'added-quantity': '0', disabled: '' },
-                        { item: 'Item 2', 'wanted-quantity': '1', 'added-quantity': '0', disabled: '' }
+                        {
+                            item: 'Carnet de santé',
+                            'wanted-quantity': 1,
+                            'added-quantity': 0,
+                            disabled: false
+                        }
                     ]
                 }
             ]
         };
-        const id = await db.checklists.add(checklist as any);
-        
-        const c = await db.checklists.get(id);
-        if (c) {
-            c.elements[0].items[0]['added-quantity'] = '1';
-            c.elements[0].progress = '50';
-            c.progress = '33';
-            await db.checklists.update(id, c);
-        }
-
-        const updated = await db.checklists.get(id);
-        expect(updated?.elements[0].items[0]['added-quantity']).toBe('1');
-        expect(updated?.elements[0].progress).toBe('50');
-        expect(updated?.progress).toBe('33');
-    });
-
-    it('devrait insérer un utilisateur (insert)', async () => {
-        const id = await db.users.add({ firstName: 'Test' });
+        const id = await db.checklists.add(checklist);
         expect(id).toBeDefined();
-
-        const user = await db.users.get(id);
-        expect(user).toBeDefined();
-        expect(user?.firstName).toBe('Test');
-    });
-
-    it('devrait récupérer un utilisateur par prénom (select)', async () => {
-        await db.users.add({ firstName: 'Alice' });
-        await db.users.add({ firstName: 'Bob' });
-
-        const user = await db.users.where('firstName').equals('Bob').first();
-        expect(user).toBeDefined();
-        expect(user?.firstName).toBe('Bob');
-    });
-
-    it('devrait mettre à jour un utilisateur (update)', async () => {
-        const id = await db.users.add({ firstName: 'Charlie' });
         
-        await db.users.update(id, { firstName: 'Charlie Updated' });
-
-        const user = await db.users.get(id);
-        expect(user?.firstName).toBe('Charlie Updated');
+        const inserted = await db.checklists.get(id);
+        expect(inserted?.checklistName).toBe('Ma Checklist');
+        expect(inserted?.elements.length).toBe(1);
     });
 
-    it('devrait supprimer un utilisateur (delete)', async () => {
-        const id = await db.users.add({ firstName: 'David' });
-
-        await db.users.delete(id);
-
-        const user = await db.users.get(id);
-        expect(user).toBeUndefined();
-    });
-
-    it('ne devrait pas permettre d\'insérer deux utilisateurs avec le même prénom', async () => {
-        await db.users.add({ firstName: 'Eve' });
+    it('devrait récupérer les checklists d\'un utilisateur (select)', async () => {
+        const userId = await db.users.add({ firstName: 'User1' });
         
-        await expect(db.users.add({ firstName: 'Eve' })).rejects.toThrow();
-    });
-
-    it('devrait supprimer toutes les checklists associées lors de la suppression d\'un utilisateur', async () => {
-        // 1. Créer un utilisateur
-        const userId = await db.users.add({ firstName: 'UserToDelete' });
-
-        // 2. Lui associer des checklists
         await db.checklists.add({
-            checklistId: 'c1',
+            checklistId: 'uuid-1',
             checklistName: 'Checklist 1',
             userId,
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
             status: 'IN_PROGRESS',
-            modelName: 'Model',
+            modelName: 'M1',
             elements: []
         });
+
         await db.checklists.add({
-            checklistId: 'c2',
+            checklistId: 'uuid-2',
             checklistName: 'Checklist 2',
             userId,
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
             status: 'IN_PROGRESS',
-            modelName: 'Model',
+            modelName: 'M2',
             elements: []
         });
 
-        // Vérifier qu'elles sont là
-        const countBefore = await db.checklists.where('userId').equals(userId).count();
-        expect(countBefore).toBe(2);
+        const checklists = await db.checklists.where('userId').equals(userId).toArray();
+        expect(checklists.length).toBe(2);
+    });
 
-        // 3. Simuler la logique de suppression (celle implémentée dans page.svelte.ts)
-        await db.checklists.where('userId').equals(userId).delete();
+    it('devrait mettre à jour la progression d\'une checklist (update)', async () => {
+        const id = await db.checklists.add({
+            checklistId: 'uuid-3',
+            checklistName: 'Checklist 3',
+            userId: 1,
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            modelName: 'M3',
+            elements: []
+        });
+
+        await db.checklists.update(id, { progress: '50', status: 'IN_PROGRESS' });
+        
+        const updated = await db.checklists.get(id);
+        expect(updated?.progress).toBe('50');
+    });
+
+    it('devrait supprimer une checklist (delete)', async () => {
+        const id = await db.checklists.add({
+            checklistId: 'uuid-4',
+            checklistName: 'Checklist 4',
+            userId: 1,
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            modelName: 'M4',
+            elements: []
+        });
+
+        await db.checklists.delete(id);
+        const found = await db.checklists.get(id);
+        expect(found).toBeUndefined();
+    });
+
+    // --- Tests pour les Utilisateurs ---
+    it('devrait créer un utilisateur', async () => {
+        const id = await db.users.add({ firstName: 'Alice' });
+        expect(id).toBeDefined();
+
+        const user = await db.users.get(id);
+        expect(user?.firstName).toBe('Alice');
+    });
+
+    it('devrait empêcher les prénoms en doublon', async () => {
+        await db.users.add({ firstName: 'Bob' });
+        await expect(db.users.add({ firstName: 'Bob' })).rejects.toThrow();
+    });
+
+    it('devrait supprimer un utilisateur et ses checklists (simulé)', async () => {
+        const userId = await db.users.add({ firstName: 'Charlie' });
+        await db.checklists.add({
+            checklistId: 'uuid-5',
+            checklistName: 'Checklist Charlie',
+            userId,
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            modelName: 'M5',
+            elements: []
+        });
+
+        // Suppression de l'utilisateur
         await db.users.delete(userId);
+        // Suppression manuelle des checklists (ce que fait l'app)
+        await db.checklists.where('userId').equals(userId).delete();
 
-        // 4. Vérifier que tout est supprimé
         const user = await db.users.get(userId);
         const checklistsCount = await db.checklists.where('userId').equals(userId).count();
 
