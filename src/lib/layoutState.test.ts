@@ -12,18 +12,6 @@ vi.mock('$app/paths', () => ({
     base: ''
 }));
 
-// Mock localStorage
-const localStorageMock = (() => {
-    let store: Record<string, string> = {};
-    return {
-        getItem: (key: string) => store[key] || null,
-        setItem: (key: string, value: string) => { store[key] = value.toString(); },
-        clear: () => { store = {}; },
-        removeItem: (key: string) => { delete store[key]; }
-    };
-})();
-Object.defineProperty(global, 'localStorage', { value: localStorageMock });
-
 describe('Layout State', () => {
     beforeEach(async () => {
         await db.users.clear();

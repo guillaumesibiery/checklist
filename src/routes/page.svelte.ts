@@ -71,6 +71,13 @@ export function createPageState() {
           await db.models.where('userId').equals(userToDelete).delete();
           // Puis supprimer l'utilisateur
           await db.users.delete(userToDelete);
+
+          // Si c'était le dernier utilisateur, on purge tout pour être propre
+          const usersCount = await db.users.count();
+          if (usersCount === 0) {
+              await db.purgeAllData();
+          }
+
           userToDelete = null;
           userToDeleteName = '';
           showDeleteModal = false;

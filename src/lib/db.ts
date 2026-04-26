@@ -62,6 +62,15 @@ export class ChecklistDatabase extends Dexie {
             models: '++id, modelId, userId, modelName'
         });
     }
+
+    async purgeAllData() {
+        await Promise.all([
+            this.users.clear(),
+            this.checklists.clear(),
+            this.models.clear()
+        ]);
+        localStorage.clear();
+    }
 }
 
 export const db = new ChecklistDatabase();

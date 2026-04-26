@@ -297,4 +297,41 @@ describe('Database Operations', () => {
         expect(checklistsCount).toBe(0);
         expect(modelsCount).toBe(0);
     });
+
+    it('devrait purger toutes les données avec purgeAllData', async () => {
+        await db.users.add({ firstName: 'Alice' });
+        await db.checklists.add({
+            checklistId: 'uuid-p1',
+            checklistName: 'C1',
+            userId: 1,
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            modelName: 'M1',
+            elements: []
+        });
+        await db.models.add({
+            modelName: 'M1',
+            modelId: 'uuid-m1',
+            modelCreationDate: '',
+            modelLastModifiedDate: '',
+            checklistId: '',
+            checklistName: '',
+            userId: 1,
+            creationDate: '',
+            lastModifiedDate: '',
+            progress: '0',
+            status: 'IN_PROGRESS',
+            elements: []
+        });
+        localStorage.setItem('testKey', 'testValue');
+
+        await db.purgeAllData();
+
+        expect(await db.users.count()).toBe(0);
+        expect(await db.checklists.count()).toBe(0);
+        expect(await db.models.count()).toBe(0);
+        expect(localStorage.getItem('testKey')).toBeNull();
+    });
 });
