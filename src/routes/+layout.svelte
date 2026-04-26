@@ -2,6 +2,7 @@
     import './layout.css';
     import favicon from '$lib/assets/favicon.svg';
     import { layoutState } from '$lib/layoutState.svelte.ts';
+    import { filterInput } from '$lib/modalInputFilter';
     import { page } from '$app/state';
     import { fade, scale } from 'svelte/transition';
     import { onMount } from 'svelte';
@@ -185,7 +186,13 @@
                             <input 
                                 type="text" 
                                 id="checklistName"
-                                bind:value={layoutState.checklistName}
+                                value={layoutState.checklistName}
+                                oninput={(e) => {
+                                    const input = e.currentTarget;
+                                    const filtered = filterInput(input.value);
+                                    layoutState.checklistName = filtered;
+                                    input.value = filtered;
+                                }}
                                 placeholder="Ex: Vacances d'été"
                                 class="w-full p-4 bg-secondary rounded-2xl border-2 border-transparent focus:border-primary outline-none transition-all font-medium"
                                 maxlength="50"

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { page } from '$app/state';
     import { createChecklistState } from './page.svelte.ts';
+    import { filterInput } from '$lib/modalInputFilter';
     import { fade, fly, scale } from 'svelte/transition';
 
     const readOnly = page.url.searchParams.get('readOnly') === 'true';
@@ -361,7 +362,7 @@
                                        value={state.newCategoryName}
                                        oninput={(e) => {
                                            const input = e.currentTarget;
-                                           const filtered = input.value.replace(/[^\p{L}\p{N}\s._'\-]/gu, '');
+                                           const filtered = filterInput(input.value);
                                            state.newCategoryName = filtered;
                                            input.value = filtered;
                                        }}
@@ -412,7 +413,7 @@
                                        value={state.newItemName}
                                        oninput={(e) => {
                                            const input = e.currentTarget;
-                                           const filtered = input.value.replace(/[^\p{L}\p{N}\s._'\-]/gu, '');
+                                           const filtered = filterInput(input.value);
                                            state.newItemName = filtered;
                                            input.value = filtered;
                                        }}
