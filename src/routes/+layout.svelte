@@ -91,7 +91,7 @@
 
         <!-- Menu fixe en bas -->
         {#if showNav}
-            <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-secondary pb-6 pt-2 grid grid-cols-3 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]" transition:fade>
+            <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-secondary pb-6 pt-2 grid grid-cols-4 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]" transition:fade>
                 <!-- Accueil -->
                 <div class="flex justify-center">
                     <button 
@@ -112,12 +112,28 @@
                         onclick={layoutState.toggleCreateModal}
                         class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
                     >
-                        <div class="p-2 bg-primary text-text-inverse rounded-2xl group-active:scale-95 transition-transform shadow-lg shadow-primary/20">
+                        <div class="p-2 {layoutState.showCreateModal ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                                 <path d="M10.75 4.75a.75.75 0 0 1 1.5 0v5.25h5.25a.75.75 0 0 1 0 1.5h-5.25v5.25a.75.75 0 0 1-1.5 0v-5.25H5.25a.75.75 0 0 1 0-1.5h5.25V4.75Z" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-black text-primary uppercase tracking-widest text-center leading-tight">Creer<br/>une checklist</span>
+                        <span class="text-[10px] font-bold {layoutState.showCreateModal ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Créer</span>
+                    </button>
+                </div>
+
+                <!-- Modèles -->
+                <div class="flex justify-center">
+                    <button 
+                        onclick={() => goto(`${base}/modeles/`)}
+                        class="flex flex-col items-center gap-1 group cursor-pointer pb-1"
+                    >
+                        <div class="p-2 {page.url.pathname === `${base}/modeles/` ? 'text-primary' : 'text-gray-400'} group-active:scale-95 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                                <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
+                                <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+                            </svg>
+                        </div>
+                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/modeles/` ? 'text-primary' : 'text-gray-400'} uppercase tracking-widest">Modèles</span>
                     </button>
                 </div>
 
