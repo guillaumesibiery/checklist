@@ -85,7 +85,7 @@ test('Checklist life cycle', async ({ page }) => {
   await expect(page.getByText(`Bonjour, ${testUserName}`)).toBeVisible();
 
   //Suppression
-  await page.getByRole('button', { name: 'Supprimer la checklist' }).click();
+  await page.getByRole('button', { name: 'Supprimer' }).click();
   await page.getByRole('button', { name: 'Valider la suppression' }).click();
 
   await expect(page.getByText(testChecklistName)).toHaveCount(0);
