@@ -62,7 +62,7 @@ test('Checklist life cycle', async ({ page }) => {
   await page.getByRole('button', { name: 'Quitter' }).click();
   
   // Modification
-  await page.getByRole('link', { name: testChecklistName+' Bébé pack Cr' }).click();
+  await page.locator('.home-checklist-name').first().click();
   await expect(page.getByText(testChecklistName)).toBeVisible();
 
   await page.getByRole('button', { name: 'Ajouter une catégorie' }).click();

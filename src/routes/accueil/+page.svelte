@@ -23,6 +23,23 @@
             minute: '2-digit'
         }).format(date).replace(',', ' à');
     }
+
+    function addToGoogleCalendar(checklist: any) {
+        const title = encodeURIComponent(`Checklist: ${checklist.checklistName}`);
+        const url = window.location.origin + base + '/checklist/' + checklist.checklistId;
+        const details = encodeURIComponent(`Lien vers la checklist : ${url}`);
+        
+        // Date de début (maintenant)
+        const now = new Date();
+        const start = now.toISOString().replace(/-|:|\.\d\d\d/g, "");
+        
+        // Date de fin (+1 heure)
+        const end = new Date(now.getTime() + 60 * 60 * 1000).toISOString().replace(/-|:|\.\d\d\d/g, "");
+        
+        const googleUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${start}/${end}`;
+        
+        window.open(googleUrl, '_blank');
+    }
 </script>
 
 <div in:fade={{ duration: 300 }} class="p-6 transition-colors duration-300">
@@ -45,29 +62,45 @@
                             href="{base}/checklist/{checklist.checklistId}"
                             class="block p-6 bg-white dark:bg-gray-800 border-2 border-secondary dark:border-gray-700 rounded-[2rem] hover:border-primary/30 dark:hover:border-primary/50 transition-all active:scale-[0.98]"
                         >
-                            <div class="flex justify-between items-center pr-10">
-                                <div>
-                                    <h3 class="font-bold text-lg text-text-main dark:text-white group-hover:text-primary transition-colors">{checklist.checklistName}</h3>
+                            <div class="flex justify-between items-start pr-24">
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h3 class="home-checklist-name font-bold text-lg text-text-main dark:text-white group-hover:text-primary transition-colors">{checklist.checklistName}</h3>
+                                        <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full border border-primary/20 transition-colors">
+                                            {checklist.progress}%
+                                        </span>
+                                    </div>
                                     <div class="flex flex-col">
                                         <p class="text-sm text-text-main/50 dark:text-gray-400 font-medium transition-colors">{checklist.modelName}</p>
                                         <p class="text-[11px] text-text-main/40 dark:text-gray-500 font-medium transition-colors">Créée le {formatDate(checklist.creationDate)}</p>
                                         <p class="text-[11px] text-text-main/40 dark:text-gray-500 font-medium transition-colors">Modifiée le {formatDate(checklist.lastModifiedDate)}</p>
                                     </div>
                                 </div>
-                                <div class="flex flex-col items-end justify-center">
-                                    <span class="text-primary font-bold text-lg">{checklist.progress}%</span>
-                                </div>
                             </div>
                         </a>
-                        <button 
-                            onclick={() => state.confirmDelete(checklist)}
-                            class="absolute right-6 top-1/2 -translate-y-1/2 p-2 text-red-500/40 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
-                            aria-label="Supprimer la checklist"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 1 0 1.5 0l-.5-8.5Zm4.33.75a.75.75 0 0 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                            <button 
+                                onclick={() => addToGoogleCalendar(checklist)}
+                                class="p-2 text-primary hover:bg-primary/10 rounded-xl transition-all cursor-pointer"
+                                title="Ajouter à Google Agenda"
+                                aria-label="Ajouter à Google Agenda"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                    <path d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM7.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM8.25 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM9.75 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM10.5 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM12.75 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM14.25 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 13.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
+                                    <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9h-16.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <button 
+                                onclick={() => state.confirmDelete(checklist)}
+                                class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
+                                title="Supprimer la checklist"
+                                aria-label="Supprimer la checklist"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 1 0 1.5 0l-.5-8.5Zm4.33.75a.75.75 0 0 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 {/each}
             </div>

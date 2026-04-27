@@ -45,18 +45,17 @@
                             class="w-full text-left p-6 bg-white dark:bg-gray-800 border-2 border-secondary dark:border-gray-700 rounded-[2rem] hover:border-primary/30 dark:hover:border-primary/50 transition-all active:scale-[0.98] cursor-pointer"
                             onclick={() => goto(`${base}/checklist/${checklist.checklistId}/?readOnly=true`)}
                         >
-                            <div class="flex justify-between items-center pr-24">
-                                <div>
-                                    <h3 class="font-bold text-lg text-text-main dark:text-white group-hover:text-primary transition-colors">{checklist.checklistName}</h3>
+                            <div class="flex justify-between items-start pr-24">
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h3 class="font-bold text-lg text-text-main dark:text-white group-hover:text-primary transition-colors">{checklist.checklistName}</h3>
+                                        <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full border border-primary/20 transition-colors">
+                                            {checklist.progress}%
+                                        </span>
+                                    </div>
                                     <div class="flex flex-col">
                                         <p class="text-sm text-text-main/50 dark:text-gray-400 font-medium transition-colors">{checklist.modelName}</p>
                                         <p class="text-[11px] text-text-main/40 dark:text-gray-500 font-medium transition-colors">Terminée le {formatDate(checklist.lastModifiedDate)}</p>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col items-end gap-1">
-                                    <span class="text-primary font-bold">{checklist.progress}%</span>
-                                    <div class="w-16 h-1.5 bg-secondary dark:bg-gray-700 rounded-full overflow-hidden transition-colors">
-                                        <div class="h-full bg-primary" style="width: {checklist.progress}%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +66,7 @@
                             <!-- Bouton restaurer -->
                             <button 
                                 onclick={(e) => { e.stopPropagation(); state.confirmRestore(checklist); }}
-                                class="p-2 text-primary/40 hover:text-primary hover:bg-primary/10 rounded-xl transition-all cursor-pointer"
+                                class="p-2 text-primary hover:bg-primary/10 rounded-xl transition-all cursor-pointer"
                                 aria-label="Restaurer la checklist"
                                 title="Restaurer la checklist"
                             >
@@ -78,7 +77,7 @@
                             <!-- Bouton supprimer -->
                             <button 
                                 onclick={(e) => { e.stopPropagation(); state.confirmDelete(checklist); }}
-                                class="p-2 text-red-500/40 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
+                                class="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
                                 aria-label="Supprimer la checklist"
                                 title="Supprimer la checklist"
                             >
