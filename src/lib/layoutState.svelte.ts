@@ -35,22 +35,22 @@ export function createLayoutState() {
     }
 
     async function init() {
+        // Charger la préférence de mode sombre globale
+        const savedDarkMode = localStorage.getItem('darkMode');
+        isDarkMode = savedDarkMode === 'true';
+        applyDarkMode(isDarkMode);
+
         const idStr = localStorage.getItem('currentUserId');
         if (!idStr) {
             user = null;
-            applyDarkMode(false);
+            await loadAvailableModels();
             return null;
         }
         const u = await db.users.get(parseInt(idStr));
         if (u) {
             user = u;
-            // Charger la préférence de mode sombre
-            const savedDarkMode = localStorage.getItem(`darkMode_${user.id}`);
-            isDarkMode = savedDarkMode === 'true';
-            applyDarkMode(isDarkMode);
         } else {
             user = null;
-            applyDarkMode(false);
         }
         
         await loadAvailableModels();
@@ -72,9 +72,8 @@ export function createLayoutState() {
     }
 
     function toggleDarkMode() {
-        if (!user) return;
         isDarkMode = !isDarkMode;
-        localStorage.setItem(`darkMode_${user.id}`, String(isDarkMode));
+        localStorage.setItem('darkMode', String(isDarkMode));
         applyDarkMode(isDarkMode);
     }
 
@@ -173,8 +172,6 @@ export function createLayoutState() {
         user = null;
         showLogoutModal = false;
         showSettingsModal = false;
-        isDarkMode = false;
-        applyDarkMode(false);
         goto(`${base}/`);
     }
 

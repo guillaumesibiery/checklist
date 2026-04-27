@@ -58,4 +58,34 @@ describe('Layout State', () => {
         expect(state.availableModels).toContainEqual({ name: 'Bébé pack', file: 'model-bebepack.json' });
         expect(state.availableModels).toContainEqual(expect.objectContaining({ name: 'Mon Modèle Perso' }));
     });
+
+    it('devrait basculer le mode sombre globalement', async () => {
+        const state = createLayoutState();
+        expect(state.isDarkMode).toBe(false);
+
+        state.toggleDarkMode();
+        expect(state.isDarkMode).toBe(true);
+        expect(localStorage.getItem('darkMode')).toBe('true');
+
+        state.toggleDarkMode();
+        expect(state.isDarkMode).toBe(false);
+        expect(localStorage.getItem('darkMode')).toBe('false');
+    });
+
+    it('devrait persister le mode sombre après déconnexion', async () => {
+        const state = createLayoutState();
+        state.toggleDarkMode();
+        expect(state.isDarkMode).toBe(true);
+
+        state.logout();
+        expect(state.isDarkMode).toBe(true);
+        expect(localStorage.getItem('darkMode')).toBe('true');
+    });
+
+    it('devrait charger le mode sombre global lors de l\'initialisation', async () => {
+        localStorage.setItem('darkMode', 'true');
+        const state = createLayoutState();
+        await state.init();
+        expect(state.isDarkMode).toBe(true);
+    });
 });
