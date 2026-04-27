@@ -314,6 +314,15 @@
                         <!-- Informations de version -->
                         <div class="p-4 bg-secondary dark:bg-gray-700/50 rounded-2xl transition-colors">
                             <div class="flex flex-col">
+                                <span class="text-xs font-bold text-primary uppercase tracking-wider mb-1">Version</span>
+                                <span class="text-xs font-bold text-text-main dark:text-white transition-colors">
+                                    v{__PACKAGE_VERSION__}
+                                </span>
+                            </div>
+                            
+                            <div class="my-3 border-t border-gray-300 dark:border-gray-600 opacity-50"></div>
+                            
+                            <div class="flex flex-col">
                                 <span class="text-xs font-bold text-primary uppercase tracking-wider mb-1">Numéro de build</span>
                                 <span class="text-xs font-bold text-text-main dark:text-white break-all transition-colors">
                                     {__APP_VERSION__}
