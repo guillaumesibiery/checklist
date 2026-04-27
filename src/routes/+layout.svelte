@@ -80,15 +80,6 @@
 
                         <div class="flex gap-1 items-center mt-1">
                             <button 
-                                onclick={layoutState.toggleSettingsModal}
-                                class="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer text-text-inverse"
-                                aria-label="Paramètres"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 sm:w-8 sm:h-8">
-                                    <path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 0 0-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 0 0-2.282.819l-.922 1.597a1.875 1.875 0 0 0 .432 2.385l1.09.845c.12.093.18.232.193.376.016.182.024.367.024.553 0 .186-.008.37-.024.552-.013.145-.073.284-.193.377l-1.09.845a1.875 1.875 0 0 0-.432 2.385l.922 1.597a1.875 1.875 0 0 0 2.282.818l1.019-.382c.115-.043.283-.031.45.082.31.214.641.405.986.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.345-.165.675-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 0 0 2.28-.819l.923-1.597a1.875 1.875 0 0 0-.432-2.385l-1.09-.845c-.12-.093-.18-.232-.193-.377a7.483 7.483 0 0 0 0-1.104c.013-.145.073-.284.193-.377l1.09-.845a1.875 1.875 0 0 0 .432-2.385l-.923-1.597a1.875 1.875 0 0 0-2.28-.818l-1.02.382c-.115.043-.283.032-.45-.082a7.49 7.49 0 0 0-.985-.57c-.183-.088-.277-.228-.297-.349l-.178-1.071a1.875 1.875 0 0 0-1.85-1.567h-1.844ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                            <button 
                                 onclick={layoutState.toggleLogoutModal}
                                 class="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer text-text-inverse"
                                 aria-label="Déconnexion"
@@ -110,7 +101,7 @@
         </main>
 
         {#if showNav}
-            <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-secondary dark:border-gray-800 pb-5 pt-2 grid grid-cols-4 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] transition-colors duration-300" transition:fade>
+            <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-secondary dark:border-gray-800 pb-5 pt-2 grid grid-cols-5 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] transition-colors duration-300" transition:fade>
                 <!-- Accueil -->
                 <div class="flex justify-center">
                     <button 
@@ -122,21 +113,7 @@
                                 <path d="M11.47 3.84a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 1-1.06 1.06l-1.06-1.06V18.3c0 .58-.45 1.06-1.03 1.06h-2.25c-.58 0-1.06-.48-1.06-1.06v-4.5c0-.58-.48-1.06-1.06-1.06h-1.5c-.58 0-1.06.48-1.06 1.06v4.5c0 .58-.48 1.06-1.06 1.06H6.75c-.58 0-1.06-.48-1.06-1.06v-5.75l-1.06 1.06a.75.75 0 0 1-1.06-1.06l8.69-8.69Z" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/accueil` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} uppercase tracking-widest">Accueil</span>
-                    </button>
-                </div>
-
-                <div class="flex justify-center">
-                    <button 
-                        onclick={layoutState.toggleCreateModal}
-                        class="flex flex-col items-center group cursor-pointer"
-                    >
-                        <div class="flex flex-col items-center gap-0.5 px-4 py-2.5 bg-primary text-text-inverse rounded-2xl group-active:scale-95 transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
-                                <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-                            </svg>
-                            <span class="text-[10px] font-bold uppercase tracking-widest">Créer</span>
-                        </div>
+                        <span class="text-[8px] sm:text-[10px] font-bold {page.url.pathname === `${base}/accueil` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} uppercase text-center">Accueil</span>
                     </button>
                 </div>
 
@@ -152,7 +129,22 @@
                                 <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/modeles` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} uppercase tracking-widest">Modèles</span>
+                        <span class="text-[8px] sm:text-[10px] font-bold {page.url.pathname === `${base}/modeles` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} uppercase text-center">Modèles</span>
+                    </button>
+                </div>
+
+                <!-- Créer -->
+                <div class="flex justify-center">
+                    <button 
+                        onclick={layoutState.toggleCreateModal}
+                        class="flex flex-col items-center group cursor-pointer"
+                    >
+                        <div class="flex flex-col items-center gap-0.5 px-4 py-2.5 bg-primary text-text-inverse rounded-2xl group-active:scale-95 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                                <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-[8px] sm:text-[10px] font-bold uppercase text-center">Créer</span>
+                        </div>
                     </button>
                 </div>
 
@@ -168,7 +160,22 @@
                                 <path fill-rule="evenodd" d="m3.087 9 .54 9.17c.108 1.837 1.631 3.255 3.473 3.255h9.799c1.844 0 3.367-1.42 3.473-3.255l.54-9.17H3.087ZM10 12.25a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5h-4Z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <span class="text-[10px] font-bold {page.url.pathname === `${base}/historique` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} uppercase tracking-widest">Historique</span>
+                        <span class="text-[8px] sm:text-[10px] font-bold {page.url.pathname === `${base}/historique` ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} uppercase text-center">Historique</span>
+                    </button>
+                </div>
+
+                <!-- Paramètres -->
+                <div class="flex justify-center">
+                    <button 
+                        onclick={layoutState.toggleSettingsModal}
+                        class="flex flex-col items-center gap-1 group cursor-pointer"
+                    >
+                        <div class="p-2 {layoutState.showSettingsModal ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} group-active:scale-95 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
+                                <path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 0 0-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 0 0-2.282.819l-.922 1.597a1.875 1.875 0 0 0 .432 2.385l1.09.845c.12.093.18.232.193.376.016.182.024.367.024.553 0 .186-.008.37-.024.552-.013.145-.073.284-.193.377l-1.09.845a1.875 1.875 0 0 0-.432 2.385l.922 1.597a1.875 1.875 0 0 0 2.282.818l1.019-.382c.115-.043.283-.031.45.082.31.214.641.405.986.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.345-.165.675-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 0 0 2.28-.819l.923-1.597a1.875 1.875 0 0 0-.432-2.385l-1.09-.845c-.12-.093-.18-.232-.193-.377a7.483 7.483 0 0 0 0-1.104c.013-.145.073-.284.193-.377l1.09-.845a1.875 1.875 0 0 0 .432-2.385l-.923-1.597a1.875 1.875 0 0 0-2.28-.818l-1.02.382c-.115.043-.283.032-.45-.082a7.49 7.49 0 0 0-.985-.57c-.183-.088-.277-.228-.297-.349l-.178-1.071a1.875 1.875 0 0 0-1.85-1.567h-1.844ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <span class="text-[8px] sm:text-[10px] font-bold {layoutState.showSettingsModal ? 'text-primary' : 'text-gray-400 dark:text-gray-500'} uppercase text-center">Paramètres</span>
                     </button>
                 </div>
 
