@@ -13,6 +13,7 @@ export function createChecklistState(id: string, readOnly: boolean = false) {
     let isAddCategoryModalOpen = $state(false);
     let newCategoryName = $state("");
     let isAddItemModalOpen = $state(false);
+    let isEditMode = $state(false);
     let newItemName = $state("");
     let newItemQuantity = $state(1);
     let currentCategoryNameForNewItem = $state<string | null>(null);
@@ -383,6 +384,8 @@ export function createChecklistState(id: string, readOnly: boolean = false) {
         },
         get isMobile() { return isMobile; },
         get readOnly() { return readOnly; },
+        get isEditMode() { return isEditMode; },
+        toggleEditMode() { isEditMode = !isEditMode; },
         updateQuantity,
         toggleItem,
         toggleDisabled,

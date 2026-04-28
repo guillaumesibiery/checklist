@@ -230,4 +230,15 @@ describe('Checklist State - Add Category', () => {
         const updated = await db.checklists.where('checklistId').equals(checklistId).first();
         expect(updated?.elements.find(e => e.category === 'UserCat')).toBeUndefined();
     });
+
+    it('devrait basculer le mode édition', async () => {
+        const state = createChecklistState(checklistId);
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        expect(state.isEditMode).toBe(false);
+        state.toggleEditMode();
+        expect(state.isEditMode).toBe(true);
+        state.toggleEditMode();
+        expect(state.isEditMode).toBe(false);
+    });
 });

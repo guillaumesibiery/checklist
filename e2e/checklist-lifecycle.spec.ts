@@ -32,6 +32,8 @@ test('Checklist life cycle', async ({ page }) => {
   await expect(page.getByText(testChecklistName)).toBeVisible();
 
   // Ajout de catégories et éléments
+  await page.getByTestId('checklist-edit-mode').click();
+
   await page.getByRole('button', { name: 'Ajouter une catégorie' }).click();
   await page.getByRole('textbox', { name: 'Nom de la catégorie' }).fill('Voiture');
   await page.getByTestId('add-checklist-category').click();
@@ -59,11 +61,15 @@ test('Checklist life cycle', async ({ page }) => {
 
   await expect(page.getByText('Niveau d\'huile')).toHaveCount(0);
 
+  await page.getByTestId('checklist-edit-mode').click();
+
   await page.getByRole('button', { name: 'Quitter' }).click();
   
   // Modification
   await page.locator('.home-checklist-name').first().click();
   await expect(page.getByText(testChecklistName)).toBeVisible();
+
+  await page.getByTestId('checklist-edit-mode').click();
 
   await page.getByRole('button', { name: 'Ajouter une catégorie' }).click();
   await page.getByRole('textbox', { name: 'Nom de la catégorie' }).fill('Maison');
@@ -78,6 +84,8 @@ test('Checklist life cycle', async ({ page }) => {
 
   await expect(page.locator('body')).toContainText('Voiture 100%');
   await expect(page.locator('body')).toContainText('Gonflage pneus Quantité : 4 4');
+
+  await page.getByTestId('checklist-edit-mode').click();
 
   await page.getByRole('button', { name: 'Quitter' }).click();
 

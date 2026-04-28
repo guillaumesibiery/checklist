@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('Checklist life cycle', async ({ page }) => {
+test('Model life cycle', async ({ page }) => {
   
   const formattedDate: string = new Date().toLocaleDateString('fr-FR');
   const testUserName = 'TestUser' + Math.floor(Math.random() * 1000);
