@@ -7,6 +7,7 @@
   --color-secondary: #f5f5f5;
   --color-text-main: #0a0a0a;
   --color-text-inverse: #ffffff;
+  --background-image-header-gradient: linear-gradient(to bottom right, #5072f9, #a76be5);
 }
 
 

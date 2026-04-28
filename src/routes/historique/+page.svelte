@@ -100,7 +100,7 @@
                 <p class="text-gray-500 dark:text-gray-400 font-medium text-center transition-colors">Aucune checklist dans l'historique.</p>
                 <button 
                     onclick={() => goto(`${base}/accueil/`)}
-                    class="mt-6 px-6 py-3 bg-primary text-text-inverse font-bold rounded-2xl shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                    class="mt-6 px-6 py-3 bg-header-gradient text-text-inverse font-bold rounded-2xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
                 >
                     Retour à l'accueil
                 </button>

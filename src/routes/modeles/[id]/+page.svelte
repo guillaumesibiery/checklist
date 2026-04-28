@@ -33,7 +33,7 @@
         </div>
     {:else if state.model}
         <!-- Header Style Checklist -->
-        <header class="fixed top-0 left-0 right-0 bg-primary text-text-inverse p-4 z-10 shadow-lg flex flex-col items-center min-h-20 justify-center" in:fly={{ y: -50 }}>
+        <header class="fixed top-0 left-0 right-0 bg-header-gradient text-text-inverse p-4 z-10 shadow-lg flex flex-col items-center min-h-20 justify-center" in:fly={{ y: -50 }}>
             <h1 class="text-xl font-bold truncate w-full text-center px-8">Modèle "{state.model.modelName}"</h1>
         </header>
 

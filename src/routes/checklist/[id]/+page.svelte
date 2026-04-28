@@ -46,7 +46,7 @@
         </div>
     {:else if state.checklist}
         <!-- Header -->
-        <header class="fixed top-0 left-0 right-0 bg-primary text-text-inverse p-4 z-10 shadow-lg flex flex-col items-center" in:fly={{ y: -50 }}>
+        <header class="fixed top-0 left-0 right-0 bg-header-gradient text-text-inverse p-4 z-10 shadow-lg flex flex-col items-center" in:fly={{ y: -50 }}>
             <h1 class="text-xl font-bold truncate w-full text-center px-8">{state.checklist.checklistName}</h1>
             <div class="mt-2 h-2.5 w-full max-w-md bg-white/30 rounded-full overflow-hidden">
                 <div class="h-full bg-white transition-all duration-500 ease-out" 
@@ -496,7 +496,7 @@
         <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center" in:fade>
             <h1 class="text-2xl font-bold text-red-500">Checklist non trouvée</h1>
             <p class="mt-2 text-text-main/60 dark:text-gray-400 transition-colors">Nous n'avons pas pu charger votre checklist.</p>
-            <button onclick={state.quit} class="mt-8 px-6 py-3 bg-primary text-text-inverse rounded-xl font-bold shadow-lg active:scale-95 transition-transform">
+            <button onclick={state.quit} class="mt-8 px-6 py-3 bg-header-gradient text-text-inverse rounded-xl font-bold active:scale-95 transition-transform">
                 Retour à l'accueil
             </button>
         </div>

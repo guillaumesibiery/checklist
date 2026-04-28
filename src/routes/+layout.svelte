@@ -28,7 +28,8 @@
 <svelte:head>
     <title>Checklist</title>
     <link rel="icon" href={favicon} />
-    <meta name="theme-color" content="#9d50f8" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)" />
     {@html pwaInfo?.webManifest.linkTag}
 </svelte:head>
 
@@ -38,13 +39,12 @@
         {#if showHeader}
             <div class="sticky top-0 z-20 bg-white dark:bg-gray-900" transition:fade>
 
-                <header class="m-2 sm:m-4 p-4 sm:p-6 bg-primary text-text-inverse shadow-lg rounded-[2rem] sm:rounded-[2.5rem]">
-                    <div class="flex justify-between items-start">
+                <header class="mx-6 mt-4 mb-2 p-4 sm:p-6 bg-header-gradient text-text-inverse shadow-lg rounded-[2rem] sm:rounded-[2.5rem]">
+                    <div class="flex justify-between items-center">
                         {#if layoutState.user}
-                            <div in:fade={{ duration: 300 }} class="flex flex-col gap-1">
+                            <div in:fade={{ duration: 300 }} class="flex flex-col">
                                 {#if page.url.pathname === `${base}/accueil`}
                                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Bonjour, {layoutState.user.firstName}</h1>
-                                    <p class="text-text-inverse/90 text-sm sm:text-base font-medium">Comment allez vous aujourd'hui ?</p>
                                     {#if layoutState.checklistsCount > 0}
                                         <div class="mt-1" transition:fade>
                                             <span class="bg-white/20 text-text-inverse px-3 py-1.5 rounded-full text-[10px] font-bold border border-white/10 backdrop-blur-sm inline-flex items-center">
@@ -54,7 +54,6 @@
                                     {/if}
                                 {:else if page.url.pathname === `${base}/historique`}
                                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Historique</h1>
-                                    <p class="text-text-inverse/90 text-sm sm:text-base font-medium">Vos checklists terminées</p>
                                     {#if layoutState.finishedChecklistsCount > 0}
                                         <div class="mt-1" transition:fade>
                                             <span class="bg-white/20 text-text-inverse px-3 py-1.5 rounded-full text-[10px] font-bold border border-white/10 backdrop-blur-sm inline-flex items-center">
@@ -64,7 +63,6 @@
                                     {/if}
                                 {:else if page.url.pathname === `${base}/modeles`}
                                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Modèles</h1>
-                                    <p class="text-text-inverse/90 text-sm sm:text-base font-medium">Gérez vos propres modèles</p>
                                     {#if layoutState.createdModelsCount > 0}
                                         <div class="mt-1" transition:fade>
                                             <span class="bg-white/20 text-text-inverse px-3 py-1.5 rounded-full text-[10px] font-bold border border-white/10 backdrop-blur-sm inline-flex items-center">
@@ -78,10 +76,9 @@
                             </div>
                         {/if}
 
-                        <div class="flex gap-1 items-center mt-1">
-                            <button 
-                                onclick={layoutState.toggleLogoutModal}
-                                class="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer text-text-inverse"
+                        <div class="flex gap-1 items-center">
+                            <button
+                                onclick={layoutState.toggleLogoutModal}                                class="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer text-text-inverse"
                                 aria-label="Déconnexion"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 sm:w-8 sm:h-8">
@@ -139,7 +136,7 @@
                         onclick={layoutState.toggleCreateModal}
                         class="flex flex-col items-center group cursor-pointer"
                     >
-                        <div class="flex flex-col items-center gap-0.5 px-4 py-2.5 bg-primary text-text-inverse rounded-2xl group-active:scale-95 transition-all">
+                        <div class="flex flex-col items-center gap-0.5 px-4 py-2.5 bg-header-gradient text-text-inverse rounded-2xl group-active:scale-95 transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                                 <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
                             </svg>
@@ -297,7 +294,7 @@
                         <div class="flex items-center justify-between p-4 bg-secondary dark:bg-gray-700/50 rounded-2xl transition-colors">
                             <div class="flex flex-col">
                                 <span class="font-bold text-text-main dark:text-gray-200">Mode sombre</span>
-                                <span class="text-xs text-text-main/50 dark:text-gray-400">Activer le thème noir</span>
+                                <span class="text-xs text-text-main/50 dark:text-gray-400">Activer le thème sombre</span>
                             </div>
                             <button 
                                 onclick={layoutState.toggleDarkMode}

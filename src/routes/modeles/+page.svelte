@@ -73,7 +73,7 @@
                             <!-- Bouton supprimer -->
                             <button 
                                 onclick={(e) => { e.stopPropagation(); state.confirmDelete(model); }}
-                                class="p-2 text-red-500/40 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
+                                class="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
                                 aria-label="Supprimer le modèle"
                                 title="Supprimer le modèle"
                             >
@@ -95,7 +95,7 @@
                 <p class="text-gray-500 dark:text-gray-400 font-medium text-center transition-colors">Aucun modèle de checklist pour le moment.</p>
                 <button 
                     onclick={state.toggleCreateModal}
-                    class="mt-6 px-6 py-3 bg-primary text-text-inverse font-bold rounded-2xl shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                    class="mt-6 px-6 py-3 bg-header-gradient text-text-inverse font-bold rounded-2xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
                 >
                     Créer un modèle
                 </button>
