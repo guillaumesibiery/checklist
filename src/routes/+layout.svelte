@@ -39,7 +39,7 @@
     <div class="min-h-screen bg-white dark:bg-gray-900 text-text-main dark:text-white flex flex-col relative transition-colors duration-300">
         <!-- Header simplifié -->
         {#if showHeader}
-            <header class="w-full p-4 sm:p-6 flex justify-between items-center bg-white dark:bg-gray-900 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)]" transition:fade>
+            <header class="w-full p-4 sm:p-6 flex justify-between items-center bg-white dark:bg-gray-900 border-b border-secondary dark:border-gray-800" transition:fade>
                 <div class="flex items-center">
                     <img 
                         src={layoutState.isDarkMode ? logoDark : logoLight} 
@@ -106,11 +106,10 @@
                         onclick={layoutState.toggleCreateModal}
                         class="flex flex-col items-center group cursor-pointer"
                     >
-                        <div class="flex flex-col items-center gap-0.5 px-4 py-2.5 bg-header-gradient text-text-inverse rounded-2xl group-active:scale-95 transition-all">
+                        <div class="flex flex-col items-center px-4 py-4 bg-header-gradient text-text-inverse rounded-2xl group-active:scale-95 transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                                 <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
                             </svg>
-                            <span class="text-[8px] sm:text-[10px] font-bold uppercase text-center">Créer</span>
                         </div>
                     </button>
                 </div>
