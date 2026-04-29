@@ -46,7 +46,7 @@
         </div>
     {:else if state.checklist}
         <!-- Header -->
-        <header class="fixed top-0 left-0 right-0 bg-header-gradient text-text-inverse p-4 z-10 shadow-lg flex flex-col items-center" in:fly={{ y: -50 }}>
+        <header class="fixed top-0 left-0 right-0 bg-header-gradient text-text-inverse p-4 z-10 border-b border-white/20 flex flex-col items-center pt-[calc(1rem+env(safe-area-inset-top))]" in:fly={{ y: -50 }}>
             <h1 class="text-lg font-bold truncate w-full text-center px-8 mb-2">{state.checklist.checklistName}</h1>
             
             <!-- Barre de progression avec % intégré -->

@@ -31,7 +31,7 @@
     <title>Checklist</title>
     <link rel="icon" href={favicon} />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
     {@html pwaInfo?.webManifest.linkTag}
 </svelte:head>
 
