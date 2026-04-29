@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createAccueilState } from './page.svelte.ts';
-    import { fade, scale } from 'svelte/transition';
+    import { fade, scale, fly } from 'svelte/transition';
     import { onMount } from 'svelte';
     import { base } from '$app/paths';
     import { layoutState } from '$lib/layoutState.svelte';
@@ -42,10 +42,29 @@
     }
 </script>
 
-<div in:fade={{ duration: 300 }} class="p-6 transition-colors duration-300">
+<div in:fade={{ duration: 300 }} class="px-6 pt-6 pb-6 transition-colors duration-300">
+    <!-- Bloc de bienvenue utilisateur -->
+    {#if layoutState.user}
+        <div class="flex items-center gap-4 mb-6" in:fly={{ y: -20, duration: 400 }}>
+            <div class="w-16 h-16 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-9 h-9">
+                    <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="flex flex-col">
+                <h1 class="text-xl font-bold text-text-main dark:text-white">Bonjour, {layoutState.user.firstName} !</h1>
+                <div class="mt-1">
+                    <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/10 dark:border-primary/20">
+                        {layoutState.checklistsCount} Checklist{layoutState.checklistsCount > 1 ? 's' : ''} en cours
+                    </span>
+                </div>
+            </div>
+        </div>
+    {/if}
+
     <div class="mt-4">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-bold text-text-main dark:text-white uppercase tracking-wider text-sm opacity-60 transition-colors">Checklists en cours</h2>
+            <h2 class="text-lg font-bold text-text-main dark:text-white tracking-wider text-sm opacity-60 transition-colors">Checklists en cours</h2>
         </div>
         
         {#if state.isLoadingChecklists}
@@ -57,51 +76,66 @@
         {:else if state.checklists.length > 0}
             <div class="grid gap-4">
                 {#each state.checklists as checklist}
-                    <div class="group">
-                        <div class="block p-6 bg-white dark:bg-gray-800 border-2 border-secondary dark:border-gray-700 rounded-[2rem] hover:border-primary/30 dark:hover:border-primary/50 transition-all active:scale-[0.98]">
-                            <a href="{base}/checklist/{checklist.checklistId}" class="block">
-                                <!-- Section Titre et Progression : Systématiquement au-dessus, wrap si trop long -->
-                                <div class="flex items-center flex-wrap gap-2 mb-3">
-                                    <h3 class="home-checklist-name font-bold text-lg text-text-main dark:text-white group-hover:text-primary transition-colors">
-                                        {checklist.checklistName}
-                                    </h3>
-                                    <span class="flex-shrink-0 bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full border border-primary/20 transition-colors">
-                                        {checklist.progress}%
-                                    </span>
+                    <div class="group relative overflow-hidden bg-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 rounded-[2rem] hover:bg-primary/10 dark:hover:bg-primary/20 transition-all active:scale-[0.98]">
+                        <a href="{base}/checklist/{checklist.checklistId}" class="block px-6 pt-6 pb-3">
+                            <!-- Nom de la checklist en pleine largeur -->
+                            <h3 class="font-bold text-xl text-text-main dark:text-white mb-4">
+                                {checklist.checklistName}
+                            </h3>
+
+                            <!-- Barre de progression pleine largeur avec % à l'intérieur -->
+                            <div class="w-full h-6 bg-primary/10 dark:bg-primary/20 rounded-full relative overflow-hidden">
+                                <!-- Barre de remplissage -->
+                                <div 
+                                    class="h-full bg-primary transition-all duration-500" 
+                                    style="width: {checklist.progress}%"
+                                ></div>
+                                
+                                <!-- Texte en couleur primaire (par défaut) -->
+                                <div class="absolute inset-0 flex items-center justify-center text-[10px] font-black text-primary">
+                                    {checklist.progress}%
                                 </div>
                                 
-                                <!-- Détails de la carte -->
-                                <div class="flex flex-col gap-0.5">
-                                    <p class="text-sm text-text-main/50 dark:text-gray-400 font-medium transition-colors">{checklist.modelName}</p>
-                                    <div class="mt-1">
-                                        <p class="text-[11px] text-text-main/40 dark:text-gray-500 font-medium transition-colors">Créée le {formatDate(checklist.creationDate)}</p>
-                                        <p class="text-[11px] text-text-main/40 dark:text-gray-500 font-medium transition-colors">Modifiée le {formatDate(checklist.lastModifiedDate)}</p>
-                                    </div>
+                                <!-- Texte en blanc (révélé par la barre via clip-path) -->
+                                <div 
+                                    class="absolute inset-0 flex items-center justify-center text-[10px] font-black text-white transition-all duration-500" 
+                                    style="clip-path: inset(0 {100 - Number(checklist.progress)}% 0 0)"
+                                >
+                                    {checklist.progress}%
                                 </div>
-                            </a>
+                            </div>
+                        </a>
 
-                            <!-- Boutons d'action en dessous -->
-                            <div class="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-secondary dark:border-gray-700 transition-colors">
+                        <!-- Ligne du bas : Date et Boutons d'action -->
+                        <div class="flex items-center justify-between px-6 pb-6 mt-0">
+                            <!-- Date (style badge utilisateur) -->
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/10 dark:border-primary/20 inline-flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                                    <path fill-rule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.75c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V8.75c0-.69-.56-1.25-1.25-1.25H4.75Z" clip-rule="evenodd" />
+                                </svg>
+                                {checklist.lastModifiedDate ? formatDate(checklist.lastModifiedDate) : formatDate(checklist.creationDate)}
+                            </span>
+
+                            <!-- Boutons d'action -->
+                            <div class="flex items-center gap-2">
                                 <button 
                                     onclick={() => addToGoogleCalendar(checklist)}
-                                    class="flex items-center gap-2 px-3 py-2 text-primary hover:bg-primary/10 rounded-xl transition-all cursor-pointer text-xs font-bold"
+                                    class="p-2 text-primary hover:bg-primary/10 rounded-full transition-all cursor-pointer"
                                     title="Ajouter à Google Agenda"
                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                         <path d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM7.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM8.25 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM9.75 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM10.5 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM12.75 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM14.25 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 13.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
                                         <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9h-16.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd" />
                                     </svg>
-                                    Agenda
                                 </button>
                                 <button 
                                     onclick={() => state.confirmDelete(checklist)}
-                                    class="flex items-center gap-2 px-3 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all cursor-pointer text-xs font-bold"
+                                    class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full transition-all cursor-pointer"
                                     title="Supprimer la checklist"
                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 1 0 1.5 0l-.5-8.5Zm4.33.75a.75.75 0 0 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Z" clip-rule="evenodd" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Zm4.33.75a.75.75 0 0 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Z" clip-rule="evenodd" />
                                     </svg>
-                                    Supprimer
                                 </button>
                             </div>
                         </div>

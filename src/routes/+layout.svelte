@@ -10,6 +10,8 @@
     import { base } from '$app/paths';
     import { pwaInfo } from 'virtual:pwa-info';
     import ReloadPrompt from '$lib/components/ReloadPrompt.svelte';
+    import logoLight from '$lib/assets/CHECKLIST-png-small.png';
+    import logoDark from '$lib/assets/CHECKLIST-png-small-black.png';
 
     let { children } = $props();
 
@@ -35,61 +37,29 @@
 
 {#if showLayout}
     <div class="min-h-screen bg-white dark:bg-gray-900 text-text-main dark:text-white flex flex-col relative transition-colors duration-300">
-        <!-- Header (Bandeau personnalisé) style maquette -->
+        <!-- Header simplifié -->
         {#if showHeader}
-            <div class="sticky top-0 z-20 bg-white dark:bg-gray-900" transition:fade>
+            <header class="w-full p-4 sm:p-6 flex justify-between items-center bg-white dark:bg-gray-900 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)]" transition:fade>
+                <div class="flex items-center">
+                    <img 
+                        src={layoutState.isDarkMode ? logoDark : logoLight} 
+                        alt="Logo Checklist" 
+                        class="h-8 sm:h-10 w-auto object-contain"
+                    />
+                </div>
 
-                <header class="mx-6 mt-4 mb-2 p-4 sm:p-6 bg-header-gradient text-text-inverse shadow-lg rounded-[2rem] sm:rounded-[2.5rem]">
-                    <div class="flex justify-between items-center">
-                        {#if layoutState.user}
-                            <div in:fade={{ duration: 300 }} class="flex flex-col">
-                                {#if page.url.pathname === `${base}/accueil`}
-                                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Bonjour, {layoutState.user.firstName}</h1>
-                                    {#if layoutState.checklistsCount > 0}
-                                        <div class="mt-1" transition:fade>
-                                            <span class="bg-white/20 text-text-inverse px-3 py-1.5 rounded-full text-[10px] font-bold border border-white/10 backdrop-blur-sm inline-flex items-center">
-                                                {layoutState.checklistsCount} {layoutState.checklistsCount > 1 ? 'checklists' : 'checklist'} en cours
-                                            </span>
-                                        </div>
-                                    {/if}
-                                {:else if page.url.pathname === `${base}/historique`}
-                                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Historique</h1>
-                                    {#if layoutState.finishedChecklistsCount > 0}
-                                        <div class="mt-1" transition:fade>
-                                            <span class="bg-white/20 text-text-inverse px-3 py-1.5 rounded-full text-[10px] font-bold border border-white/10 backdrop-blur-sm inline-flex items-center">
-                                                {layoutState.finishedChecklistsCount} {layoutState.finishedChecklistsCount > 1 ? 'checklists' : 'checklist'} terminée{layoutState.finishedChecklistsCount > 1 ? 's' : ''}
-                                            </span>
-                                        </div>
-                                    {/if}
-                                {:else if page.url.pathname === `${base}/modeles`}
-                                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Modèles</h1>
-                                    {#if layoutState.createdModelsCount > 0}
-                                        <div class="mt-1" transition:fade>
-                                            <span class="bg-white/20 text-text-inverse px-3 py-1.5 rounded-full text-[10px] font-bold border border-white/10 backdrop-blur-sm inline-flex items-center">
-                                                {layoutState.createdModelsCount} {layoutState.createdModelsCount > 1 ? 'modèles créés' : 'modèle créé'}
-                                            </span>
-                                        </div>
-                                    {/if}
-                                {:else}
-                                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">{layoutState.user.firstName}</h1>
-                                {/if}
-                            </div>
-                        {/if}
-
-                        <div class="flex gap-1 items-center">
-                            <button
-                                onclick={layoutState.toggleLogoutModal}                                class="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer text-text-inverse"
-                                aria-label="Déconnexion"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 sm:w-8 sm:h-8">
-                                    <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </div>
-
-                    </div>
-                </header>
-            </div>
+                <div class="flex gap-1 items-center">
+                    <button
+                        onclick={layoutState.toggleLogoutModal}
+                        class="p-2 hover:bg-primary/10 rounded-full transition-colors cursor-pointer text-primary"
+                        aria-label="Déconnexion"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 sm:w-8 sm:h-8">
+                            <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
         {/if}
 
         <!-- Contenu principal -->
