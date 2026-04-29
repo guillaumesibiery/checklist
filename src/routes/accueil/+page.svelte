@@ -64,7 +64,7 @@
 
     <div class="mt-4">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-bold text-text-main dark:text-white tracking-wider text-sm opacity-60 transition-colors">Checklists en cours</h2>
+            <h2 class="text-lg font-bold text-text-main dark:text-white uppercase tracking-wider text-sm opacity-60 transition-colors">Checklists en cours</h2>
         </div>
         
         {#if state.isLoadingChecklists}

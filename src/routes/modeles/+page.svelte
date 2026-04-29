@@ -52,35 +52,44 @@
         {:else if state.models.length > 0}
             <div class="grid gap-4">
                 {#each state.models as model}
-                    <div class="relative group">
-                        <button 
-                            class="w-full text-left p-6 bg-white dark:bg-gray-800 border-2 border-secondary dark:border-gray-700 rounded-[2rem] hover:border-primary/30 dark:hover:border-primary/50 transition-all active:scale-[0.98] cursor-pointer"
-                            onclick={() => goto(`${base}/modeles/${model.modelId}/`)}
-                        >
-                            <div class="flex justify-between items-center pr-12">
-                                <div>
-                                    <h3 class="font-bold text-lg text-text-main dark:text-white group-hover:text-primary transition-colors">{model.modelName}</h3>
-                                    <div class="flex flex-col">
-                                        <p class="text-[11px] text-text-main/40 dark:text-gray-500 font-medium transition-colors">Créé le {formatDate(model.modelCreationDate)}</p>
-                                        <p class="text-[11px] text-text-main/40 dark:text-gray-500 font-medium transition-colors">Modifié le {formatDate(model.modelLastModifiedDate)}</p>
-                                    </div>
-                                </div>
+                    <div class="group relative overflow-hidden bg-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 rounded-[2rem] hover:bg-primary/10 dark:hover:bg-primary/20 transition-all active:scale-[0.98]">
+                        <a href="{base}/modeles/{model.modelId}/" class="block px-6 pt-6 pb-1">
+                            <!-- Nom du modèle -->
+                            <h3 class="font-bold text-xl text-text-main dark:text-white mb-1 transition-colors">
+                                {model.modelName}
+                            </h3>
+                        </a>
+
+                        <!-- Ligne du bas : Dates et Boutons d'action -->
+                        <div class="flex items-center justify-between px-6 pb-6 mt-0">
+                            <!-- Dates (style badge) -->
+                            <div class="flex flex-col gap-1.5">
+                                <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/10 dark:border-primary/20 inline-flex items-center gap-1.5 w-fit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                                        <path fill-rule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.75c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V8.75c0-.69-.56-1.25-1.25-1.25H4.75Z" clip-rule="evenodd" />
+                                    </svg>
+                                    Créé le {formatDate(model.modelCreationDate)}
+                                </span>
+                                <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/10 dark:border-primary/20 inline-flex items-center gap-1.5 w-fit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                                        <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-5.038a7 7 0 0 0-11.712 3.138.75.75 0 0 0 1.449.39 5.5 5.5 0 0 1 9.201-2.466l.312.311h-2.433a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .75-.75V3.367a.75.75 0 0 0-1.5 0v2.431l-.31-.31Z" clip-rule="evenodd" />
+                                    </svg>
+                                    Modifié le {formatDate(model.modelLastModifiedDate)}
+                                </span>
                             </div>
-                        </button>
-                        
-                        <!-- Actions -->
-                        <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
-                            <!-- Bouton supprimer -->
-                            <button 
-                                onclick={(e) => { e.stopPropagation(); state.confirmDelete(model); }}
-                                class="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
-                                aria-label="Supprimer le modèle"
-                                title="Supprimer le modèle"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
-                                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Zm4.33.25a.75.75 0 0 0-1.5-.085l-.5 8.5a.75.75 0 0 0 1.5.085l.5-8.5Z" clip-rule="evenodd" />
-                                </svg>
-                            </button>
+
+                            <!-- Boutons d'action -->
+                            <div class="flex items-center gap-2">
+                                <button 
+                                    onclick={(e) => { e.preventDefault(); state.confirmDelete(model); }}
+                                    class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full transition-all cursor-pointer"
+                                    title="Supprimer le modèle"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Zm4.33.75a.75.75 0 0 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 {/each}
