@@ -10,7 +10,7 @@
     // Icônes Heroicons Solid
     const icons = {
         share: `<path fill-rule="evenodd" d="M15.75 4.5a3.75 3.75 0 1 1 .731 2.25l-6.45 3.518a3.75 3.75 0 0 1 0 3.464l6.45 3.518a3.75 3.75 0 1 1-.731 2.25c0-.188.014-.37.04-.548l-6.45-3.518a3.75 3.75 0 1 1 0-4.932l6.45-3.518a3.75 3.75 0 0 1-.04-.548Z" clip-rule="evenodd" />`,
-        check: `<path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 0 1 1.04-.208Z" clip-rule="evenodd" />`,
+        check: `<path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" /><path fill-rule="evenodd" d="m3.087 9 .54 9.17c.108 1.837 1.631 3.255 3.473 3.255h9.799c1.844 0 3.367-1.42 3.473-3.255l.54-9.17H3.087ZM10 12.25a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5h-4Z" clip-rule="evenodd" />`,
         logout: `<path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a0 0 0 0 1 0 0H7.5a0 0 0 0 1 0 0V5.25a0 0 0 0 1 0 0h6a0 0 0 0 1 0 0V8.25a.75.75 0 0 0 1.5 0V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />`,
         plus: `<path d="M10.75 4.75a.75.75 0 00-1.5 0v5.25H4a.75.75 0 000 1.5h5.25v5.25a.75.75 0 001.5 0v-5.25H16a.75.75 0 000-1.5h-5.25V4.75z" />`,
         minus: `<path d="M5.25 10.75a.75.75 0 0 1 0-1.5h13.5a.75.75 0 0 1 0 1.5H5.25Z" />`,
@@ -36,7 +36,7 @@
         </div>
         <div class="pt-28 px-4 space-y-6">
             {#each Array(3) as _}
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm animate-pulse transition-colors">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-primary/10 dark:border-gray-700/50 animate-pulse transition-colors">
                     <div class="h-6 bg-secondary dark:bg-gray-700 rounded w-1/3 mb-4 transition-colors"></div>
                     {#each Array(4) as _}
                         <div class="h-12 bg-secondary dark:bg-gray-700 rounded w-full mt-2 transition-colors"></div>
@@ -47,17 +47,33 @@
     {:else if state.checklist}
         <!-- Header -->
         <header class="fixed top-0 left-0 right-0 bg-header-gradient text-text-inverse p-4 z-10 shadow-lg flex flex-col items-center" in:fly={{ y: -50 }}>
-            <h1 class="text-xl font-bold truncate w-full text-center px-8">{state.checklist.checklistName}</h1>
-            <div class="mt-2 h-2.5 w-full max-w-md bg-white/30 rounded-full overflow-hidden">
-                <div class="h-full bg-white transition-all duration-500 ease-out" 
-                     style="width: {state.checklist.progress}%">
+            <h1 class="text-lg font-bold truncate w-full text-center px-8 mb-2">{state.checklist.checklistName}</h1>
+            
+            <!-- Barre de progression avec % intégré -->
+            <div class="w-full max-w-md h-6 bg-white/20 rounded-full relative overflow-hidden transition-colors">
+                <!-- Barre de remplissage (blanche) -->
+                <div 
+                    class="h-full bg-white transition-all duration-500 ease-out" 
+                    style="width: {state.checklist.progress}%"
+                ></div>
+                
+                <!-- Texte en blanc (par défaut sur le fond transparent) -->
+                <div class="absolute inset-0 flex items-center justify-center text-[10px] font-black text-white">
+                    {state.checklist.progress}%
+                </div>
+                
+                <!-- Texte en couleur primaire (révélé par la barre blanche via clip-path) -->
+                <div 
+                    class="absolute inset-0 flex items-center justify-center text-[10px] font-black text-primary transition-all duration-500" 
+                    style="clip-path: inset(0 {100 - Number(state.checklist.progress)}% 0 0)"
+                >
+                    {state.checklist.progress}%
                 </div>
             </div>
-            <span class="mt-1 text-lg font-black">{state.checklist.progress}%</span>
         </header>
 
         <!-- Content -->
-        <main class="pt-36 px-4 space-y-6">
+        <main class="pt-28 px-4 space-y-6">
             {#if !state.readOnly && state.isEditMode}
                 <button class="w-full py-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors active:scale-95"
                         onclick={state.openAddCategoryModal}
@@ -71,7 +87,7 @@
 
             {#each state.checklist.elements as element, catIndex}
                 {@const isExpanded = state.expandedCategories.has(catIndex)}
-                <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden transition-colors" in:fade={{ delay: catIndex * 100 }}>
+                <section class="bg-white dark:bg-gray-800 rounded-2xl border border-primary/10 dark:border-gray-700/50 overflow-hidden transition-colors" in:fade={{ delay: catIndex * 100 }}>
                     <!-- svelte-ignore a11y_no_static_element_interactions -->
                     <!-- svelte-ignore a11y_click_events_have_key_events -->
                     <div class="w-full p-4 bg-white dark:bg-gray-800 flex justify-between items-center hover:bg-secondary/50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
@@ -211,20 +227,20 @@
                     <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer" 
                             onclick={state.toggleEditMode} 
                             data-testid="checklist-edit-mode"
-                            aria-label="Éditer">
+                            aria-label="Modifier">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                             {@html state.isEditMode ? icons.eye : icons.squaresPlus}
                         </svg>
-                        <span class="text-[10px] font-bold uppercase tracking-wider">{state.isEditMode ? 'Consulter' : 'Éditer'}</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider">{state.isEditMode ? 'Consulter' : 'Modifier'}</span>
                     </button>
                     <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100" 
                             onclick={state.openFinalizeModal} 
                             disabled={state.isEditMode}
-                            aria-label="Finaliser">
+                            aria-label="Archiver">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
                             {@html icons.check}
                         </svg>
-                        <span class="text-[10px] font-bold uppercase tracking-wider">Finaliser</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider">Archiver</span>
                     </button>
                 {/if}
                 <button class="flex flex-col items-center gap-1 text-text-inverse hover:scale-110 transition-transform active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100" 
@@ -253,11 +269,11 @@
                                 {@html icons.check}
                             </svg>
                         </div>
-                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-4 transition-colors">Finaliser la checklist ?</h2>
+                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-4 transition-colors">Archiver la checklist ?</h2>
                         
                         {#if state.checklist.progress !== '100'}
                             <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 transition-colors">
-                                Attention : votre checklist n'est pas encore terminée (<span class="text-primary font-bold">{state.checklist.progress}%</span>). Voulez-vous tout de même la finaliser ?
+                                Attention : votre checklist n'est pas encore terminée (<span class="text-primary font-bold">{state.checklist.progress}%</span>). Voulez-vous tout de même l'archiver ?
                             </p>
                         {:else}
                             <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 transition-colors">
