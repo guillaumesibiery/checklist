@@ -52,7 +52,7 @@
         <div class="grid gap-4">
             {#each state.models as model}
                 <div class="group relative overflow-hidden bg-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 rounded-[2rem] hover:bg-primary/10 dark:hover:bg-primary/20 transition-all active:scale-[0.98]">
-                    <a href="{base}/modeles/{model.modelId}/" class="block px-6 pt-6 pb-1">
+                    <a href="{base}/modeles/{model.modelId}/" class="block px-6 pt-5 pb-1">
                         <!-- Nom du modèle -->
                         <h3 class="font-bold text-xl text-text-main dark:text-white mb-1 transition-colors">
                             {model.modelName}
@@ -60,8 +60,7 @@
                     </a>
 
                     <!-- Ligne du bas : Dates et Boutons d'action -->
-                    <div class="flex items-center justify-between px-6 pb-6 mt-0">
-                        <!-- Dates (style badge) -->
+                    <div class="flex items-center justify-between px-6 pb-6 mt-0">                        <!-- Dates (style badge) -->
                         <div class="flex flex-col gap-1.5">
                             <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/10 dark:border-primary/20 inline-flex items-center gap-1.5 w-fit">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">

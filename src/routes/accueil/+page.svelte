@@ -77,7 +77,7 @@
             <div class="grid gap-4">
                 {#each state.checklists as checklist}
                     <div class="group relative overflow-hidden bg-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 rounded-[2rem] hover:bg-primary/10 dark:hover:bg-primary/20 transition-all active:scale-[0.98]">
-                        <a href="{base}/checklist/{checklist.checklistId}" class="block px-6 pt-6 pb-3">
+                        <a href="{base}/checklist/{checklist.checklistId}" class="block px-6 pt-5 pb-3">
                             <!-- Nom de la checklist en pleine largeur -->
                             <h3 class="font-bold text-xl text-text-main dark:text-white mb-4">
                                 {checklist.checklistName}
@@ -107,7 +107,7 @@
                         </a>
 
                         <!-- Ligne du bas : Date et Boutons d'action -->
-                        <div class="flex items-center justify-between px-6 pb-6 mt-0">
+                        <div class="flex items-center justify-between px-6 pb-5 mt-0">
                             <!-- Date (style badge utilisateur) -->
                             <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/10 dark:border-primary/20 inline-flex items-center gap-1.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
