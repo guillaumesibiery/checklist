@@ -84,7 +84,7 @@ test('Model life cycle', async ({ page }) => {
   await expect(page.locator('h3')).toContainText('Voyage pro');
 
   //Modification
-  await page.getByRole('button', { name: 'Voyage pro Créé le '+formattedDate }).click();
+  await page.getByRole('link', { name: 'Voyage pro' }).click();
   await expect(page.getByRole('heading', { name: 'Modèle "Voyage pro"' })).toBeVisible();
 
   await page.getByRole('button', { name: 'Ajouter une catégorie' }).click();

@@ -20,7 +20,7 @@ test('Finalize checklist flow', async ({ page }) => {
   await expect(page.getByText(testChecklistName)).toBeVisible();
 
   // 4. Cliquer sur Finaliser (elle est à 0%)
-  await page.getByRole('button', { name: 'Finaliser' }).click();
+  await page.getByRole('button', { name: 'Archiver' }).click();
 
   // 5. Vérifier la présence de l'alerte de progression < 100%
   await expect(page.getByText(/Attention : votre checklist n'est pas encore terminée/)).toBeVisible();
@@ -28,11 +28,11 @@ test('Finalize checklist flow', async ({ page }) => {
 
   // 6. Cliquer sur Annuler
   await page.getByRole('button', { name: 'Annuler' }).click();
-  await expect(page.getByText(/Finaliser la checklist \?/)).not.toBeVisible();
+  await expect(page.getByText(/Archiver la checklist \?/)).not.toBeVisible();
 
   // 7. Cocher quelques items pour changer le progrès (optionnel mais bien pour le test)
   // On va juste finaliser tel quel pour tester le bouton Valider
-  await page.getByRole('button', { name: 'Finaliser' }).click();
+  await page.getByRole('button', { name: 'Archiver' }).click();
   await page.getByRole('button', { name: 'Valider' }).click();
 
   // 8. Vérifier la redirection vers l'accueil

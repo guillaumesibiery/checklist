@@ -77,7 +77,7 @@
             <div class="grid gap-4">
                 {#each state.checklists as checklist}
                     <div class="group relative overflow-hidden bg-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 rounded-[2rem] hover:bg-primary/10 dark:hover:bg-primary/20 transition-all active:scale-[0.98]">
-                        <a href="{base}/checklist/{checklist.checklistId}" class="block px-6 pt-5 pb-3">
+                        <a href="{base}/checklist/{checklist.checklistId}" class="home-checklist-name block px-6 pt-5 pb-3">
                             <!-- Nom de la checklist en pleine largeur -->
                             <h3 class="font-bold text-xl text-text-main dark:text-white mb-4">
                                 {checklist.checklistName}
