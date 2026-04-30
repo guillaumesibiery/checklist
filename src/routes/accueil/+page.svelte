@@ -26,7 +26,8 @@
 
     function addToGoogleCalendar(checklist: any) {
         const title = encodeURIComponent(`Checklist: ${checklist.checklistName}`);
-        const url = window.location.origin + base + '/checklist/' + checklist.checklistId;
+        // Utiliser la racine de l'app avec un paramètre pour éviter les 404 sur GitHub Pages
+        const url = window.location.origin + base + '/?checklistId=' + checklist.checklistId;
         const details = encodeURIComponent(`Lien vers la checklist : ${url}`);
         
         // Date de début (maintenant)

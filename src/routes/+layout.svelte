@@ -17,6 +17,17 @@
 
     onMount(async () => {
         await layoutState.init();
+        
+        // Gestion de la redirection via paramètre checklistId (ex: via Google Agenda)
+        const urlParams = new URLSearchParams(window.location.search);
+        const checklistId = urlParams.get('checklistId');
+        if (checklistId) {
+            // Nettoyer l'URL et rediriger
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.delete('checklistId');
+            window.history.replaceState({}, '', newUrl.href);
+            goto(`${base}/checklist/${checklistId}`);
+        }
     });
 
     const isLoginPage = $derived(page.url.pathname === base || page.url.pathname === `${base}/`);
