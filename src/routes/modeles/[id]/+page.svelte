@@ -1,7 +1,7 @@
 <script lang="ts">
     import { page } from '$app/state';
     import { createModelEditorState } from './page.svelte.ts';
-    import { filterInput } from '$lib/modalInputFilter';
+    import { filterInput } from '$lib/ts/modalInputFilter';
     import { fade, fly, scale } from 'svelte/transition';
 
     const state = createModelEditorState(page.params.id as string);

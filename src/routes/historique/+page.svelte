@@ -4,6 +4,7 @@
     import { goto } from '$app/navigation';
     import { base } from '$app/paths';
     import { onMount } from 'svelte';
+    import { formatDate } from '$lib/ts/date';
 
     const state = createHistoriqueState();
 
@@ -11,18 +12,6 @@
         await state.loadChecklists();
     });
 
-    // Formate la date en français (ex: 15/04/2026 à 17:00)
-    function formatDate(isoString: string) {
-        if (!isoString) return '';
-        const date = new Date(isoString);
-        return new Intl.DateTimeFormat('fr-FR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        }).format(date).replace(',', ' à');
-    }
 </script>
 
 <div in:fade={{ duration: 300 }} class="p-6 transition-colors duration-300">

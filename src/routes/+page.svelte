@@ -2,7 +2,7 @@
   import { fade, scale, fly } from 'svelte/transition';
   import { base } from '$app/paths';
   import { createPageState } from './page.svelte.ts';
-  import { layoutState } from '$lib/layoutState.svelte.ts';
+  import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 
   const state = createPageState();
   let users = state.users;

@@ -1,5 +1,5 @@
-import { db, type Checklist } from '$lib/db';
-import { layoutState } from '$lib/layoutState.svelte.ts';
+import { db, type Checklist } from '$lib/ts/db';
+import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 
 export function createHistoriqueState() {
     let checklists = $state<Checklist[]>([]);

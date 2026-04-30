@@ -1,6 +1,6 @@
 import 'fake-indexeddb/auto';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { db } from './db';
+import { db } from '$lib/ts/db';
 
 describe('Database Operations', () => {
     beforeEach(async () => {

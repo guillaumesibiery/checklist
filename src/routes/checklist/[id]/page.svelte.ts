@@ -1,4 +1,4 @@
-import { db, type Checklist, type ChecklistItem } from '$lib/db';
+import { db, type Checklist, type ChecklistItem } from '$lib/ts/db';
 import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { onMount } from 'svelte';

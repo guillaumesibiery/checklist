@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { createPageState } from './page.svelte';
-import { db } from '$lib/db';
+import { db } from '$lib/ts/db';
 
 // Mock navigation
 vi.mock('$app/navigation', () => ({

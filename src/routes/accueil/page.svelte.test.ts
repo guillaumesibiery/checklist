@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { createAccueilState } from './page.svelte.ts';
-import { db } from '$lib/db';
+import { db } from '$lib/ts/db';
 import { goto } from '$app/navigation';
 
 // Mock Svelte lifecycle and navigation

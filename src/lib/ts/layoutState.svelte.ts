@@ -1,6 +1,6 @@
 import { goto } from '$app/navigation';
 import { base } from '$app/paths';
-import { db, type User } from '$lib/db';
+import { db, type User } from '$lib/ts/db';
 
 export function createLayoutState() {
     let user = $state<User | null>(null);

@@ -1,5 +1,5 @@
-import { db, type Model } from '$lib/db';
-import { layoutState } from '$lib/layoutState.svelte.ts';
+import { db, type Model } from '$lib/ts/db';
+import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 import { base } from '$app/paths';
 import { goto } from '$app/navigation';
 

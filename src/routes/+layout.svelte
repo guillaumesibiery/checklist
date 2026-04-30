@@ -1,8 +1,8 @@
 <script lang="ts">
     import './layout.css';
     import favicon from '$lib/assets/favicon.svg';
-    import { layoutState } from '$lib/layoutState.svelte.ts';
-    import { filterInput } from '$lib/modalInputFilter';
+    import { layoutState } from '$lib/ts/layoutState.svelte.ts';
+    import { filterInput } from '$lib/ts/modalInputFilter';
     import { page } from '$app/state';
     import { fade, scale } from 'svelte/transition';
     import { onMount } from 'svelte';

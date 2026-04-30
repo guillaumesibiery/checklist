@@ -3,7 +3,8 @@
     import { fade, scale, fly } from 'svelte/transition';
     import { onMount } from 'svelte';
     import { base } from '$app/paths';
-    import { layoutState } from '$lib/layoutState.svelte';
+    import { layoutState } from '$lib/ts/layoutState.svelte';
+    import { formatDate } from '$lib/ts/date';
 
     const state = createAccueilState();
 
@@ -11,18 +12,6 @@
         await state.loadChecklists();
     });
 
-    // Formate la date en français (ex: 15/04/2026 à 17:00)
-    function formatDate(isoString: string) {
-        if (!isoString) return '';
-        const date = new Date(isoString);
-        return new Intl.DateTimeFormat('fr-FR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        }).format(date).replace(',', ' à');
-    }
 
     function addToGoogleCalendar(checklist: any) {
         const title = encodeURIComponent(`Checklist: ${checklist.checklistName}`);

@@ -1,8 +1,8 @@
 import { liveQuery } from 'dexie';
-import { db, type User } from '$lib/db';
+import { db, type User } from '$lib/ts/db';
 import { goto } from '$app/navigation';
 import { base } from '$app/paths';
-import { layoutState } from '$lib/layoutState.svelte.ts';
+import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 
 export function createPageState() {
   let users = liveQuery(() => db.users.orderBy('firstName').toArray());
