@@ -231,6 +231,25 @@ describe('Checklist State - Add Category', () => {
         expect(updated?.elements.find(e => e.category === 'UserCat')).toBeUndefined();
     });
 
+    it('devrait ajouter un item dans une catégorie système (venant d\'un modèle)', async () => {
+        const state = createChecklistState(checklistId);
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // 'Cat1' est une catégorie système créée dans beforeEach
+        expect(state.checklist?.elements.find(e => e.category === 'Cat1')?.addedByUser).toBeUndefined();
+        
+        state.openAddItemModal('Cat1');
+        state.newItemName = 'NewItemInSystemCat';
+        state.newItemQuantity = 1;
+        await state.addItem();
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const cat = state.checklist?.elements.find(e => e.category === 'Cat1');
+        expect(cat?.items.length).toBe(1);
+        expect(cat?.items[0].item).toBe('NewItemInSystemCat');
+        expect(cat?.items[0].addedByUser).toBe("true");
+    });
+
     it('devrait basculer le mode édition', async () => {
         const state = createChecklistState(checklistId);
         await new Promise(resolve => setTimeout(resolve, 100));

@@ -53,7 +53,7 @@
             <div class="w-full max-w-md h-6 bg-white/20 rounded-full relative overflow-hidden transition-colors">
                 <!-- Barre de remplissage (blanche) -->
                 <div 
-                    class="h-full bg-white transition-all duration-500 ease-out" 
+                    class="h-full bg-white rounded-full transition-all duration-500 ease-out" 
                     style="width: {state.checklist.progress}%"
                 ></div>
                 
@@ -120,7 +120,7 @@
                     
                     {#if isExpanded}
                         <div class="divide-y divide-secondary dark:divide-gray-700 transition-colors" transition:fade={{ duration: 200 }}>
-                            {#if (element.addedByUser === "true" || element.addedByUser === true) && !state.readOnly && state.isEditMode}
+                            {#if !state.readOnly && state.isEditMode}
                                 <button class="w-full py-3 bg-secondary/30 dark:bg-gray-700/30 text-primary text-sm font-bold flex items-center justify-center gap-2 hover:bg-secondary/50 dark:hover:bg-gray-700/50 transition-colors"
                                         onclick={() => state.openAddItemModal(element.category)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
