@@ -41,16 +41,15 @@
 <svelte:head>
     <title>Checklist</title>
     <link rel="icon" href={favicon} />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#9d50f8" />
     {@html pwaInfo?.webManifest.linkTag}
 </svelte:head>
 
 {#if showLayout}
-    <div class="min-h-screen bg-white dark:bg-gray-900 text-text-main dark:text-white flex flex-col relative transition-colors duration-300">
+    <div class="min-h-screen bg-white dark:bg-[#05010d] text-text-main dark:text-white flex flex-col relative transition-colors duration-300">
         <!-- Header simplifié -->
         {#if showHeader}
-            <header class="w-full p-4 sm:p-6 flex justify-between items-center bg-white dark:bg-gray-900 border-b border-secondary dark:border-gray-800" transition:fade>
+            <header class="w-full p-4 sm:p-6 flex justify-between items-center bg-white dark:bg-[#111828] border-b border-secondary dark:border-gray-800" transition:fade>
                 <div class="flex items-center">
                     <img 
                         src={layoutState.isDarkMode ? logoDark : logoLight} 
@@ -79,7 +78,7 @@
         </main>
 
         {#if showNav}
-            <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-secondary dark:border-gray-800 pb-5 pt-2 grid grid-cols-5 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] transition-colors duration-300" transition:fade>
+            <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#05010d] border-t border-secondary dark:border-gray-800 pb-5 pt-2 grid grid-cols-5 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] transition-colors duration-300" transition:fade>
                 <!-- Accueil -->
                 <div class="flex justify-center">
                     <button 

@@ -34,7 +34,7 @@ export default defineConfig({
 				name: 'Checklist',
 				short_name: 'Checklist',
 				description: 'Application de suivi de checklists hors-ligne',
-				theme_color: '#ffffff',
+				theme_color: '#9d50f8',
 				background_color: '#ffffff',
 				display: 'standalone',
 				scope: base,

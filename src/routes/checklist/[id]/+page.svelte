@@ -28,7 +28,7 @@
     }
 </script>
 
-<div class="min-h-screen bg-secondary dark:bg-gray-900 pb-24 transition-colors duration-300">
+<div class="min-h-screen bg-secondary dark:bg-[#05010d] pb-24 transition-colors duration-300">
     {#if state.loading}
         <div class="fixed top-0 left-0 right-0 h-24 bg-primary p-4 z-10 shadow-lg flex flex-col justify-end">
             <div class="animate-pulse h-6 bg-white/20 rounded w-1/2 mb-4"></div>
@@ -46,7 +46,7 @@
         </div>
     {:else if state.checklist}
         <!-- Header -->
-        <header class="fixed top-0 left-0 right-0 bg-header-gradient text-text-inverse p-4 z-10 border-b border-white/20 flex flex-col items-center pt-[calc(1rem+env(safe-area-inset-top))]" in:fly={{ y: -50 }}>
+        <header class="fixed top-0 left-0 right-0 bg-primary text-text-inverse p-4 z-10 flex flex-col items-center pt-[calc(1rem+env(safe-area-inset-top))]" in:fly={{ y: -50 }}>
             <h1 class="text-lg font-bold truncate w-full text-center px-8 mb-2">{state.checklist.checklistName}</h1>
             
             <!-- Barre de progression avec % intégré -->
