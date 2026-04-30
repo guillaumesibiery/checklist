@@ -8,7 +8,7 @@
   let users = state.users;
 </script>
 
-<div class="min-h-screen bg-white dark:bg-[#05010d] flex flex-col items-center justify-center p-4 transition-colors duration-300">
+<div class="min-h-screen bg-white dark:bg-[#111828] flex flex-col items-center justify-center transition-colors duration-300">
     <div class="w-full max-w-4xl" transition:fade>
         <div class="flex justify-center mb-12">
             {#if layoutState.isDarkMode}
