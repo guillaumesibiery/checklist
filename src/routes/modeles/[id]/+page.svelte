@@ -3,6 +3,7 @@
     import { createModelEditorState } from './page.svelte.ts';
     import { filterInput } from '$lib/ts/modalInputFilter';
     import { fade, fly, scale } from 'svelte/transition';
+    import './page.css';
 
     const state = createModelEditorState(page.params.id as string);
 
@@ -290,23 +291,3 @@
         </div>
     {/if}
 </div>
-
-<style>
-    :global(body) {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-    :global(body::-webkit-scrollbar) {
-        display: none;
-    }
-
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    input[type='number'] {
-        -moz-appearance: textfield;
-        appearance: textfield;
-    }
-</style>

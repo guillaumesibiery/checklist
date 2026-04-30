@@ -3,6 +3,7 @@
   import { base } from '$app/paths';
   import { createPageState } from './page.svelte.ts';
   import { layoutState } from '$lib/ts/layoutState.svelte.ts';
+  import './page.css';
 
   const state = createPageState();
   let users = state.users;
@@ -182,13 +183,3 @@
         </div>
     </div>
 {/if}
-
-<style>
-    .hide-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-    .hide-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-</style>

@@ -3,6 +3,7 @@
     import { createChecklistState } from './page.svelte.ts';
     import { filterInput } from '$lib/ts/modalInputFilter';
     import { fade, fly, scale } from 'svelte/transition';
+    import './page.css';
 
     const readOnly = page.url.searchParams.get('readOnly') === 'true';
     const state = createChecklistState(page.params.id as string, readOnly);
@@ -518,25 +519,3 @@
         </div>
     {/if}
 </div>
-
-<style>
-    /* Optionnel: masquer la scrollbar mais garder le scroll */
-    :global(body) {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-    :global(body::-webkit-scrollbar) {
-        display: none;
-    }
-
-    /* Supprimer les flèches par défaut des champs nombre */
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    input[type='number'] {
-        -moz-appearance: textfield;
-        appearance: textfield;
-    }
-</style>
