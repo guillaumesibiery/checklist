@@ -274,8 +274,7 @@ export function createLayoutState() {
                 await ChecklistRepository.save(checklistToSave);
                 toastState.success(`Checklist "${checklistToSave.checklistName}" mise à jour`);
             } else {
-                // Création : comportement existant
-                checklistToSave.userId = user.uuid;
+                // Création : on conserve l'userId et l'userName du JSON décodé
                 checklistToSave.creationDate = now;
                 checklistToSave.lastModifiedDate = now;
                 checklistToSave.status = 'IN_PROGRESS';

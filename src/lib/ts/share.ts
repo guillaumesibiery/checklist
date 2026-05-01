@@ -6,6 +6,7 @@ import type { Checklist, ChecklistElement, ChecklistItem } from './db';
 const MAPPING: Record<string, string> = {
     checklistName: 'n',
     checklistId: 'id',
+    userId: 'uid',
     userName: 'u',
     elements: 'e',
     category: 'c',
@@ -27,6 +28,7 @@ export function compactChecklist(checklist: Checklist): any {
     return {
         [MAPPING.checklistName]: checklist.checklistName,
         [MAPPING.checklistId]: checklist.checklistId,
+        [MAPPING.userId]: checklist.userId,
         [MAPPING.userName]: checklist.userName,
         [MAPPING.elements]: checklist.elements.map(el => {
             const compactEl: any = {
@@ -75,6 +77,7 @@ export function validateCompactChecklist(compact: any): void {
     // Vérification des champs racines requis
     if (typeof compact[MAPPING.checklistName] !== 'string' || 
         typeof compact[MAPPING.checklistId] !== 'string' ||
+        typeof compact[MAPPING.userId] !== 'string' ||
         typeof compact[MAPPING.userName] !== 'string') {
         throw new Error('Données racines manquantes ou invalides');
     }
@@ -133,7 +136,8 @@ export function expandChecklist(compact: any): Partial<Checklist> {
 
     const checklist: any = {
         checklistName: sanitize(compact[MAPPING.checklistName]),
-        checklistId: compact[MAPPING.checklistId], // UUID, pas besoin de sanitize strict mais validé par regex plus tard si besoin
+        checklistId: compact[MAPPING.checklistId],
+        userId: compact[MAPPING.userId],
         userName: sanitize(compact[MAPPING.userName]),
         elements: (compact[MAPPING.elements] || []).map((el: any) => {
             const element: ChecklistElement = {

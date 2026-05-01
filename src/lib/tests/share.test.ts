@@ -89,6 +89,7 @@ describe('Share Utilities', () => {
         const maliciousCompact = {
             n: 'Checklist <script>alert("XSS")</script>',
             id: 'uuid',
+            uid: 'user-uuid',
             u: 'User <b>Bold</b>',
             e: [{
                 c: 'Category <img src=x onerror=alert(1)>',
@@ -104,6 +105,7 @@ describe('Share Utilities', () => {
 
         expect(expanded.checklistName).toBe('Checklist alert("XSS")');
         expect(expanded.userName).toBe('User Bold');
+        expect(expanded.userId).toBe('user-uuid');
         expect(expanded.elements![0].category).toBe('Category');
         expect(expanded.elements![0].items[0].item).toBe('Item');
     });
@@ -117,6 +119,7 @@ describe('Share Utilities', () => {
         const tooManyElements = {
             n: 'Large',
             id: 'uuid',
+            uid: 'user-uuid',
             u: 'User',
             e: Array(51).fill({ c: 'Cat', i: [] })
         };
