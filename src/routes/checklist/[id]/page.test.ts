@@ -40,20 +40,21 @@ describe('Checklist State - Add Category', () => {
         await db.checklists.add({
             checklistId: checklistId,
             checklistName: 'Test Checklist',
-            userId: 1,
+            userId: 'user-uuid-test',
+            userName: 'Test User',
             creationDate: new Date().toISOString(),
             lastModifiedDate: new Date().toISOString(),
-            progress: '0',
+            progress: 0,
             status: 'IN_PROGRESS',
             modelName: 'Test Model',
             elements: [
                 {
                     category: 'Cat1',
-                    progress: '0',
+                    progress: 0,
                     items: []
                 }
             ]
-        });
+        } as any);
     });
 
     it('devrait ajouter une catégorie si elle n\'existe pas', async () => {

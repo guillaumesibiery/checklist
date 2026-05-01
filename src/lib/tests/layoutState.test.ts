@@ -31,16 +31,16 @@ describe('Layout State', () => {
     });
 
     it('devrait charger les modèles par défaut et les modèles personnalisés avec un utilisateur connecté', async () => {
-        const userId = await db.users.add({ firstName: 'Alice' });
-        const user = await db.users.get(userId);
+        const user = { uuid: 'uuid-alice', firstName: 'Alice' };
+        await db.users.add(user);
         
         const state = createLayoutState();
-        state.user = user!;
+        state.user = user as any;
 
         await db.models.add({
             modelName: 'Mon Modèle Perso',
             modelId: 'uuid-custom',
-            userId: userId,
+            userId: user.uuid,
             modelCreationDate: '',
             modelLastModifiedDate: '',
             checklistId: '',

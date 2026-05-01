@@ -19,7 +19,7 @@ describe('Database Operations', () => {
             modelLastModifiedDate: new Date().toISOString(),
             checklistId: '',
             checklistName: '',
-            userId: '',
+            userId: 'user-uuid-1',
             creationDate: '',
             lastModifiedDate: '',
             progress: "0",
@@ -42,7 +42,7 @@ describe('Database Operations', () => {
             modelLastModifiedDate: '2026-01-01T10:00:00Z',
             checklistId: '',
             checklistName: '',
-            userId: '',
+            userId: 'user-uuid-1',
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
@@ -57,7 +57,7 @@ describe('Database Operations', () => {
             modelLastModifiedDate: '2026-01-02T10:00:00Z',
             checklistId: '',
             checklistName: '',
-            userId: '',
+            userId: 'user-uuid-1',
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
@@ -78,7 +78,7 @@ describe('Database Operations', () => {
             modelLastModifiedDate: new Date().toISOString(),
             checklistId: '',
             checklistName: '',
-            userId: '',
+            userId: 'user-uuid-1',
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
@@ -101,7 +101,7 @@ describe('Database Operations', () => {
             modelLastModifiedDate: '',
             checklistId: '',
             checklistName: '',
-            userId: 1,
+            userId: 'user-uuid-1',
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
@@ -123,7 +123,7 @@ describe('Database Operations', () => {
             modelLastModifiedDate: '',
             checklistId: '',
             checklistName: '',
-            userId: 1,
+            userId: 'user-uuid-1',
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
@@ -139,11 +139,13 @@ describe('Database Operations', () => {
 
     // --- Tests pour les Checklists ---
     it('devrait insérer une checklist (insert)', async () => {
-        const userId = await db.users.add({ firstName: 'Test' });
+        const user = { uuid: 'user-uuid-1', firstName: 'Test' };
+        await db.users.add(user);
         const checklist = {
             checklistId: 'test-uuid',
             checklistName: 'Ma Checklist',
-            userId,
+            userId: user.uuid,
+            userName: user.firstName,
             creationDate: new Date().toISOString(),
             lastModifiedDate: new Date().toISOString(),
             progress: "0",
@@ -164,42 +166,46 @@ describe('Database Operations', () => {
                 }
             ]
         };
-        const id = await db.checklists.add(checklist);
+        const id = await db.checklists.add(checklist as any);
         expect(id).toBeDefined();
         
         const inserted = await db.checklists.get(id);
         expect(inserted?.checklistName).toBe('Ma Checklist');
+        expect(inserted?.userName).toBe('Test');
         expect(inserted?.elements.length).toBe(1);
     });
 
     it('devrait récupérer les checklists d\'un utilisateur (select)', async () => {
-        const userId = await db.users.add({ firstName: 'User1' });
+        const user = { uuid: 'user-uuid-2', firstName: 'User1' };
+        await db.users.add(user);
         
         await db.checklists.add({
             checklistId: 'uuid-1',
             checklistName: 'Checklist 1',
-            userId,
+            userId: user.uuid,
+            userName: user.firstName,
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
             status: 'IN_PROGRESS',
             modelName: 'M1',
             elements: []
-        });
+        } as any);
 
         await db.checklists.add({
             checklistId: 'uuid-2',
             checklistName: 'Checklist 2',
-            userId,
+            userId: user.uuid,
+            userName: user.firstName,
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
             status: 'IN_PROGRESS',
             modelName: 'M2',
             elements: []
-        });
+        } as any);
 
-        const checklists = await db.checklists.where('userId').equals(userId).toArray();
+        const checklists = await db.checklists.where('userId').equals(user.uuid).toArray();
         expect(checklists.length).toBe(2);
     });
 
@@ -207,14 +213,15 @@ describe('Database Operations', () => {
         const id = await db.checklists.add({
             checklistId: 'uuid-3',
             checklistName: 'Checklist 3',
-            userId: 1,
+            userId: 'user-uuid-3',
+            userName: 'User3',
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
             status: 'IN_PROGRESS',
             modelName: 'M3',
             elements: []
-        });
+        } as any);
 
         await db.checklists.update(id, { progress: '50', status: 'IN_PROGRESS' });
         
@@ -226,14 +233,15 @@ describe('Database Operations', () => {
         const id = await db.checklists.add({
             checklistId: 'uuid-4',
             checklistName: 'Checklist 4',
-            userId: 1,
+            userId: 'user-uuid-4',
+            userName: 'User4',
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
             status: 'IN_PROGRESS',
             modelName: 'M4',
             elements: []
-        });
+        } as any);
 
         await db.checklists.delete(id);
         const found = await db.checklists.get(id);
@@ -242,31 +250,34 @@ describe('Database Operations', () => {
 
     // --- Tests pour les Utilisateurs ---
     it('devrait créer un utilisateur', async () => {
-        const id = await db.users.add({ firstName: 'Alice' });
+        const id = await db.users.add({ uuid: 'user-uuid-3', firstName: 'Alice' });
         expect(id).toBeDefined();
 
         const user = await db.users.get(id);
         expect(user?.firstName).toBe('Alice');
+        expect(user?.uuid).toBe('user-uuid-3');
     });
 
     it('devrait empêcher les prénoms en doublon', async () => {
-        await db.users.add({ firstName: 'Bob' });
-        await expect(db.users.add({ firstName: 'Bob' })).rejects.toThrow();
+        await db.users.add({ uuid: 'uuid-b1', firstName: 'Bob' });
+        await expect(db.users.add({ uuid: 'uuid-b2', firstName: 'Bob' })).rejects.toThrow();
     });
 
     it('devrait supprimer un utilisateur, ses checklists et ses modèles (simulé)', async () => {
-        const userId = await db.users.add({ firstName: 'Charlie' });
+        const user = { uuid: 'uuid-charlie', firstName: 'Charlie' };
+        const id = await db.users.add(user);
         await db.checklists.add({
             checklistId: 'uuid-5',
             checklistName: 'Checklist Charlie',
-            userId,
+            userId: user.uuid,
+            userName: 'Charlie',
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
             status: 'IN_PROGRESS',
             modelName: 'M5',
             elements: []
-        });
+        } as any);
 
         await db.models.add({
             modelName: 'Modèle Charlie',
@@ -275,7 +286,7 @@ describe('Database Operations', () => {
             modelLastModifiedDate: '',
             checklistId: '',
             checklistName: '',
-            userId,
+            userId: user.uuid,
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
@@ -284,33 +295,35 @@ describe('Database Operations', () => {
         });
 
         // Suppression de l'utilisateur
-        await db.users.delete(userId);
+        await db.users.delete(id);
         // Suppression manuelle des checklists et modèles (ce que fait l'app)
-        await db.checklists.where('userId').equals(userId).delete();
-        await db.models.where('userId').equals(userId).delete();
+        await db.checklists.where('userId').equals(user.uuid).delete();
+        await db.models.where('userId').equals(user.uuid).delete();
 
-        const user = await db.users.get(userId);
-        const checklistsCount = await db.checklists.where('userId').equals(userId).count();
-        const modelsCount = await db.models.where('userId').equals(userId).count();
+        const foundUser = await db.users.get(id);
+        const checklistsCount = await db.checklists.where('userId').equals(user.uuid).count();
+        const modelsCount = await db.models.where('userId').equals(user.uuid).count();
 
-        expect(user).toBeUndefined();
+        expect(foundUser).toBeUndefined();
         expect(checklistsCount).toBe(0);
         expect(modelsCount).toBe(0);
     });
 
     it('devrait purger toutes les données avec purgeAllData', async () => {
-        await db.users.add({ firstName: 'Alice' });
+        const user = { uuid: 'uuid-p1', firstName: 'Alice' };
+        await db.users.add(user);
         await db.checklists.add({
             checklistId: 'uuid-p1',
             checklistName: 'C1',
-            userId: 1,
+            userId: user.uuid,
+            userName: 'Alice',
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',
             status: 'IN_PROGRESS',
             modelName: 'M1',
             elements: []
-        });
+        } as any);
         await db.models.add({
             modelName: 'M1',
             modelId: 'uuid-m1',
@@ -318,7 +331,7 @@ describe('Database Operations', () => {
             modelLastModifiedDate: '',
             checklistId: '',
             checklistName: '',
-            userId: 1,
+            userId: user.uuid,
             creationDate: '',
             lastModifiedDate: '',
             progress: '0',

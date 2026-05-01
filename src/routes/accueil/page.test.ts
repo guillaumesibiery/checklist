@@ -24,7 +24,7 @@ describe('Accueil State', () => {
     });
 
     it('devrait charger l\'utilisateur si un ID est présent dans localStorage', async () => {
-        const id = await db.users.add({ firstName: 'Alice' });
+        const id = await db.users.add({ uuid: 'uuid-1', firstName: 'Alice' });
         localStorage.setItem('currentUserId', id.toString());
         await layoutState.init();
 
@@ -36,6 +36,47 @@ describe('Accueil State', () => {
         // Note: user est maintenant dans layoutState, mais accueilState le récupère via un getter
         expect(state.user).toBeDefined();
         expect(state.user?.firstName).toBe('Alice');
+    });
+
+    it('devrait charger les checklists de l\'utilisateur connecté', async () => {
+        const uuid = 'uuid-alice';
+        const id = await db.users.add({ uuid, firstName: 'Alice' });
+        localStorage.setItem('currentUserId', id.toString());
+        await layoutState.init();
+
+        // Ajouter une checklist pour Alice
+        await db.checklists.add({
+            checklistId: 'c1',
+            checklistName: 'Checklist Alice',
+            userId: uuid,
+            userName: 'Alice',
+            creationDate: new Date().toISOString(),
+            lastModifiedDate: new Date().toISOString(),
+            progress: 0,
+            status: 'IN_PROGRESS',
+            modelName: 'M1',
+            elements: []
+        } as any);
+
+        // Ajouter une checklist pour un autre utilisateur
+        await db.checklists.add({
+            checklistId: 'c2',
+            checklistName: 'Checklist Bob',
+            userId: 'uuid-bob',
+            userName: 'Bob',
+            creationDate: new Date().toISOString(),
+            lastModifiedDate: new Date().toISOString(),
+            progress: 0,
+            status: 'IN_PROGRESS',
+            modelName: 'M1',
+            elements: []
+        } as any);
+
+        const state = createPageState();
+        await state.loadChecklists();
+
+        expect(state.checklists.length).toBe(1);
+        expect(state.checklists[0].checklistName).toBe('Checklist Alice');
     });
 });
 

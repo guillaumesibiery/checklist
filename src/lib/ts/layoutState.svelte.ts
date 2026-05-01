@@ -30,7 +30,7 @@ export function createLayoutState() {
             ];
             return;
         }
-        const customModels = await ModelRepository.getByUser(user.id!);
+        const customModels = await ModelRepository.getByUser(user.uuid);
         availableModels = [
             { name: 'Modèle vide', file: 'model-vide.json' },
             { name: 'Bébé pack', file: 'model-bebepack.json' },
@@ -83,7 +83,7 @@ export function createLayoutState() {
 
     async function checkNameExists(name: string) {
         if (!user) return false;
-        return await ChecklistRepository.existsByName(user.id!, name);
+        return await ChecklistRepository.existsByName(user.uuid, name);
     }
 
     async function handleNameChange(name: string) {
@@ -148,7 +148,8 @@ export function createLayoutState() {
                 ...rest,
                 checklistId: crypto.randomUUID(),
                 checklistName: checklistName,
-                userId: user.id!,
+                userId: user.uuid,
+                userName: user.firstName,
                 creationDate: now,
                 lastModifiedDate: now,
                 progress: 0,

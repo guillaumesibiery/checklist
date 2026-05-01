@@ -37,16 +37,22 @@ export const UserRepository = {
      * Crée un nouvel utilisateur.
      */
     async create(firstName: string): Promise<number> {
-        return await db.users.add({ firstName: firstName.trim() });
+        return await db.users.add({ 
+            uuid: crypto.randomUUID(),
+            firstName: firstName.trim() 
+        });
     },
 
     /**
      * Supprime un utilisateur et toutes ses données liées (checklists et modèles).
      */
     async deleteCascading(userId: number): Promise<void> {
+        const user = await db.users.get(userId);
+        if (!user) return;
+
         await db.transaction('rw', db.users, db.checklists, db.models, async () => {
-            await db.checklists.where('userId').equals(userId).delete();
-            await db.models.where('userId').equals(userId).delete();
+            await db.checklists.where('userId').equals(user.uuid).delete();
+            await db.models.where('userId').equals(user.uuid).delete();
             await db.users.delete(userId);
             
             const count = await db.users.count();

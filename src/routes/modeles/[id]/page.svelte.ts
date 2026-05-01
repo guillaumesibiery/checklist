@@ -23,7 +23,7 @@ export function createPageState(modelId: string) {
         const m = await ModelRepository.getByUuid(modelId);
         if (m) {
             // Vérifier que le modèle appartient bien à l'utilisateur
-            if (layoutState.user?.id && m.userId !== layoutState.user.id) {
+            if (layoutState.user?.uuid && m.userId !== layoutState.user.uuid) {
                 goto(`${base}/modeles/`);
                 return;
             }
@@ -51,7 +51,7 @@ export function createPageState(modelId: string) {
         
         model.modelLastModifiedDate = new Date().toISOString();
         if (layoutState.user?.id) {
-            model.userId = layoutState.user.id;
+            model.userId = layoutState.user.uuid;
         }
 
         // On s'assure que addedByUser est à false pour toutes les catégories du modèle

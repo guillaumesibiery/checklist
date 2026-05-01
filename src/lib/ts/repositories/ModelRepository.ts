@@ -18,7 +18,7 @@ export const ModelRepository = {
     /**
      * Récupère les modèles personnalisés d'un utilisateur triés par date de création.
      */
-    async getByUser(userId: number): Promise<Model[]> {
+    async getByUser(userId: string): Promise<Model[]> {
         const data = await db.models
             .where('userId')
             .equals(userId)
@@ -32,7 +32,7 @@ export const ModelRepository = {
     /**
      * Vérifie si un modèle existe avec ce nom pour un utilisateur.
      */
-    async existsByName(userId: number, name: string): Promise<boolean> {
+    async existsByName(userId: string, name: string): Promise<boolean> {
         const model = await db.models
             .where('modelName')
             .equalsIgnoreCase(name.trim())

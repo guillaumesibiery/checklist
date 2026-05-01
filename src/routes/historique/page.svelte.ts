@@ -12,10 +12,10 @@ export function createPageState() {
     let checklistToDelete = $state<Checklist | null>(null);
 
     async function loadChecklists() {
-        if (!layoutState.user || !layoutState.user.id) return;
+        if (!layoutState.user?.uuid) return;
         isLoadingChecklists = true;
         try {
-            checklists = await ChecklistRepository.getByUserAndStatus(layoutState.user.id, 'FINISHED');
+            checklists = await ChecklistRepository.getByUserAndStatus(layoutState.user.uuid, 'FINISHED');
             layoutState.finishedChecklistsCount = checklists.length;
         } finally {
             isLoadingChecklists = false;

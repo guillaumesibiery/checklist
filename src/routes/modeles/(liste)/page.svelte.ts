@@ -18,10 +18,10 @@ export function createPageState() {
     let isCreating = $state(false);
 
     async function loadModels() {
-        if (!layoutState.user?.id) return;
+        if (!layoutState.user?.uuid) return;
         isLoadingModels = true;
         try {
-            models = await ModelRepository.getByUser(layoutState.user.id);
+            models = await ModelRepository.getByUser(layoutState.user.uuid);
         } finally {
             isLoadingModels = false;
         }
@@ -46,7 +46,7 @@ export function createPageState() {
             return false;
         }
 
-        if (await ModelRepository.existsByName(layoutState.user!.id!, modelName)) {
+        if (await ModelRepository.existsByName(layoutState.user!.uuid, modelName)) {
             nameError = 'Ce nom de modèle existe déjà';
             return false;
         }
@@ -70,7 +70,7 @@ export function createPageState() {
                 ...template,
                 modelName: modelName.trim(),
                 modelId: newModelId,
-                userId: layoutState.user!.id!,
+                userId: layoutState.user!.uuid,
                 modelCreationDate: now,
                 modelLastModifiedDate: now,
                 // On s'assure que les champs checklist restent vides

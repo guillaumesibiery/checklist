@@ -2,6 +2,7 @@ import Dexie, { type Table } from 'dexie';
 
 export interface User {
     id?: number;
+    uuid: string;
     firstName: string;
 }
 
@@ -33,12 +34,13 @@ export interface Checklist extends ChecklistBase {
     id?: number;
     checklistId: string;
     checklistName: string;
-    userId: number;
+    userId: string;
     creationDate: string;
     lastModifiedDate: string;
     progress: number;
     status: ChecklistStatus;
     modelName: string;
+    userName: string;
 }
 
 export interface Model extends ChecklistBase {
@@ -47,7 +49,7 @@ export interface Model extends ChecklistBase {
     modelName: string;
     modelCreationDate: string;
     modelLastModifiedDate: string;
-    userId: number;
+    userId: string;
 }
 
 export class ChecklistDatabase extends Dexie {
@@ -57,8 +59,8 @@ export class ChecklistDatabase extends Dexie {
 
     constructor() {
         super('ChecklistDB');
-        this.version(4).stores({
-            users: '++id, &firstName',
+        this.version(5).stores({
+            users: '++id, &uuid, &firstName',
             checklists: '++id, checklistId, userId, checklistName',
             models: '++id, modelId, userId, modelName'
         });

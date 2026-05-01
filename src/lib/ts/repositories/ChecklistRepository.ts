@@ -11,7 +11,7 @@ export const ChecklistRepository = {
     /**
      * Récupère les checklists d'un utilisateur filtrées par statut et triées par date de modification.
      */
-    async getByUserAndStatus(userId: number, status: string): Promise<Checklist[]> {
+    async getByUserAndStatus(userId: string, status: string): Promise<Checklist[]> {
         const data = await db.checklists
             .where('userId').equals(userId)
             .filter(c => c.status === status)
@@ -25,7 +25,7 @@ export const ChecklistRepository = {
     /**
      * Vérifie si une checklist existe avec ce nom pour un utilisateur.
      */
-    async existsByName(userId: number, name: string): Promise<boolean> {
+    async existsByName(userId: string, name: string): Promise<boolean> {
         const count = await db.checklists
             .where({ userId, checklistName: name })
             .count();
