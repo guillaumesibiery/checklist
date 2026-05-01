@@ -1,6 +1,9 @@
 import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { db, type User } from '$lib/ts/db';
+import { UserRepository } from './repositories/UserRepository';
+import { ChecklistRepository } from './repositories/ChecklistRepository';
+import { ModelRepository } from './repositories/ModelRepository';
 
 export function createLayoutState() {
     let user = $state<User | null>(null);
@@ -26,7 +29,7 @@ export function createLayoutState() {
             ];
             return;
         }
-        const customModels = await db.models.where('userId').equals(user.id!).toArray();
+        const customModels = await ModelRepository.getByUser(user.id!);
         availableModels = [
             { name: 'Modèle vide', file: 'model-vide.json' },
             { name: 'Bébé pack', file: 'model-bebepack.json' },
@@ -46,7 +49,7 @@ export function createLayoutState() {
             await loadAvailableModels();
             return null;
         }
-        const u = await db.users.get(parseInt(idStr));
+        const u = await UserRepository.getById(parseInt(idStr));
         if (u) {
             user = u;
         } else {
@@ -78,12 +81,8 @@ export function createLayoutState() {
     }
 
     async function checkNameExists(name: string) {
-
         if (!user) return false;
-        const count = await db.checklists
-            .where({ userId: user.id, checklistName: name })
-            .count();
-        return count > 0;
+        return await ChecklistRepository.existsByName(user.id!, name);
     }
 
     async function handleNameChange(name: string) {
@@ -134,7 +133,7 @@ export function createLayoutState() {
                 const response = await fetch(`${base}/models/${modelOption.file}`);
                 modelData = await response.json();
             } else if (modelOption?.id) {
-                modelData = await db.models.get(modelOption.id);
+                modelData = await ModelRepository.getById(modelOption.id);
             }
 
             if (!modelData) throw new Error('Modèle non trouvé');
@@ -155,7 +154,7 @@ export function createLayoutState() {
                 status: "IN_PROGRESS"
             };
 
-            await db.checklists.add(newChecklist);
+            await ChecklistRepository.create(newChecklist);
             showCreateModal = false;
             checklistName = '';
             selectedModel = '';

@@ -1,5 +1,6 @@
-import { db, type Checklist } from '$lib/ts/db';
+import { type Checklist } from '$lib/ts/db';
 import { layoutState } from '$lib/ts/layoutState.svelte.ts';
+import { ChecklistRepository } from '$lib/ts/repositories/ChecklistRepository';
 
 export function createPageState() {
     let checklists = $state<Checklist[]>([]);
@@ -13,14 +14,7 @@ export function createPageState() {
         if (!layoutState.user || !layoutState.user.id) return;
         isLoadingChecklists = true;
         try {
-            const data = await db.checklists
-                .where('userId').equals(layoutState.user.id)
-                .filter(c => c.status === 'FINISHED')
-                .toArray();
-            
-            checklists = data.sort((a, b) => 
-                new Date(b.lastModifiedDate).getTime() - new Date(a.lastModifiedDate).getTime()
-            );
+            checklists = await ChecklistRepository.getByUserAndStatus(layoutState.user.id, 'FINISHED');
             layoutState.finishedChecklistsCount = checklists.length;
         } finally {
             isLoadingChecklists = false;
@@ -40,7 +34,7 @@ export function createPageState() {
     async function executeRestore() {
         if (!checklistToRestore || !checklistToRestore.id) return;
         
-        await db.checklists.update(checklistToRestore.id, {
+        await ChecklistRepository.update(checklistToRestore.id, {
             status: 'IN_PROGRESS',
             lastModifiedDate: new Date().toISOString()
         });
@@ -62,7 +56,7 @@ export function createPageState() {
     async function executeDelete() {
         if (!checklistToDelete || !checklistToDelete.id) return;
         
-        await db.checklists.delete(checklistToDelete.id);
+        await ChecklistRepository.delete(checklistToDelete.id);
         
         await loadChecklists();
         cancelDelete();

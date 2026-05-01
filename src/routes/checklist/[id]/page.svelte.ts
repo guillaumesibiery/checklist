@@ -1,7 +1,8 @@
-import { db, type Checklist, type ChecklistItem } from '$lib/ts/db';
+import { type Checklist, type ChecklistItem } from '$lib/ts/db';
 import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { onMount } from 'svelte';
+import { ChecklistRepository } from '$lib/ts/repositories/ChecklistRepository';
 
 export function createPageState(id: string, readOnly: boolean = false) {
     let checklist = $state<Checklist | null>(null);
@@ -21,7 +22,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
 
     onMount(async () => {
         isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const c = await db.checklists.where('checklistId').equals(id).first();
+        const c = await ChecklistRepository.getByUuid(id);
         if (c) {
             checklist = c;
             // Par défaut, on ouvre toutes les catégories au chargement
@@ -50,7 +51,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
         checklist.lastModifiedDate = new Date().toISOString();
         
         // 2. Récupérer l'enregistrement actuel en base pour garantir l'ID numérique
-        const existing = await db.checklists.where('checklistId').equals(id).first();
+        const existing = await ChecklistRepository.getByUuid(id);
         
         if (existing && existing.id) {
             // 3. Créer un snapshot (objet brut) à partir de l'état réactif
@@ -61,7 +62,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
                 rawChecklist.id = existing.id;
                 
                 // 5. Sauvegarde complète de l'objet (écrase l'existant)
-                await db.checklists.put(rawChecklist);
+                await ChecklistRepository.save(rawChecklist);
             }
         }
     }

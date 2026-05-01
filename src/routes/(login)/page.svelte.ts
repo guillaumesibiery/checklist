@@ -1,11 +1,12 @@
 import { liveQuery } from 'dexie';
-import { db, type User } from '$lib/ts/db';
+import { type User } from '$lib/ts/db';
 import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { layoutState } from '$lib/ts/layoutState.svelte.ts';
+import { UserRepository } from '$lib/ts/repositories/UserRepository';
 
 export function createPageState() {
-  let users = liveQuery(() => db.users.orderBy('firstName').toArray());
+  let users = liveQuery(() => UserRepository.getAll());
   let showModal = $state(false);
   let firstName = $state('');
   let existingUserError = $state(false);
@@ -27,8 +28,7 @@ export function createPageState() {
           existingUserError = false;
           return;
       }
-      const existing = await db.users.where('firstName').equalsIgnoreCase(firstName.trim()).first();
-      existingUserError = !!existing;
+      existingUserError = await UserRepository.exists(firstName);
   }
 
   function handleInput(e: Event) {
@@ -41,10 +41,8 @@ export function createPageState() {
   async function createUser() {
       if (!isValid) return;
       try {
-          const user = await db.users.add({ firstName: firstName.trim() });
-          localStorage.setItem('currentUserId', user.toString());
-          await layoutState.init();
-          goto(`${base}/accueil/`);
+          const userId = await UserRepository.create(firstName);
+          await login(userId);
       } catch (e) {
           console.error(e);
       }
@@ -65,19 +63,7 @@ export function createPageState() {
 
   async function confirmDeleteUser() {
       if (userToDelete !== null) {
-          // Supprimer d'abord toutes les checklists de l'utilisateur
-          await db.checklists.where('userId').equals(userToDelete).delete();
-          // Supprimer aussi tous les modèles de l'utilisateur
-          await db.models.where('userId').equals(userToDelete).delete();
-          // Puis supprimer l'utilisateur
-          await db.users.delete(userToDelete);
-
-          // Si c'était le dernier utilisateur, on purge tout pour être propre
-          const usersCount = await db.users.count();
-          if (usersCount === 0) {
-              await db.purgeAllData();
-          }
-
+          await UserRepository.deleteCascading(userToDelete);
           userToDelete = null;
           userToDeleteName = '';
           showDeleteModal = false;

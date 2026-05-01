@@ -1,7 +1,8 @@
-import { db, type Model } from '$lib/ts/db';
+import { type Model } from '$lib/ts/db';
 import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 import { base } from '$app/paths';
 import { goto } from '$app/navigation';
+import { ModelRepository } from '$lib/ts/repositories/ModelRepository';
 
 export function createPageState() {
     let models = $state<Model[]>([]);
@@ -19,14 +20,7 @@ export function createPageState() {
         if (!layoutState.user?.id) return;
         isLoadingModels = true;
         try {
-            const data = await db.models
-                .where('userId')
-                .equals(layoutState.user.id)
-                .toArray();
-            
-            models = data.sort((a, b) => 
-                new Date(b.modelCreationDate).getTime() - new Date(a.modelCreationDate).getTime()
-            );
+            models = await ModelRepository.getByUser(layoutState.user.id);
         } finally {
             isLoadingModels = false;
         }
@@ -51,13 +45,7 @@ export function createPageState() {
             return false;
         }
 
-        // Vérifier si le nom existe déjà (insensible à la casse)
-        const existing = await db.models
-            .where('modelName')
-            .equalsIgnoreCase(modelName.trim())
-            .first();
-        
-        if (existing) {
+        if (await ModelRepository.existsByName(layoutState.user!.id!, modelName)) {
             nameError = 'Ce nom de modèle existe déjà';
             return false;
         }
@@ -91,7 +79,7 @@ export function createPageState() {
                 lastModifiedDate: ""
             };
 
-            await db.models.add(newModel);
+            await ModelRepository.create(newModel);
             await layoutState.loadAvailableModels();
             
             toggleCreateModal();
@@ -117,7 +105,7 @@ export function createPageState() {
     async function executeDelete() {
         if (!modelToDelete || !modelToDelete.id) return;
         
-        await db.models.delete(modelToDelete.id);
+        await ModelRepository.delete(modelToDelete.id);
         
         await loadModels();
         await layoutState.loadAvailableModels();

@@ -1,8 +1,9 @@
-import { db, type Model } from '$lib/ts/db';
+import { type Model } from '$lib/ts/db';
 import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { onMount } from 'svelte';
+import { ModelRepository } from '$lib/ts/repositories/ModelRepository';
 
 export function createPageState(modelId: string) {
     let model = $state<Model | null>(null);
@@ -18,7 +19,7 @@ export function createPageState(modelId: string) {
     let currentCategoryNameForNewItem = $state<string | null>(null);
 
     onMount(async () => {
-        const m = await db.models.where('modelId').equals(modelId).first();
+        const m = await ModelRepository.getByUuid(modelId);
         if (m) {
             // Vérifier que le modèle appartient bien à l'utilisateur
             if (layoutState.user?.id && m.userId !== layoutState.user.id) {
@@ -57,12 +58,12 @@ export function createPageState(modelId: string) {
             el.addedByUser = "false";
         });
         
-        const existing = await db.models.where('modelId').equals(modelId).first();
+        const existing = await ModelRepository.getByUuid(modelId);
         if (existing && existing.id) {
             const rawModel = $state.snapshot(model);
             if (rawModel) {
                 rawModel.id = existing.id;
-                await db.models.put(rawModel);
+                await ModelRepository.save(rawModel);
             }
         }
     }
