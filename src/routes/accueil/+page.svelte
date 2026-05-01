@@ -24,14 +24,14 @@
     <!-- Bloc de bienvenue utilisateur -->
     {#if layoutState.user}
         <div class="flex items-center gap-4 mb-6" in:fly={{ y: -20, duration: 400 }}>
-            <div class="w-16 h-16 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-9 h-9">
                     <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
                 </svg>
             </div>
             <div class="flex flex-col">
-                <h1 class="text-xl font-bold text-text-main dark:text-white">Bonjour, {layoutState.user.firstName} !</h1>
-                <div class="mt-1">
+                <h1 class="text-xl font-bold text-text-main dark:text-white">Bonjour {layoutState.user.firstName}</h1>
+                <div>
                     <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/10 dark:border-primary/20">
                         {layoutState.checklistsCount} Checklist{layoutState.checklistsCount > 1 ? 's' : ''} en cours
                     </span>

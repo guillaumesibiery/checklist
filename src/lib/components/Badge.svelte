@@ -15,7 +15,7 @@
 
     const variants = {
         primary: "bg-primary/10 text-primary border-primary/10 dark:border-primary/20",
-        secondary: "bg-secondary dark:bg-gray-700 text-text-main dark:text-white border-transparent",
+        secondary: "bg-secondary dark:bg-gray-700 text-text-main dark:text-white border-gray-200 dark:border-gray-600",
         outline: "bg-transparent text-primary border-primary/30"
     };
 </script>

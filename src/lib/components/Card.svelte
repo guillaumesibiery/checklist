@@ -56,7 +56,7 @@
     <!-- Ligne du bas : Infos et Actions -->
     <div class="flex items-center justify-between px-6 pb-5 mt-0">
         <!-- Informations (Badges, etc.) -->
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col items-start gap-2">
             {#if info}
                 {@render info()}
             {/if}
