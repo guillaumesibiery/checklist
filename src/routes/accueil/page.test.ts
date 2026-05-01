@@ -75,8 +75,9 @@ describe('Accueil State', () => {
         const state = createPageState();
         await state.loadChecklists();
 
-        expect(state.checklists.length).toBe(1);
-        expect(state.checklists[0].checklistName).toBe('Checklist Alice');
+        expect(state.checklists.length).toBe(2);
+        expect(state.checklists.some(c => c.checklistName === 'Checklist Alice')).toBe(true);
+        expect(state.checklists.some(c => c.checklistName === 'Checklist Bob')).toBe(true);
     });
 });
 

@@ -15,7 +15,7 @@ export function createPageState() {
         if (!layoutState.user?.uuid) return;
         isLoadingChecklists = true;
         try {
-            checklists = await ChecklistRepository.getByUserAndStatus(layoutState.user.uuid, 'FINISHED');
+            checklists = await ChecklistRepository.getAllByStatus('FINISHED');
             layoutState.finishedChecklistsCount = checklists.length;
         } finally {
             isLoadingChecklists = false;
