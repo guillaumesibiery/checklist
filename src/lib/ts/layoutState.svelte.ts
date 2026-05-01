@@ -178,6 +178,16 @@ export function createLayoutState() {
         goto(`${base}/`);
     }
 
+    function reset() {
+        isDarkMode = false;
+        applyDarkMode(false);
+        localStorage.removeItem('darkMode');
+        user = null;
+        showLogoutModal = false;
+        showSettingsModal = false;
+        showCreateModal = false;
+    }
+
     return {
         get user() { return user; },
         set user(val) { user = val; },
@@ -200,6 +210,7 @@ export function createLayoutState() {
         set selectedModel(val: string) { selectedModel = val; },
         init,
         logout,
+        reset,
         toggleLogoutModal,
         toggleCreateModal,
         toggleSettingsModal,

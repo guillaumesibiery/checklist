@@ -42,6 +42,12 @@ export function createPageState() {
   async function createUser() {
       if (!isValid) return;
       try {
+          const userCount = await UserRepository.count();
+          if (userCount >= 1) {
+              toastState.error('Un seul utilisateur est autorisé sur cette instance.');
+              showModal = false;
+              return;
+          }
           const userId = await UserRepository.create(firstName);
           await login(userId);
       } catch (e) {
@@ -66,6 +72,7 @@ export function createPageState() {
       if (userToDelete !== null) {
           const name = userToDeleteName;
           await UserRepository.deleteCascading(userToDelete);
+          layoutState.reset();
           toastState.success(`Utilisateur "${name}" supprimé`);
           userToDelete = null;
           userToDeleteName = '';

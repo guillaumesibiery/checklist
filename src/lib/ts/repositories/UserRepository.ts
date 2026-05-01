@@ -27,6 +27,13 @@ export const UserRepository = {
     },
 
     /**
+     * Compte le nombre total d'utilisateurs.
+     */
+    async count(): Promise<number> {
+        return await db.users.count();
+    },
+
+    /**
      * Crée un nouvel utilisateur.
      */
     async create(firstName: string): Promise<number> {

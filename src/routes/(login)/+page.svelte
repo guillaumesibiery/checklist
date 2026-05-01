@@ -79,18 +79,6 @@
                         </button>
                     </div>
                 {/each}
-
-                <button
-                    onclick={() => state.showModal = true}
-                    class="flex-shrink-0 flex flex-col items-center justify-center w-36 h-36 bg-white dark:bg-transparent rounded-2xl transition-all text-primary hover:bg-primary hover:text-text-inverse group snap-center cursor-pointer"
-                >
-                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-white/20 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
-                            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <span class="font-medium text-center px-2 leading-tight">Créer un<br/>utilisateur</span>
-                </button>
             </div>
         {/if}
     </div>
