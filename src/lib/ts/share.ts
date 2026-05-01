@@ -55,23 +55,96 @@ export function compactChecklist(checklist: Checklist): any {
 }
 
 /**
+ * Désinfecte une chaîne de caractères pour éviter les injections HTML/JS.
+ */
+function sanitize(str: any): string {
+    if (typeof str !== 'string') return '';
+    // Supprime les balises HTML et limite la longueur
+    return str.replace(/<[^>]*>?/gm, '').trim().substring(0, 100);
+}
+
+/**
+ * Valide la structure de l'objet compacté.
+ * @throws Error si l'objet est invalide ou suspect
+ */
+export function validateCompactChecklist(compact: any): void {
+    if (!compact || typeof compact !== 'object') {
+        throw new Error('Format de données invalide');
+    }
+
+    // Vérification des champs racines requis
+    if (typeof compact[MAPPING.checklistName] !== 'string' || 
+        typeof compact[MAPPING.checklistId] !== 'string' ||
+        typeof compact[MAPPING.userName] !== 'string') {
+        throw new Error('Données racines manquantes ou invalides');
+    }
+
+    // Vérification de la liste des éléments
+    const elements = compact[MAPPING.elements];
+    if (!Array.isArray(elements)) {
+        throw new Error('Liste d\'éléments manquante');
+    }
+
+    // Limites de sécurité pour éviter les abus de mémoire/affichage
+    if (elements.length > 50) {
+        throw new Error('Trop de catégories dans la checklist');
+    }
+
+    for (const el of elements) {
+        if (typeof el[MAPPING.category] !== 'string') {
+            throw new Error('Nom de catégorie invalide');
+        }
+
+        const items = el[MAPPING.items];
+        if (!Array.isArray(items)) {
+            throw new Error('Liste d\'articles manquante');
+        }
+
+        if (items.length > 100) {
+            throw new Error('Trop d\'articles dans une catégorie');
+        }
+
+        for (const item of items) {
+            if (typeof item[MAPPING.item] !== 'string') {
+                throw new Error('Nom d\'article invalide');
+            }
+            
+            // Vérification des quantités (doivent être des nombres positifs raisonnables)
+            const w = item[MAPPING['wanted-quantity']];
+            const a = item[MAPPING['added-quantity']];
+            
+            if (w !== undefined && (typeof w !== 'number' || w < 0 || w > 999)) {
+                throw new Error('Quantité demandée invalide');
+            }
+            if (a !== undefined && (typeof a !== 'number' || a < 0 || a > 999)) {
+                throw new Error('Quantité ajoutée invalide');
+            }
+        }
+    }
+}
+
+/**
  * Étend un objet compacté en une structure de Checklist complète (partielle).
+ * Applique une désinfection systématique sur les textes.
  */
 export function expandChecklist(compact: any): Partial<Checklist> {
+    // Validation avant expansion
+    validateCompactChecklist(compact);
+
     const checklist: any = {
-        checklistName: compact[MAPPING.checklistName],
-        checklistId: compact[MAPPING.checklistId],
-        userName: compact[MAPPING.userName],
+        checklistName: sanitize(compact[MAPPING.checklistName]),
+        checklistId: compact[MAPPING.checklistId], // UUID, pas besoin de sanitize strict mais validé par regex plus tard si besoin
+        userName: sanitize(compact[MAPPING.userName]),
         elements: (compact[MAPPING.elements] || []).map((el: any) => {
             const element: ChecklistElement = {
-                category: el[MAPPING.category],
+                category: sanitize(el[MAPPING.category]),
                 progress: 0,
                 addedByUser: true,
                 items: (el[MAPPING.items] || []).map((item: any) => {
                     const expandedItem: ChecklistItem = {
-                        item: item[MAPPING.item],
-                        'wanted-quantity': item[MAPPING['wanted-quantity']] ?? 1,
-                        'added-quantity': item[MAPPING['added-quantity']] ?? 0,
+                        item: sanitize(item[MAPPING.item]),
+                        'wanted-quantity': Math.max(0, Math.min(999, Number(item[MAPPING['wanted-quantity']] ?? 1))),
+                        'added-quantity': Math.max(0, Math.min(999, Number(item[MAPPING['added-quantity']] ?? 0))),
                         disabled: !!item[MAPPING.disabled],
                         addedByUser: true
                     };

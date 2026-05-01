@@ -84,4 +84,42 @@ describe('Share Utilities', () => {
         
         expect(expanded.checklistName).toBe('Checklist Éléphant 🐘');
     });
+
+    it('devrait désinfecter les chaînes de caractères (XSS protection)', () => {
+        const maliciousCompact = {
+            n: 'Checklist <script>alert("XSS")</script>',
+            id: 'uuid',
+            u: 'User <b>Bold</b>',
+            e: [{
+                c: 'Category <img src=x onerror=alert(1)>',
+                i: [{
+                    t: 'Item <iframe src="javascript:alert(1)"></iframe>',
+                    w: 1,
+                    a: 0
+                }]
+            }]
+        };
+
+        const expanded = expandChecklist(maliciousCompact);
+
+        expect(expanded.checklistName).toBe('Checklist alert("XSS")');
+        expect(expanded.userName).toBe('User Bold');
+        expect(expanded.elements![0].category).toBe('Category');
+        expect(expanded.elements![0].items[0].item).toBe('Item');
+    });
+
+    it('devrait rejeter un objet malformé', () => {
+        const invalidCompact = { n: 'Incomplet' };
+        expect(() => expandChecklist(invalidCompact)).toThrow('Données racines manquantes ou invalides');
+    });
+
+    it('devrait rejeter un nombre excessif d\'éléments (DDoS protection)', () => {
+        const tooManyElements = {
+            n: 'Large',
+            id: 'uuid',
+            u: 'User',
+            e: Array(51).fill({ c: 'Cat', i: [] })
+        };
+        expect(() => expandChecklist(tooManyElements)).toThrow('Trop de catégories dans la checklist');
+    });
 });

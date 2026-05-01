@@ -53,6 +53,11 @@ export function createLayoutState() {
             const urlParams = new URLSearchParams(window.location.search);
             const base64 = urlParams.get('import');
             if (base64) {
+                // Limite de sécurité sur la taille de l'import (ex: 200Ko)
+                if (base64.length > 200000) {
+                    toastState.error("Le lien de partage est trop volumineux");
+                    return;
+                }
                 try {
                     const decoded = decodeChecklist(base64);
                     const data = expandChecklist(decoded);
