@@ -8,6 +8,7 @@
     import { addToGoogleCalendar } from '$lib/ts/calendar';
     import Badge from '$lib/components/Badge.svelte';
     import Button from '$lib/components/Button.svelte';
+    import Card from '$lib/components/Card.svelte';
     import ListSkeleton from '$lib/components/ListSkeleton.svelte';
     import Modal from '$lib/components/Modal.svelte';
     import { icons } from '$lib/ts/icons';
@@ -49,13 +50,11 @@
         {:else if state.checklists.length > 0}
             <div class="grid gap-4">
                 {#each state.checklists as checklist}
-                    <div class="group relative overflow-hidden bg-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 rounded-[2rem] hover:bg-primary/10 dark:hover:bg-primary/20 transition-all active:scale-[0.98]">
-                        <a href="{base}/checklist/{checklist.checklistId}" class="home-checklist-name block px-6 pt-5 pb-3">
-                            <!-- Nom de la checklist en pleine largeur -->
-                            <h3 class="font-bold text-xl text-text-main dark:text-white mb-4">
-                                {checklist.checklistName}
-                            </h3>
-
+                    <Card
+                        title={checklist.checklistName}
+                        href="{base}/checklist/{checklist.checklistId}"
+                    >
+                        {#snippet children()}
                             <!-- Barre de progression pleine largeur avec % à l'intérieur -->
                             <div class="w-full h-6 bg-primary/10 dark:bg-primary/20 rounded-full relative overflow-hidden">
                                 <!-- Barre de remplissage -->
@@ -77,55 +76,50 @@
                                     {checklist.progress}%
                                 </div>
                             </div>
-                        </a>
+                        {/snippet}
 
-                        <!-- Ligne du bas : Date et Boutons d'action -->
-                        <div class="flex items-center justify-between px-6 pb-5 mt-0">
-                            <!-- Date et Créateur (si différent) -->
-                            <div class="flex flex-col gap-2">
-                                <Badge>
+                        {#snippet info()}
+                            <Badge>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                                    <path fill-rule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.75c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V8.75c0-.69-.56-1.25-1.25-1.25H4.75Z" clip-rule="evenodd" />
+                                </svg>
+                                {checklist.lastModifiedDate ? formatDate(checklist.lastModifiedDate) : formatDate(checklist.creationDate)}
+                            </Badge>
+
+                            {#if layoutState.user && checklist.userId !== layoutState.user.uuid}
+                                <Badge variant="secondary">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
-                                        <path fill-rule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.75c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V8.75c0-.69-.56-1.25-1.25-1.25H4.75Z" clip-rule="evenodd" />
+                                        <path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1a1.23 1.23 0 0 0 .41-1.412A7.012 7.012 0 0 0 10 10a7.012 7.012 0 0 0-6.535 4.493Z" />
                                     </svg>
-                                    {checklist.lastModifiedDate ? formatDate(checklist.lastModifiedDate) : formatDate(checklist.creationDate)}
+                                    {checklist.userName}
                                 </Badge>
+                            {/if}
+                        {/snippet}
 
-                                {#if layoutState.user && checklist.userId !== layoutState.user.uuid}
-                                    <Badge variant="secondary">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
-                                            <path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1a1.23 1.23 0 0 0 .41-1.412A7.012 7.012 0 0 0 10 10a7.012 7.012 0 0 0-6.535 4.493Z" />
-                                        </svg>
-                                        {checklist.userName}
-                                    </Badge>
-                                {/if}
-                            </div>
-
-                            <!-- Boutons d'action -->
-                            <div class="flex items-center gap-2">
-                                <Button 
-                                    variant="ghost"
-                                    size="sm"
-                                    onclick={() => addToGoogleCalendar(checklist)}
-                                    class="p-2"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                        <path d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM7.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM8.25 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM9.75 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM10.5 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM12.75 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM14.25 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 13.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
-                                        <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9h-16.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd" />
-                                    </svg>
-                                </Button>
-                                <Button 
-                                    variant="ghost"
-                                    size="sm"
-                                    onclick={() => state.confirmDelete(checklist)}
-                                    class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                        {@html icons.trash}
-                                    </svg>
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
+                        {#snippet actions()}
+                            <Button 
+                                variant="ghost"
+                                size="sm"
+                                onclick={() => addToGoogleCalendar(checklist)}
+                                class="p-2"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                    <path d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM7.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM8.25 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM9.75 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM10.5 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM12.75 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM14.25 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 13.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
+                                    <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9h-16.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd" />
+                                </svg>
+                            </Button>
+                            <Button 
+                                variant="ghost"
+                                size="sm"
+                                onclick={() => state.confirmDelete(checklist)}
+                                class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                    {@html icons.trash}
+                                </svg>
+                            </Button>
+                        {/snippet}
+                    </Card>
                 {/each}
             </div>
         {:else}

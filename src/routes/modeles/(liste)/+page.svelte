@@ -9,6 +9,7 @@
     import { layoutState } from '$lib/ts/layoutState.svelte.ts';
     import Badge from '$lib/components/Badge.svelte';
     import Button from '$lib/components/Button.svelte';
+    import Card from '$lib/components/Card.svelte';
     import Input from '$lib/components/Input.svelte';
     import ListSkeleton from '$lib/components/ListSkeleton.svelte';
     import Modal from '$lib/components/Modal.svelte';
@@ -43,46 +44,38 @@
     {:else if state.models.length > 0}
         <div class="grid gap-4">
             {#each state.models as model}
-                <div class="group relative overflow-hidden bg-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 rounded-[2rem] hover:bg-primary/10 dark:hover:bg-primary/20 transition-all active:scale-[0.98]">
-                    <a href="{base}/modeles/{model.modelId}/" class="block px-6 pt-5 pb-1">
-                        <h3 class="font-bold text-xl text-text-main dark:text-white mb-2">
-                            {model.modelName}
-                        </h3>
-                    </a>
+                <Card
+                    title={model.modelName}
+                    href="{base}/modeles/{model.modelId}/"
+                >
+                    {#snippet info()}
+                        <Badge>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                                <path fill-rule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.75c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V8.75c0-.69-.56-1.25-1.25-1.25H4.75Z" clip-rule="evenodd" />
+                            </svg>
+                            Créé le {formatDate(model.modelCreationDate)}
+                        </Badge>
+                        <Badge>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                                <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-5.038a7 7 0 0 0-11.712 3.138.75.75 0 0 0 1.449.39 5.5 5.5 0 0 1 9.201-2.466l.312.311h-2.433a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .75-.75V3.367a.75.75 0 0 0-1.5 0v2.431l-.31-.31Z" clip-rule="evenodd" />
+                            </svg>
+                            Modifié le {formatDate(model.modelLastModifiedDate)}
+                        </Badge>
+                    {/snippet}
 
-                    <!-- Ligne du bas : Dates et Boutons d'action -->
-                    <div class="flex items-center justify-between px-6 pb-6 mt-0">
-                        <!-- Dates (style badge) -->
-                        <div class="flex flex-col gap-1.5">
-                            <Badge>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
-                                    <path fill-rule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.75c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V8.75c0-.69-.56-1.25-1.25-1.25H4.75Z" clip-rule="evenodd" />
-                                </svg>
-                                Créé le {formatDate(model.modelCreationDate)}
-                            </Badge>
-                            <Badge>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
-                                    <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-5.038a7 7 0 0 0-11.712 3.138.75.75 0 0 0 1.449.39 5.5 5.5 0 0 1 9.201-2.466l.312.311h-2.433a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .75-.75V3.367a.75.75 0 0 0-1.5 0v2.431l-.31-.31Z" clip-rule="evenodd" />
-                                </svg>
-                                Modifié le {formatDate(model.modelLastModifiedDate)}
-                            </Badge>
-                        </div>
-
-                        <!-- Boutons d'action -->
-                        <div class="flex items-center gap-2">
-                            <Button 
-                                variant="ghost"
-                                size="sm"
-                                onclick={() => state.confirmDelete(model)}
-                                class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                    {@html icons.trash}
-                                </svg>
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+                    {#snippet actions()}
+                        <Button 
+                            variant="ghost"
+                            size="sm"
+                            onclick={() => state.confirmDelete(model)}
+                            class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                {@html icons.trash}
+                            </svg>
+                        </Button>
+                    {/snippet}
+                </Card>
             {/each}
         </div>
     {:else}
