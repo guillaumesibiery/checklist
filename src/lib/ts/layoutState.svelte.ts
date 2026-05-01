@@ -5,6 +5,7 @@ import { UserRepository } from './repositories/UserRepository';
 import { ChecklistRepository } from './repositories/ChecklistRepository';
 import { ModelRepository } from './repositories/ModelRepository';
 import { toastState } from './toastState.svelte';
+import { decodeChecklist, expandChecklist } from './share';
 
 export function createLayoutState() {
     let user = $state<User | null>(null);
@@ -21,6 +22,9 @@ export function createLayoutState() {
     let isCreating = $state(false);
     let checklistsCount = $state(0);
     let finishedChecklistsCount = $state(0);
+
+    let importData = $state<Checklist | null>(null);
+    let showImportModal = $state(false);
 
     async function loadAvailableModels() {
         if (!user) {
@@ -43,6 +47,27 @@ export function createLayoutState() {
         const savedDarkMode = localStorage.getItem('darkMode');
         isDarkMode = savedDarkMode === 'true';
         applyDarkMode(isDarkMode);
+
+        // Vérifier s'il y a une checklist à importer dans l'URL
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const base64 = urlParams.get('import');
+            if (base64) {
+                try {
+                    const decoded = decodeChecklist(base64);
+                    const data = expandChecklist(decoded);
+                    
+                    // Validation basique
+                    if (data.checklistId && data.checklistName && data.elements) {
+                        importData = data as Checklist;
+                        showImportModal = true;
+                    }
+                } catch (e) {
+                    console.error("Erreur lors du décodage de l'import:", e);
+                    toastState.error("Le lien de partage est invalide");
+                }
+            }
+        }
 
         const idStr = localStorage.getItem('currentUserId');
         if (!idStr) {
@@ -194,6 +219,54 @@ export function createLayoutState() {
         showCreateModal = false;
     }
 
+    async function confirmImport() {
+        if (!importData || !user) return;
+        try {
+            const now = new Date().toISOString();
+            // On complète les données manquantes pour l'import
+            importData.userId = user.uuid;
+            importData.creationDate = now;
+            importData.lastModifiedDate = now;
+            importData.status = 'IN_PROGRESS';
+            importData.modelName = importData.modelName || 'Checklist importée';
+            
+            // On s'assure que addedByUser est vrai pour les éléments importés
+            importData.elements.forEach(el => {
+                el.addedByUser = true;
+                el.items.forEach(item => item.addedByUser = true);
+            });
+            
+            await ChecklistRepository.create(importData);
+            toastState.success(`Checklist de ${importData.userName} importée`);
+            const targetId = importData.checklistId;
+            importData = null;
+            showImportModal = false;
+            
+            // Nettoyer l'URL
+            const url = new URL(window.location.href);
+            url.searchParams.delete('import');
+            window.history.replaceState({}, '', url.toString());
+
+            goto(`${base}/checklist/${targetId}/`);
+        } catch (e) {
+            console.error("Erreur lors de l'import:", e);
+            toastState.error("Erreur lors de l'importation");
+        }
+    }
+
+    function cancelImport() {
+        if (importData) {
+            toastState.info(`La checklist de ${importData.userName} n'a pas été importée`);
+        }
+        importData = null;
+        showImportModal = false;
+        // Nettoyer l'URL
+        const url = new URL(window.location.href);
+        url.searchParams.delete('import');
+        window.history.replaceState({}, '', url.toString());
+        goto(`${base}/accueil/`);
+    }
+
     return {
         get user() { return user; },
         set user(val) { user = val; },
@@ -214,6 +287,8 @@ export function createLayoutState() {
         get createdModelsCount() { return availableModels.filter(m => m.id).length; },
         set checklistName(val: string) { handleNameChange(val); },
         set selectedModel(val: string) { selectedModel = val; },
+        get importData() { return importData; },
+        get showImportModal() { return showImportModal; },
         init,
         logout,
         reset,
@@ -222,7 +297,9 @@ export function createLayoutState() {
         toggleSettingsModal,
         toggleDarkMode,
         createChecklist,
-        loadAvailableModels
+        loadAvailableModels,
+        confirmImport,
+        cancelImport
     };
 }
 

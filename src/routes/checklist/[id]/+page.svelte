@@ -110,7 +110,7 @@
         <BottomActionMenu>
             {#if !state.readOnly}
                 <ActionButton 
-                    onclick={state.openShareModal} 
+                    onclick={state.shareNative} 
                     disabled={state.isEditMode}
                     icon={icons.share}
                     label="Partager"
@@ -175,7 +175,7 @@
         <Modal
             isOpen={state.isShareModalOpen}
             onclose={state.closeShareModal}
-            title="Partager les éléments manquants ?"
+            title="Partager la checklist ?"
         >
             <div class="flex flex-col items-center">
                 <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
@@ -184,7 +184,7 @@
                     </svg>
                 </div>
                 <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 text-center transition-colors">
-                    Souhaitez-vous partager la liste des éléments dont la quantité n'est pas encore atteinte ?
+                    Souhaitez-vous partager la checklist ?
                 </p>
 
                 <div class="flex flex-col gap-3 w-full">
@@ -198,13 +198,22 @@
             </div>
         </Modal>
 
-        <!-- Modal d'options de partage -->
         <Modal
             isOpen={state.isShareOptionsModalOpen}
             onclose={state.closeShareOptionsModal}
             title="Partager via..."
         >
-            <div class="grid gap-4" class:grid-cols-1={!state.isMobile} class:grid-cols-3={state.isMobile}>
+            <div class="grid gap-4" class:grid-cols-2={!state.isMobile} class:grid-cols-3={state.isMobile}>
+                <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group cursor-pointer"
+                        onclick={state.shareViaCopy}>
+                    <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                            {@html icons.copy}
+                        </svg>
+                    </div>
+                    <span class="text-[10px] font-bold text-text-main dark:text-gray-300 uppercase tracking-tighter transition-colors">Copier</span>
+                </button>
+
                 {#if state.isMobile}
                     <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group cursor-pointer"
                             onclick={state.shareViaWhatsApp}>

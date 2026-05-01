@@ -4,6 +4,7 @@ import { base } from '$app/paths';
 import { onMount } from 'svelte';
 import { ChecklistRepository } from '$lib/ts/repositories/ChecklistRepository';
 import { toastState } from '$lib/ts/toastState.svelte';
+import { compactChecklist, encodeChecklist } from '$lib/ts/share';
 
 export function createPageState(id: string, readOnly: boolean = false) {
     let checklist = $state<Checklist | null>(null);
@@ -311,55 +312,90 @@ export function createPageState(id: string, readOnly: boolean = false) {
         isShareOptionsModalOpen = false;
     }
 
-    function getMissingItemsText() {
+    function getShareUrl() {
         if (!checklist) return "";
-        let text = `Liste des éléments manquants pour ma checklist "${checklist.checklistName}" :\n\n`;
-        let hasMissing = false;
+        
+        // Compactage et encodage optimisé
+        const compact = compactChecklist(checklist);
+        const base64 = encodeChecklist(compact);
+        
+        const url = new URL(window.location.origin + base);
+        url.searchParams.set('import', base64);
+        return url.toString();
+    }
 
-        checklist.elements.forEach(element => {
-            const missingInCategory = element.items.filter(item => {
-                if (item.disabled) return false;
-                
-                const wanted = Number(item['wanted-quantity']) || 0;
-                const added = Number(item['added-quantity']) || 0;
-                return added < wanted;
-            });
+    function getFriendlyText() {
+        if (!checklist) return "";
+        return `Checklist ${checklist.checklistName} de ${checklist.userName}`;
+    }
 
-            if (missingInCategory.length > 0) {
-                hasMissing = true;
-                text += `* ${element.category.toUpperCase()} *\n`;
-                missingInCategory.forEach(item => {
-                    const wanted = Number(item['wanted-quantity']) || 0;
-                    const added = Number(item['added-quantity']) || 0;
-                    const missing = wanted - added;
-                    text += `- ${item.item} (manque ${missing})\n`;
-                });
-                text += "\n";
+    async function shareNative() {
+        if (!checklist) return;
+        const shareData = {
+            title: getFriendlyText(),
+            text: `Voici ma checklist : ${checklist.checklistName}`,
+            url: getShareUrl()
+        };
+
+        if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+            try {
+                await navigator.share(shareData);
+                toastState.success("Partage réussi !");
+            } catch (err) {
+                if ((err as Error).name !== 'AbortError') {
+                    console.error('Erreur lors du partage :', err);
+                }
             }
-        });
-
-        if (!hasMissing) {
-            return `Tous les éléments de ma checklist "${checklist.checklistName}" sont complets !`;
+        } else {
+            // Fallback vers le modal d'options si le partage natif n'est pas dispo
+            openShareOptionsModal();
         }
-        return text;
+    }
+
+    async function shareViaCopy() {
+        if (!checklist) return;
+        const url = getShareUrl();
+        const text = getFriendlyText();
+
+        try {
+            // Tentative de copie avec format HTML pour "masquer" le lien dans les éditeurs riches
+            const html = `<a href="${url}">${text}</a>`;
+            const blobHtml = new Blob([html], { type: 'text/html' });
+            const blobText = new Blob([url], { type: 'text/plain' });
+            const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
+            
+            await navigator.clipboard.write(data);
+            toastState.success("Lien copié dans le presse-papier !");
+        } catch (err) {
+            // Fallback si ClipboardItem n'est pas supporté
+            try {
+                await navigator.clipboard.writeText(url);
+                toastState.success("Lien copié dans le presse-papier !");
+            } catch (copyErr) {
+                console.error('Erreur lors de la copie :', copyErr);
+                toastState.error("Impossible de copier le lien");
+            }
+        }
     }
 
     function shareViaEmail() {
         if (!checklist) return;
-        const subject = encodeURIComponent(`Checklist : ${checklist.checklistName} - Éléments manquants`);
-        const body = encodeURIComponent(getMissingItemsText());
+        const subject = encodeURIComponent(`Checklist partagée : ${checklist.checklistName}`);
+        const body = encodeURIComponent(`Bonjour,\n\nVoici une checklist partagée avec vous : "${checklist.checklistName}"\n\nCliquez sur ce lien pour l'importer dans votre application :\n${getFriendlyText()}\n${getShareUrl()}`);
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
         toastState.info("Ouverture de votre application email...");
     }
 
     function shareViaSMS() {
-        const body = encodeURIComponent(getMissingItemsText());
+        if (!checklist) return;
+        const body = encodeURIComponent(`Voici une checklist partagée : ${getFriendlyText()}\n\nImportez-la ici : ${getShareUrl()}`);
         window.location.href = `sms:?body=${body}`;
         toastState.info("Ouverture de votre application SMS...");
     }
 
     function shareViaWhatsApp() {
-        const text = encodeURIComponent(getMissingItemsText());
+        if (!checklist) return;
+        const text = encodeURIComponent(`Voici une checklist partagée : *${getFriendlyText()}*\n\nImportez-la ici : ${getShareUrl()}`);
         window.open(`https://wa.me/?text=${text}`, '_blank');
         toastState.info("Ouverture de WhatsApp...");
     }
@@ -417,6 +453,8 @@ export function createPageState(id: string, readOnly: boolean = false) {
         addItem,
         deleteItem,
         deleteCategory,
+        shareNative,
+        shareViaCopy,
         shareViaEmail,
         shareViaSMS,
         shareViaWhatsApp

@@ -14,6 +14,9 @@
     import SettingsModal from '$lib/components/SettingsModal.svelte';
     import LogoutModal from '$lib/components/LogoutModal.svelte';
     import ToastContainer from '$lib/components/ToastContainer.svelte';
+    import Modal from '$lib/components/Modal.svelte';
+    import Button from '$lib/components/Button.svelte';
+    import { icons } from '$lib/ts/icons';
 
     let { children } = $props();
 
@@ -79,9 +82,81 @@
             onclose={layoutState.toggleLogoutModal} 
         />
 
+        <!-- Modal Import -->
+        <Modal
+            isOpen={layoutState.showImportModal}
+            onclose={layoutState.cancelImport}
+            title="Importer une checklist ?"
+        >
+            {#if layoutState.importData}
+                <div class="flex flex-col items-center mb-6">
+                    <div class="p-4 bg-primary/10 text-primary rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                            {@html icons.share}
+                        </svg>
+                    </div>
+                    <p class="text-text-main/60 dark:text-gray-400 text-center mt-2 font-medium">
+                        Voulez-vous importer la checklist <span class="text-text-main dark:text-white font-bold italic">"{layoutState.importData.checklistName}"</span> partagée par <span class="text-text-main dark:text-white font-bold">{layoutState.importData.userName}</span> ?
+                    </p>
+                </div>
+                
+                <div class="flex flex-col gap-3">
+                    <Button 
+                        onclick={layoutState.confirmImport}
+                        fullWidth
+                    >
+                        Valider l'import
+                    </Button>
+                    <Button 
+                        variant="secondary"
+                        onclick={layoutState.cancelImport}
+                        fullWidth
+                    >
+                        Annuler
+                    </Button>
+                </div>
+            {/if}
+        </Modal>
+
     </div>
 {:else}
     {@render children()}
+
+    <!-- Modal Import (Hors layout pour la page de login) -->
+    <Modal
+        isOpen={layoutState.showImportModal}
+        onclose={layoutState.cancelImport}
+        title="Importer une checklist ?"
+    >
+        {#if layoutState.importData}
+            <div class="flex flex-col items-center mb-6">
+                <div class="p-4 bg-primary/10 text-primary rounded-full mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                        {@html icons.share}
+                    </svg>
+                </div>
+                <p class="text-text-main/60 dark:text-gray-400 text-center mt-2 font-medium">
+                    Voulez-vous importer la checklist <span class="text-text-main dark:text-white font-bold italic">"{layoutState.importData.checklistName}"</span> partagée par <span class="text-text-main dark:text-white font-bold">{layoutState.importData.userName}</span> ?
+                </p>
+            </div>
+            
+            <div class="flex flex-col gap-3">
+                <Button 
+                    onclick={layoutState.confirmImport}
+                    fullWidth
+                >
+                    Valider l'import
+                </Button>
+                <Button 
+                    variant="secondary"
+                    onclick={layoutState.cancelImport}
+                    fullWidth
+                >
+                    Annuler
+                </Button>
+            </div>
+        {/if}
+    </Modal>
 {/if}
 
 <ReloadPrompt />
