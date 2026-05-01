@@ -78,16 +78,11 @@ export function createPageState(id: string, readOnly: boolean = false) {
             let catAdded = 0;
 
             element.items.forEach(item => {
-                // S'assurer que les valeurs existent avant de faire le calcul
-                const wantedVal = item['wanted-quantity'] ?? 0;
-                const addedVal = item['added-quantity'] ?? 0;
-                
-                const wanted = parseInt(wantedVal.toString()) || 0;
-                const added = parseInt(addedVal.toString()) || 0;
+                const wanted = Number(item['wanted-quantity']) || 0;
+                const added = Number(item['added-quantity']) || 0;
                 
                 // Un item n'est compté dans le progrès que s'il n'est pas désactivé
-                const isDisabled = item.disabled === 'true' || item.disabled === true;
-                if (!isDisabled) {
+                if (!item.disabled) {
                     catWanted += wanted;
                     // On ne peut pas avoir ajouté plus que demandé pour le calcul du progrès (%)
                     catAdded += Math.min(added, wanted);
@@ -96,7 +91,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
 
             // Calcul du progrès par catégorie
             const catProgress = catWanted > 0 ? Math.round((catAdded / catWanted) * 100) : 0;
-            element.progress = catProgress.toString();
+            element.progress = catProgress;
 
             totalWanted += catWanted;
             totalAdded += catAdded;
@@ -104,16 +99,16 @@ export function createPageState(id: string, readOnly: boolean = false) {
 
         // Calcul du progrès global de la checklist
         const totalProgress = totalWanted > 0 ? Math.round((totalAdded / totalWanted) * 100) : 0;
-        checklist.progress = totalProgress.toString();
+        checklist.progress = totalProgress;
     }
 
     async function updateQuantity(categoryIndex: number, itemIndex: number, delta: number) {
         if (!checklist || readOnly) return;
         const item = checklist.elements[categoryIndex].items[itemIndex];
-        let added = parseInt(item['added-quantity'].toString()) || 0;
+        let added = Number(item['added-quantity']) || 0;
 
         added = Math.max(0, added + delta);
-        item['added-quantity'] = added.toString();
+        item['added-quantity'] = added;
         
         await save();
     }
@@ -121,13 +116,13 @@ export function createPageState(id: string, readOnly: boolean = false) {
     async function toggleItem(categoryIndex: number, itemIndex: number) {
         if (!checklist || readOnly) return;
         const item = checklist.elements[categoryIndex].items[itemIndex];
-        const wanted = parseInt(item['wanted-quantity'].toString()) || 0;
-        let added = parseInt(item['added-quantity'].toString()) || 0;
+        const wanted = Number(item['wanted-quantity']) || 0;
+        let added = Number(item['added-quantity']) || 0;
 
         if (added >= wanted) {
-            item['added-quantity'] = '0';
+            item['added-quantity'] = 0;
         } else {
-            item['added-quantity'] = wanted.toString();
+            item['added-quantity'] = wanted;
         }
 
         await save();
@@ -136,7 +131,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
     async function toggleDisabled(categoryIndex: number, itemIndex: number) {
         if (!checklist || readOnly) return;
         const item = checklist.elements[categoryIndex].items[itemIndex];
-        item.disabled = (item.disabled === 'true' || item.disabled === true) ? '' : 'true';
+        item.disabled = !item.disabled;
         
         await save();
     }
@@ -169,8 +164,8 @@ export function createPageState(id: string, readOnly: boolean = false) {
 
         checklist.elements.unshift({
             category: nameToAdd,
-            progress: '0',
-            addedByUser: "true",
+            progress: 0,
+            addedByUser: true,
             items: []
         });
 
@@ -221,8 +216,8 @@ export function createPageState(id: string, readOnly: boolean = false) {
                 item: nameToAdd,
                 'wanted-quantity': quantityToAdd,
                 'added-quantity': 0,
-                disabled: "",
-                addedByUser: "true"
+                disabled: false,
+                addedByUser: true
             },
             ...category.items
         ];
@@ -235,7 +230,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
         if (!checklist || readOnly) return;
         const item = checklist.elements[categoryIndex].items[itemIndex];
 
-        if (item.addedByUser === "true" || item.addedByUser === true) {
+        if (item.addedByUser) {
             checklist.elements[categoryIndex].items.splice(itemIndex, 1);
             await save();
         }
@@ -246,7 +241,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
         const element = checklist.elements[index];
         
         // Sécurité : on ne supprime que si c'est une catégorie ajoutée par l'utilisateur
-        if (element.addedByUser === "true" || element.addedByUser === true) {
+        if (element.addedByUser) {
             checklist.elements.splice(index, 1);
             
             // Mise à jour des catégories dépliées
@@ -310,11 +305,10 @@ export function createPageState(id: string, readOnly: boolean = false) {
 
         checklist.elements.forEach(element => {
             const missingInCategory = element.items.filter(item => {
-                const isDisabled = item.disabled === 'true' || item.disabled === true;
-                if (isDisabled) return false;
+                if (item.disabled) return false;
                 
-                const wanted = parseInt(item['wanted-quantity'].toString()) || 0;
-                const added = parseInt(item['added-quantity'].toString()) || 0;
+                const wanted = Number(item['wanted-quantity']) || 0;
+                const added = Number(item['added-quantity']) || 0;
                 return added < wanted;
             });
 
@@ -322,8 +316,8 @@ export function createPageState(id: string, readOnly: boolean = false) {
                 hasMissing = true;
                 text += `* ${element.category.toUpperCase()} *\n`;
                 missingInCategory.forEach(item => {
-                    const wanted = parseInt(item['wanted-quantity'].toString()) || 0;
-                    const added = parseInt(item['added-quantity'].toString()) || 0;
+                    const wanted = Number(item['wanted-quantity']) || 0;
+                    const added = Number(item['added-quantity']) || 0;
                     const missing = wanted - added;
                     text += `- ${item.item} (manque ${missing})\n`;
                 });

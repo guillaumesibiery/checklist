@@ -70,13 +70,13 @@ describe('Checklist State - Add Category', () => {
 
         expect(state.checklist?.elements.length).toBe(2);
         expect(state.checklist?.elements[0].category).toBe('Cat2');
-        expect(state.checklist?.elements[0].addedByUser).toBe("true");
+        expect(state.checklist?.elements[0].addedByUser).toBe(true);
         
         // Vérifier en base
         const updated = await db.checklists.where('checklistId').equals(checklistId).first();
         expect(updated?.elements.length).toBe(2);
         expect(updated?.elements[0].category).toBe('Cat2');
-        expect(updated?.elements[0].addedByUser).toBe("true");
+        expect(updated?.elements[0].addedByUser).toBe(true);
     });
 
     it('ne devrait pas ajouter une catégorie si elle existe déjà (insensible à la casse)', async () => {
@@ -247,7 +247,7 @@ describe('Checklist State - Add Category', () => {
         const cat = state.checklist?.elements.find(e => e.category === 'Cat1');
         expect(cat?.items.length).toBe(1);
         expect(cat?.items[0].item).toBe('NewItemInSystemCat');
-        expect(cat?.items[0].addedByUser).toBe("true");
+        expect(cat?.items[0].addedByUser).toBe(true);
     });
 
     it('devrait basculer le mode édition', async () => {

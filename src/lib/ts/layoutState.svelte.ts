@@ -1,6 +1,6 @@
 import { goto } from '$app/navigation';
 import { base } from '$app/paths';
-import { db, type User } from '$lib/ts/db';
+import { type User, type Checklist } from '$lib/ts/db';
 import { UserRepository } from './repositories/UserRepository';
 import { ChecklistRepository } from './repositories/ChecklistRepository';
 import { ModelRepository } from './repositories/ModelRepository';
@@ -139,19 +139,20 @@ export function createLayoutState() {
             if (!modelData) throw new Error('Modèle non trouvé');
 
             const now = new Date().toISOString();
-            // On retire les champs spécifiques au modèle pour la checklist
+            
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { id: modelId, modelCreationDate, modelLastModifiedDate, ...rest } = modelData;
+            const { id: modelId, modelCreationDate, modelLastModifiedDate, userId: mUserId, ...rest } = modelData;
 
-            const newChecklist = {
+            const newChecklist: Checklist = {
                 ...rest,
                 checklistId: crypto.randomUUID(),
                 checklistName: checklistName,
                 userId: user.id!,
                 creationDate: now,
                 lastModifiedDate: now,
-                progress: "0",
-                status: "IN_PROGRESS"
+                progress: 0,
+                status: "IN_PROGRESS",
+                modelName: rest.modelName || ""
             };
 
             await ChecklistRepository.create(newChecklist);

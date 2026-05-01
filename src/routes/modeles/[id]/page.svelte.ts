@@ -55,7 +55,7 @@ export function createPageState(modelId: string) {
 
         // On s'assure que addedByUser est à false pour toutes les catégories du modèle
         model.elements.forEach(el => {
-            el.addedByUser = "false";
+            el.addedByUser = false;
         });
         
         const existing = await ModelRepository.getByUuid(modelId);
@@ -91,8 +91,8 @@ export function createPageState(modelId: string) {
 
         model.elements.unshift({
             category: nameToAdd,
-            progress: '0',
-            addedByUser: "false",
+            progress: 0,
+            addedByUser: false,
             items: []
         });
 
@@ -139,7 +139,8 @@ export function createPageState(modelId: string) {
                 item: nameToAdd,
                 'wanted-quantity': quantityToAdd,
                 'added-quantity': 0,
-                disabled: false
+                disabled: false,
+                addedByUser: true
             },
             ...category.items
         ];
@@ -151,7 +152,7 @@ export function createPageState(modelId: string) {
     async function updateItemQuantity(categoryIndex: number, itemIndex: number, delta: number) {
         if (!model) return;
         const item = model.elements[categoryIndex].items[itemIndex];
-        const currentQty = parseInt(item['wanted-quantity'].toString()) || 1;
+        const currentQty = Number(item['wanted-quantity']) || 1;
         item['wanted-quantity'] = Math.max(1, currentQty + delta);
         await save();
     }

@@ -5,48 +5,49 @@ export interface User {
     firstName: string;
 }
 
+export type ChecklistStatus = 'IN_PROGRESS' | 'FINISHED';
+
 export interface ChecklistItem {
     item: string;
-    'wanted-quantity': string | number;
-    'added-quantity': string | number;
-    disabled: string | boolean;
-    addedByUser?: string | boolean;
+    'wanted-quantity': number;
+    'added-quantity': number;
+    disabled: boolean;
+    addedByUser: boolean;
 }
 
 export interface ChecklistElement {
     category: string;
-    progress: string;
-    addedByUser?: string | boolean;
+    progress: number;
+    addedByUser: boolean;
     items: ChecklistItem[];
 }
 
-export interface Checklist {
+/**
+ * Base pour les structures contenant des éléments de checklist (Checklists et Modèles)
+ */
+interface ChecklistBase {
+    elements: ChecklistElement[];
+}
+
+export interface Checklist extends ChecklistBase {
     id?: number;
     checklistId: string;
     checklistName: string;
     userId: number;
     creationDate: string;
     lastModifiedDate: string;
-    progress: string;
-    status: string;
+    progress: number;
+    status: ChecklistStatus;
     modelName: string;
-    elements: ChecklistElement[];
 }
 
-export interface Model {
+export interface Model extends ChecklistBase {
     id?: number;
     modelId: string;
     modelName: string;
     modelCreationDate: string;
     modelLastModifiedDate: string;
-    checklistId: string;
-    checklistName: string;
-    userId: number | string;
-    creationDate: string;
-    lastModifiedDate: string;
-    progress: string;
-    status: string;
-    elements: ChecklistElement[];
+    userId: number;
 }
 
 export class ChecklistDatabase extends Dexie {
