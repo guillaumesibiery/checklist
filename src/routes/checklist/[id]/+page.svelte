@@ -6,6 +6,8 @@
     import { icons } from '$lib/ts/icons';
     import ActionButton from '$lib/components/ActionButton.svelte';
     import BottomActionMenu from '$lib/components/BottomActionMenu.svelte';
+    import Category from '$lib/components/Category.svelte';
+    import ChecklistItem from '$lib/components/ChecklistItem.svelte';
     import './page.css';
 
     const readOnly = page.url.searchParams.get('readOnly') === 'true';
@@ -74,128 +76,28 @@
             {/if}
 
             {#each state.checklist.elements as element, catIndex}
-                {@const isExpanded = state.expandedCategories.has(catIndex)}
-                <section class="bg-white dark:bg-gray-800 rounded-2xl border border-primary/10 dark:border-gray-700/50 overflow-hidden transition-colors" in:fade={{ delay: catIndex * 100 }}>
-                    <!-- svelte-ignore a11y_no_static_element_interactions -->
-                    <!-- svelte-ignore a11y_click_events_have_key_events -->
-                    <div class="w-full p-4 bg-white dark:bg-gray-800 flex justify-between items-center hover:bg-secondary/50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-                            role="button"
-                            tabindex="0"
-                            onclick={() => state.toggleCategory(catIndex)}>
-                        <div class="flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
-                                 class="w-5 h-5 text-primary transition-transform duration-300"
-                                 class:rotate-180={!isExpanded}>
-                                {@html icons.chevronDown}
-                            </svg>
-                            <h2 class="text-lg font-bold text-text-main dark:text-white transition-colors">{element.category}</h2>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
-                                {element.progress}%
-                            </span>
-                            {#if (element.addedByUser === "true" || element.addedByUser === true) && !state.readOnly && state.isEditMode}
-                                <button class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
-                                        onclick={(e) => { e.stopPropagation(); state.deleteCategory(catIndex); }}
-                                        aria-label="Supprimer la catégorie">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                                        {@html icons.trash}
-                                    </svg>
-                                </button>
-                            {/if}
-                        </div>
-                    </div>
-                    
-                    {#if isExpanded}
-                        <div class="divide-y divide-secondary dark:divide-gray-700 transition-colors" transition:fade={{ duration: 200 }}>
-                            {#if !state.readOnly && state.isEditMode}
-                                <button class="w-full py-3 bg-secondary/30 dark:bg-gray-700/30 text-primary text-sm font-bold flex items-center justify-center gap-2 hover:bg-secondary/50 dark:hover:bg-gray-700/50 transition-colors"
-                                        onclick={() => state.openAddItemModal(element.category)}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                                        {@html icons.plus}
-                                    </svg>
-                                    Ajouter un élément
-                                </button>
-                            {/if}
-
-                            {#each element.items as item, itemIndex}
-                                {@const isDisabled = item.disabled === 'true' || item.disabled === true}
-                            <div class="p-4 flex items-center gap-3 transition-opacity duration-300"
-                                 class:opacity-40={isDisabled}>
-                                
-                                <!-- Enable/Disable checkbox -->
-                                <input type="checkbox" 
-                                       class="w-6 h-6 rounded border-2 border-primary text-primary accent-primary focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all duration-200 disabled:opacity-50" 
-                                       checked={!isDisabled}
-                                       disabled={state.readOnly}
-                                       onchange={() => state.toggleDisabled(catIndex, itemIndex)}>
-
-                                <!-- Item Name & Quantity Info -->
-                                <div class="flex-grow flex flex-col min-w-0">
-                                    <span class="text-text-main dark:text-white font-medium truncate transition-colors" 
-                                          class:line-through={isDisabled}>
-                                        {item.item}
-                                    </span>
-                                    {#if parseInt(item['wanted-quantity'].toString()) > 1}
-                                        <span class="text-xs text-text-main/50 dark:text-gray-400 transition-colors" class:line-through={isDisabled}>
-                                            Quantité : {item['wanted-quantity']}
-                                        </span>
-                                    {/if}
-                                </div>
-
-                                <!-- Controls -->
-                                {#if !isDisabled && !state.readOnly}
-                                    <div class="flex items-center gap-2" in:scale>
-                                        {#if parseInt(item['wanted-quantity'].toString()) === 1}
-                                            <button class="w-12 h-6 rounded-full relative transition-colors duration-300 cursor-pointer"
-                                                    class:bg-primary={parseInt(item['added-quantity'].toString()) === 1}
-                                                    class:bg-secondary={parseInt(item['added-quantity'].toString()) === 0}
-                                                    class:dark:bg-gray-700={parseInt(item['added-quantity'].toString()) === 0}
-                                                    onclick={() => state.toggleItem(catIndex, itemIndex)}
-                                                    aria-label="Cocher l'élément">
-                                                <div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 shadow-sm"
-                                                     class:translate-x-6={parseInt(item['added-quantity'].toString()) === 1}>
-                                                </div>
-                                            </button>
-                                        {:else}
-                                            <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-lg p-1 transition-colors">
-                                                <button class="w-8 h-8 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
-                                                        onclick={() => state.updateQuantity(catIndex, itemIndex, -1)}
-                                                        aria-label="Diminuer la quantité">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" aria-hidden="true">
-                                                        {@html icons.minus}
-                                                    </svg>
-                                                </button>
-                                                <span class="w-8 text-center font-bold text-text-main dark:text-white transition-colors">
-                                                    {item['added-quantity']}
-                                                </span>
-                                                <button class="w-8 h-8 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
-                                                        onclick={() => state.updateQuantity(catIndex, itemIndex, 1)}
-                                                        aria-label="Augmenter la quantité">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" aria-hidden="true">
-                                                        {@html icons.plus}
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        {/if}
-                                    </div>
-                                {/if}
-
-                                <!-- Delete item button -->
-                                {#if (item.addedByUser === "true" || item.addedByUser === true) && !state.readOnly && state.isEditMode}
-                                    <button class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0"
-                                            onclick={() => state.deleteItem(catIndex, itemIndex)}
-                                            aria-label="Supprimer l'élément">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                                            {@html icons.trash}
-                                        </svg>
-                                    </button>
-                                {/if}
-                            </div>
-                            {/each}
-                        </div>
-                    {/if}
-                </section>
+                <Category 
+                    title={element.category}
+                    progress={element.progress}
+                    isExpanded={state.expandedCategories.has(catIndex)}
+                    canDelete={(element.addedByUser === "true" || element.addedByUser === true) && !state.readOnly && state.isEditMode}
+                    showAddButton={!state.readOnly && state.isEditMode}
+                    ontoggle={() => state.toggleCategory(catIndex)}
+                    ondelete={() => state.deleteCategory(catIndex)}
+                    onadditem={() => state.openAddItemModal(element.category)}
+                >
+                    {#each element.items as item, itemIndex}
+                        <ChecklistItem 
+                            {item}
+                            readOnly={state.readOnly}
+                            isEditMode={state.isEditMode}
+                            ontoggleDisabled={() => state.toggleDisabled(catIndex, itemIndex)}
+                            ontoggleItem={() => state.toggleItem(catIndex, itemIndex)}
+                            onupdateQuantity={(delta) => state.updateQuantity(catIndex, itemIndex, delta)}
+                            ondeleteItem={() => state.deleteItem(catIndex, itemIndex)}
+                        />
+                    {/each}
+                </Category>
             {/each}
         </main>
 

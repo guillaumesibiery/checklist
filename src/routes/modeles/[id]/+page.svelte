@@ -6,6 +6,8 @@
     import { icons } from '$lib/ts/icons';
     import ActionButton from '$lib/components/ActionButton.svelte';
     import BottomActionMenu from '$lib/components/BottomActionMenu.svelte';
+    import Category from '$lib/components/Category.svelte';
+    import ModelItem from '$lib/components/ModelItem.svelte';
     import './page.css';
 
     const state = createModelEditorState(page.params.id as string);
@@ -44,85 +46,23 @@
             </button>
 
             {#each state.model.elements as element, catIndex}
-                {@const isExpanded = state.expandedCategories.has(catIndex)}
-                <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden transition-colors" in:fade={{ delay: catIndex * 100 }}>
-                    <div class="w-full p-4 bg-white dark:bg-gray-800 flex justify-between items-center hover:bg-secondary/50 dark:hover:bg-gray-700 transition-colors">
-                        <!-- svelte-ignore a11y_click_events_have_key_events -->
-                        <!-- svelte-ignore a11y_no_static_element_interactions -->
-                        <div class="flex items-center gap-2 flex-1 cursor-pointer" onclick={() => state.toggleCategory(catIndex)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
-                                 class="w-5 h-5 text-primary transition-transform duration-300"
-                                 class:rotate-180={!isExpanded}
-                                 aria-hidden="true">
-                                {@html icons.chevronDown}
-                            </svg>
-                            <h2 class="text-lg font-bold text-text-main dark:text-white transition-colors">{element.category}</h2>
-                        </div>
-                        <button class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
-                                onclick={(e) => { e.stopPropagation(); state.deleteCategory(catIndex); }}
-                                aria-label="Supprimer la catégorie"
-                                title="Supprimer la catégorie">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" aria-hidden="true">
-                                {@html icons.trash}
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    {#if isExpanded}
-                        <div class="divide-y divide-secondary dark:divide-gray-700 transition-colors" transition:fade={{ duration: 200 }}>
-                            <button class="w-full py-3 bg-secondary/30 dark:bg-gray-700/30 text-primary text-sm font-bold flex items-center justify-center gap-2 hover:bg-secondary/50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
-                                    onclick={() => state.openAddItemModal(element.category)}>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4" aria-hidden="true">
-                                    {@html icons.plus}
-                                </svg>
-                                Ajouter un élément
-                            </button>
-
-                            {#each element.items as item, itemIndex}
-                            <div class="p-4 flex items-center gap-3">
-                                <div class="flex-grow flex flex-col min-w-0">
-                                    <span class="text-text-main dark:text-white font-medium truncate transition-colors">
-                                        {item.item}
-                                    </span>
-                                </div>
-
-                                <!-- Controls -->
-                                <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-lg p-1 transition-colors">
-                                    <button class="w-8 h-8 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
-                                            onclick={() => state.updateItemQuantity(catIndex, itemIndex, -1)}
-                                            aria-label="Diminuer la quantité"
-                                            title="Diminuer la quantité">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" aria-hidden="true">
-                                            {@html icons.minus}
-                                        </svg>
-                                    </button>
-                                    <span class="w-8 text-center font-bold text-text-main dark:text-white transition-colors">
-                                        {item['wanted-quantity']}
-                                    </span>
-                                    <button class="w-8 h-8 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
-                                            onclick={() => state.updateItemQuantity(catIndex, itemIndex, 1)}
-                                            aria-label="Augmenter la quantité"
-                                            title="Augmenter la quantité">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" aria-hidden="true">
-                                            {@html icons.plus}
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                <!-- Delete item button -->
-                                <button class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0 cursor-pointer"
-                                        onclick={() => state.deleteItem(catIndex, itemIndex)}
-                                        aria-label="Supprimer l'élément"
-                                        title="Supprimer l'élément">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4" aria-hidden="true">
-                                        {@html icons.trash}
-                                    </svg>
-                                </button>
-                            </div>
-                            {/each}
-                        </div>
-                    {/if}
-                </section>
+                <Category 
+                    title={element.category}
+                    isExpanded={state.expandedCategories.has(catIndex)}
+                    canDelete={true}
+                    showAddButton={true}
+                    ontoggle={() => state.toggleCategory(catIndex)}
+                    ondelete={() => state.deleteCategory(catIndex)}
+                    onadditem={() => state.openAddItemModal(element.category)}
+                >
+                    {#each element.items as item, itemIndex}
+                        <ModelItem 
+                            {item}
+                            onupdateQuantity={(delta) => state.updateItemQuantity(catIndex, itemIndex, delta)}
+                            ondeleteItem={() => state.deleteItem(catIndex, itemIndex)}
+                        />
+                    {/each}
+                </Category>
             {/each}
         </main>
 
