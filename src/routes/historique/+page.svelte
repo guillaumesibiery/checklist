@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { createHistoriqueState } from './page.svelte.ts';
+    import { createPageState } from './page.svelte.ts';
     import { fade, scale } from 'svelte/transition';
     import { goto } from '$app/navigation';
     import { base } from '$app/paths';
     import { onMount } from 'svelte';
     import { formatDate } from '$lib/ts/date';
 
-    const state = createHistoriqueState();
+    const state = createPageState();
 
     onMount(async () => {
         await state.loadChecklists();

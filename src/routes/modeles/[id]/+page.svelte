@@ -1,6 +1,6 @@
 <script lang="ts">
     import { page } from '$app/state';
-    import { createModelEditorState } from './page.svelte.ts';
+    import { createPageState } from './page.svelte.ts';
     import { filterInput } from '$lib/ts/modalInputFilter';
     import { fade, fly, scale } from 'svelte/transition';
     import { icons } from '$lib/ts/icons';
@@ -10,7 +10,7 @@
     import ModelItem from '$lib/components/ModelItem.svelte';
     import './page.css';
 
-    const state = createModelEditorState(page.params.id as string);
+    const state = createPageState(page.params.id as string);
 </script>
 
 <div class="min-h-screen bg-secondary dark:bg-[#05010d] pb-24 transition-colors duration-300">

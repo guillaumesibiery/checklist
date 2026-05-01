@@ -3,7 +3,7 @@ import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { onMount } from 'svelte';
 
-export function createChecklistState(id: string, readOnly: boolean = false) {
+export function createPageState(id: string, readOnly: boolean = false) {
     let checklist = $state<Checklist | null>(null);
     let loading = $state(true);
     let expandedCategories = $state(new Set<number>());

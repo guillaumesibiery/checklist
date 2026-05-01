@@ -4,7 +4,7 @@ import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { onMount } from 'svelte';
 
-export function createModelEditorState(modelId: string) {
+export function createPageState(modelId: string) {
     let model = $state<Model | null>(null);
     let loading = $state(true);
     let expandedCategories = $state(new Set<number>());

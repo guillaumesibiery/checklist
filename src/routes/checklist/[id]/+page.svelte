@@ -1,6 +1,6 @@
 <script lang="ts">
     import { page } from '$app/state';
-    import { createChecklistState } from './page.svelte.ts';
+    import { createPageState } from './page.svelte.ts';
     import { filterInput } from '$lib/ts/modalInputFilter';
     import { fade, fly, scale } from 'svelte/transition';
     import { icons } from '$lib/ts/icons';
@@ -11,7 +11,7 @@
     import './page.css';
 
     const readOnly = page.url.searchParams.get('readOnly') === 'true';
-    const state = createChecklistState(page.params.id as string, readOnly);
+    const state = createPageState(page.params.id as string, readOnly);
 
     function getIcon(name: keyof typeof icons) {
         return icons[name];

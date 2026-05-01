@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { createModelesState } from './page.svelte.ts';
+    import { createPageState } from './page.svelte.ts';
     import { fade, scale } from 'svelte/transition';
     import { filterInput } from '$lib/ts/modalInputFilter';
     import { goto } from '$app/navigation';
@@ -7,7 +7,7 @@
     import { onMount } from 'svelte';
     import { formatDate } from '$lib/ts/date';
 
-    const state = createModelesState();
+    const state = createPageState();
 
     onMount(async () => {
         await state.loadModels();

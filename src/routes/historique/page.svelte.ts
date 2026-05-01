@@ -1,7 +1,7 @@
 import { db, type Checklist } from '$lib/ts/db';
 import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 
-export function createHistoriqueState() {
+export function createPageState() {
     let checklists = $state<Checklist[]>([]);
     let isLoadingChecklists = $state(true);
     let showRestoreModal = $state(false);

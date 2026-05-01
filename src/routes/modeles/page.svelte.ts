@@ -3,7 +3,7 @@ import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 import { base } from '$app/paths';
 import { goto } from '$app/navigation';
 
-export function createModelesState() {
+export function createPageState() {
     let models = $state<Model[]>([]);
     let isLoadingModels = $state(true);
     let showDeleteModal = $state(false);

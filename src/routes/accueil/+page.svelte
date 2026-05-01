@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { createAccueilState } from './page.svelte.ts';
+    import { createPageState } from './page.svelte.ts';
     import { fade, scale, fly } from 'svelte/transition';
     import { onMount } from 'svelte';
     import { base } from '$app/paths';
@@ -7,7 +7,7 @@
     import { formatDate } from '$lib/ts/date';
     import { addToGoogleCalendar } from '$lib/ts/calendar';
 
-    const state = createAccueilState();
+    const state = createPageState();
 
     onMount(async () => {
         await state.loadChecklists();

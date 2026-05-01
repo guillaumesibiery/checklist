@@ -1,6 +1,6 @@
 import 'fake-indexeddb/auto';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { createChecklistState } from './page.svelte.ts';
+import { createPageState } from './page.svelte.ts';
 import { db } from '$lib/ts/db';
 
 // Mock Svelte lifecycle and navigation
@@ -57,7 +57,7 @@ describe('Checklist State - Add Category', () => {
     });
 
     it('devrait ajouter une catégorie si elle n\'existe pas', async () => {
-        const state = createChecklistState(checklistId);
+        const state = createPageState(checklistId);
         
         // Attendre que le chargement soit fini (Dexie est asynchrone)
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -80,7 +80,7 @@ describe('Checklist State - Add Category', () => {
     });
 
     it('ne devrait pas ajouter une catégorie si elle existe déjà (insensible à la casse)', async () => {
-        const state = createChecklistState(checklistId);
+        const state = createPageState(checklistId);
         
         // Attendre que le chargement soit fini
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -94,7 +94,7 @@ describe('Checklist State - Add Category', () => {
     });
 
     it('ne devrait pas ajouter une catégorie vide', async () => {
-        const state = createChecklistState(checklistId);
+        const state = createPageState(checklistId);
         
         // Attendre que le chargement soit fini
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -106,7 +106,7 @@ describe('Checklist State - Add Category', () => {
     });
 
     it('devrait ajouter un item dans une catégorie utilisateur', async () => {
-        const state = createChecklistState(checklistId);
+        const state = createPageState(checklistId);
         await new Promise(resolve => setTimeout(resolve, 500));
 
         // On ajoute manuellement une catégorie utilisateur au state pour simplifier
@@ -135,7 +135,7 @@ describe('Checklist State - Add Category', () => {
     });
 
     it('ne devrait pas ajouter un item déjà existant dans la même catégorie', async () => {
-        const state = createChecklistState(checklistId);
+        const state = createPageState(checklistId);
         await new Promise(resolve => setTimeout(resolve, 500));
 
         if (state.checklist) {
@@ -164,7 +164,7 @@ describe('Checklist State - Add Category', () => {
     });
 
     it('devrait supprimer un item ajouté par l\'utilisateur', async () => {
-        const state = createChecklistState(checklistId);
+        const state = createPageState(checklistId);
         await new Promise(resolve => setTimeout(resolve, 500));
 
         if (state.checklist) {
@@ -193,7 +193,7 @@ describe('Checklist State - Add Category', () => {
     });
 
     it('devrait supprimer une catégorie et tous ses items', async () => {
-        const state = createChecklistState(checklistId);
+        const state = createPageState(checklistId);
         await new Promise(resolve => setTimeout(resolve, 500));
 
         if (state.checklist) {
@@ -232,7 +232,7 @@ describe('Checklist State - Add Category', () => {
     });
 
     it('devrait ajouter un item dans une catégorie système (venant d\'un modèle)', async () => {
-        const state = createChecklistState(checklistId);
+        const state = createPageState(checklistId);
         await new Promise(resolve => setTimeout(resolve, 500));
 
         // 'Cat1' est une catégorie système créée dans beforeEach
@@ -251,7 +251,7 @@ describe('Checklist State - Add Category', () => {
     });
 
     it('devrait basculer le mode édition', async () => {
-        const state = createChecklistState(checklistId);
+        const state = createPageState(checklistId);
         await new Promise(resolve => setTimeout(resolve, 100));
 
         expect(state.isEditMode).toBe(false);

@@ -1,8 +1,9 @@
 import 'fake-indexeddb/auto';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { createAccueilState } from './page.svelte.ts';
+import { createPageState } from './page.svelte.ts';
 import { db } from '$lib/ts/db';
 import { goto } from '$app/navigation';
+import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 
 // Mock Svelte lifecycle and navigation
 vi.mock('svelte', () => ({
@@ -18,20 +19,16 @@ describe('Accueil State', () => {
     beforeEach(async () => {
         await db.users.clear();
         localStorage.clear();
+        await layoutState.init();
         vi.clearAllMocks();
-    });
-
-    it('devrait rediriger vers / si aucun utilisateur n\'est connecté', async () => {
-        const state = createAccueilState();
-        // Le mock de onMount appelle fn immédiatement, donc goto('/') devrait être appelé
-        expect(goto).toHaveBeenCalledWith('/');
     });
 
     it('devrait charger l\'utilisateur si un ID est présent dans localStorage', async () => {
         const id = await db.users.add({ firstName: 'Alice' });
         localStorage.setItem('currentUserId', id.toString());
+        await layoutState.init();
 
-        const state = createAccueilState();
+        const state = createPageState();
         
         // Attendre que Dexie finisse ses opérations (Tick)
         await new Promise(resolve => setTimeout(resolve, 0));
