@@ -29,7 +29,7 @@ export default defineConfig({
 		SvelteKitPWA({
 			registerType: 'autoUpdate',
 			injectRegister: 'auto',
-			includeAssets: ['favicon.svg', 'logo.png', 'robots.txt', 'models/*.json'],
+			includeAssets: ['favicon.svg', 'icon.png', 'robots.txt', 'models/*.json'],
 			manifest: {
 				name: 'Checklist',
 				short_name: 'Checklist',
@@ -44,17 +44,17 @@ export default defineConfig({
 				},
 				icons: [
 					{
-						src: 'logo.png',
+						src: 'icon.png',
 						sizes: '192x192',
 						type: 'image/png'
 					},
 					{
-						src: 'logo.png',
+						src: 'icon.png',
 						sizes: '512x512',
 						type: 'image/png'
 					},
 					{
-						src: 'logo.png',
+						src: 'icon.png',
 						sizes: '512x512',
 						type: 'image/png',
 						purpose: 'maskable'
