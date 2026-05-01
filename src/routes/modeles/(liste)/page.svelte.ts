@@ -83,7 +83,7 @@ export function createPageState() {
             await ModelRepository.create(newModel);
             await layoutState.loadAvailableModels();
             
-            toastState.success(`Modèle "${modelName}" créé`);
+            toastState.success(`Modèle créé`);
             toggleCreateModal();
             // Redirection vers l'éditeur de modèle
             goto(`${base}/modeles/${newModelId}/`);

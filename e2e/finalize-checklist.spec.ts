@@ -17,7 +17,7 @@ test('Finalize checklist flow', async ({ page }) => {
   await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
 
   // 3. Vérifier que la checklist est bien chargée
-  await expect(page.getByText(testChecklistName)).toBeVisible({timeout:10000});
+  await expect(page.getByText(testChecklistName)).toBeVisible();
 
   // 4. Cliquer sur Finaliser (elle est à 0%)
   await page.getByRole('button', { name: 'Archiver' }).click();

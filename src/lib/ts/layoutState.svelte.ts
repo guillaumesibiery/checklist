@@ -157,7 +157,7 @@ export function createLayoutState() {
             };
 
             await ChecklistRepository.create(newChecklist);
-            toastState.success(`Checklist "${checklistName}" créée`);
+            toastState.success(`Checklist créée`);
             showCreateModal = false;
             checklistName = '';
             selectedModel = '';
