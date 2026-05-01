@@ -290,7 +290,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
         
         checklist.status = 'FINISHED';
         await save();
-        toastState.success("Checklist archivée !");
+        toastState.success("Checklist archivée");
         goto(`${base}/accueil/`);
     }
 
