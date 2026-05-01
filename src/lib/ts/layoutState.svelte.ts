@@ -52,6 +52,11 @@ export function createLayoutState() {
         }
         const u = await UserRepository.getById(parseInt(idStr));
         if (u) {
+            // Migration à la volée pour les anciens utilisateurs sans UUID
+            if (!u.uuid) {
+                u.uuid = crypto.randomUUID();
+                await UserRepository.save(u);
+            }
             user = u;
         } else {
             user = null;

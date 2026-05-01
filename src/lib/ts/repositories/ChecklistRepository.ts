@@ -25,6 +25,7 @@ export const ChecklistRepository = {
      * Récupère les checklists d'un utilisateur filtrées par statut et triées par date de modification.
      */
     async getByUserAndStatus(userId: string, status: string): Promise<Checklist[]> {
+        if (!userId) return [];
         const data = await db.checklists
             .where('userId').equals(userId)
             .filter(c => c.status === status)

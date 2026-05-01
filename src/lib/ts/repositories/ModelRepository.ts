@@ -19,6 +19,7 @@ export const ModelRepository = {
      * Récupère les modèles personnalisés d'un utilisateur triés par date de création.
      */
     async getByUser(userId: string): Promise<Model[]> {
+        if (!userId) return [];
         const data = await db.models
             .where('userId')
             .equals(userId)

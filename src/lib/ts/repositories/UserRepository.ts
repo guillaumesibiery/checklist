@@ -44,6 +44,15 @@ export const UserRepository = {
     },
 
     /**
+     * Met à jour un utilisateur.
+     */
+    async save(user: User): Promise<void> {
+        if (user.id) {
+            await db.users.put(user);
+        }
+    },
+
+    /**
      * Supprime un utilisateur et toutes ses données liées (checklists et modèles).
      */
     async deleteCascading(userId: number): Promise<void> {
