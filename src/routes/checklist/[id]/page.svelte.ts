@@ -334,8 +334,8 @@ export function createPageState(id: string, readOnly: boolean = false) {
     async function shareNative() {
         if (!checklist) return;
         const shareData = {
-            title: getFriendlyText(),
-            text: `Voici ma checklist : ${checklist.checklistName}`,
+            title: `Checklist ${checklist.checklistName}`,
+            text: `Voici ma checklist ${checklist.checklistName}. Cliquez sur ce lien pour l'importer`,
             url: getShareUrl()
         };
 
