@@ -3,6 +3,7 @@ import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { onMount } from 'svelte';
 import { ChecklistRepository } from '$lib/ts/repositories/ChecklistRepository';
+import { toastState } from '$lib/ts/toastState.svelte';
 
 export function createPageState(id: string, readOnly: boolean = false) {
     let checklist = $state<Checklist | null>(null);
@@ -62,7 +63,12 @@ export function createPageState(id: string, readOnly: boolean = false) {
                 rawChecklist.id = existing.id;
                 
                 // 5. Sauvegarde complète de l'objet (écrase l'existant)
-                await ChecklistRepository.save(rawChecklist);
+                try {
+                    await ChecklistRepository.save(rawChecklist);
+                } catch (e) {
+                    console.error("Erreur de sauvegarde:", e);
+                    toastState.error("Erreur lors de l'enregistrement");
+                }
             }
         }
     }
@@ -176,6 +182,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
         expandedCategories = newExpanded;
 
         await save();
+        toastState.success(`Catégorie "${nameToAdd}" ajoutée`);
         closeAddCategoryModal();
     }
 
@@ -223,6 +230,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
         ];
 
         await save();
+        toastState.success(`Élément "${nameToAdd}" ajouté`);
         closeAddItemModal();
     }
 
@@ -231,8 +239,10 @@ export function createPageState(id: string, readOnly: boolean = false) {
         const item = checklist.elements[categoryIndex].items[itemIndex];
 
         if (item.addedByUser) {
+            const name = item.item;
             checklist.elements[categoryIndex].items.splice(itemIndex, 1);
             await save();
+            toastState.success(`Élément "${name}" supprimé`);
         }
     }
 
@@ -242,6 +252,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
         
         // Sécurité : on ne supprime que si c'est une catégorie ajoutée par l'utilisateur
         if (element.addedByUser) {
+            const name = element.category;
             checklist.elements.splice(index, 1);
             
             // Mise à jour des catégories dépliées
@@ -253,6 +264,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
             expandedCategories = newExpanded;
             
             await save();
+            toastState.success(`Catégorie "${name}" supprimée`);
         }
     }
 
@@ -278,6 +290,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
         
         checklist.status = 'FINISHED';
         await save();
+        toastState.success("Checklist archivée !");
         goto(`${base}/accueil/`);
     }
 
@@ -336,16 +349,19 @@ export function createPageState(id: string, readOnly: boolean = false) {
         const subject = encodeURIComponent(`Checklist : ${checklist.checklistName} - Éléments manquants`);
         const body = encodeURIComponent(getMissingItemsText());
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        toastState.info("Ouverture de votre application email...");
     }
 
     function shareViaSMS() {
         const body = encodeURIComponent(getMissingItemsText());
         window.location.href = `sms:?body=${body}`;
+        toastState.info("Ouverture de votre application SMS...");
     }
 
     function shareViaWhatsApp() {
         const text = encodeURIComponent(getMissingItemsText());
         window.open(`https://wa.me/?text=${text}`, '_blank');
+        toastState.info("Ouverture de WhatsApp...");
     }
 
     return {

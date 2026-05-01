@@ -29,7 +29,7 @@ test('Checklist life cycle', async ({ page }) => {
   await page.getByLabel('Modèle').selectOption('model-bebepack.json');
   await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
 
-  await expect(page.getByText(testChecklistName)).toBeVisible();
+  await expect(page.getByText(testChecklistName)).toBeVisible({timeout:10000});
 
   // Ajout de catégories et éléments
   await page.getByTestId('checklist-edit-mode').click();

@@ -4,6 +4,7 @@ import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 import { UserRepository } from '$lib/ts/repositories/UserRepository';
+import { toastState } from '$lib/ts/toastState.svelte';
 
 export function createPageState() {
   let users = liveQuery(() => UserRepository.getAll());
@@ -63,7 +64,9 @@ export function createPageState() {
 
   async function confirmDeleteUser() {
       if (userToDelete !== null) {
+          const name = userToDeleteName;
           await UserRepository.deleteCascading(userToDelete);
+          toastState.success(`Utilisateur "${name}" supprimé`);
           userToDelete = null;
           userToDeleteName = '';
           showDeleteModal = false;

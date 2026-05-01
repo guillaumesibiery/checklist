@@ -3,6 +3,7 @@ import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 import { base } from '$app/paths';
 import { goto } from '$app/navigation';
 import { ModelRepository } from '$lib/ts/repositories/ModelRepository';
+import { toastState } from '$lib/ts/toastState.svelte';
 
 export function createPageState() {
     let models = $state<Model[]>([]);
@@ -82,11 +83,13 @@ export function createPageState() {
             await ModelRepository.create(newModel);
             await layoutState.loadAvailableModels();
             
+            toastState.success(`Modèle "${modelName}" créé`);
             toggleCreateModal();
             // Redirection vers l'éditeur de modèle
             goto(`${base}/modeles/${newModelId}/`);
         } catch (error) {
             console.error('Erreur lors de la création du modèle:', error);
+            toastState.error("Erreur lors de la création du modèle");
         } finally {
             isCreating = false;
         }
@@ -105,10 +108,12 @@ export function createPageState() {
     async function executeDelete() {
         if (!modelToDelete || !modelToDelete.id) return;
         
+        const name = modelToDelete.modelName;
         await ModelRepository.delete(modelToDelete.id);
         
         await loadModels();
         await layoutState.loadAvailableModels();
+        toastState.success(`Modèle "${name}" supprimé`);
         cancelDelete();
     }
 

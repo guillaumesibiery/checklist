@@ -1,6 +1,7 @@
 import { type Checklist } from '$lib/ts/db';
 import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 import { ChecklistRepository } from '$lib/ts/repositories/ChecklistRepository';
+import { toastState } from '$lib/ts/toastState.svelte';
 
 export function createPageState() {
     let checklists = $state<Checklist[]>([]);
@@ -34,12 +35,14 @@ export function createPageState() {
     async function executeRestore() {
         if (!checklistToRestore || !checklistToRestore.id) return;
         
+        const name = checklistToRestore.checklistName;
         await ChecklistRepository.update(checklistToRestore.id, {
             status: 'IN_PROGRESS',
             lastModifiedDate: new Date().toISOString()
         });
         
         await loadChecklists();
+        toastState.success(`Checklist "${name}" restaurée`);
         cancelRestore();
     }
 
@@ -56,9 +59,11 @@ export function createPageState() {
     async function executeDelete() {
         if (!checklistToDelete || !checklistToDelete.id) return;
         
+        const name = checklistToDelete.checklistName;
         await ChecklistRepository.delete(checklistToDelete.id);
         
         await loadChecklists();
+        toastState.success(`Checklist "${name}" supprimée`);
         cancelDelete();
     }
 

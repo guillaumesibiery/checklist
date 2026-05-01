@@ -13,6 +13,7 @@
     import CreateChecklistModal from '$lib/components/CreateChecklistModal.svelte';
     import SettingsModal from '$lib/components/SettingsModal.svelte';
     import LogoutModal from '$lib/components/LogoutModal.svelte';
+    import ToastContainer from '$lib/components/ToastContainer.svelte';
 
     let { children } = $props();
 
@@ -84,3 +85,4 @@
 {/if}
 
 <ReloadPrompt />
+<ToastContainer />

@@ -1,4 +1,5 @@
 import { base } from '$app/paths';
+import { toastState } from './toastState.svelte';
 
 /**
  * Ajoute une checklist à Google Agenda.
@@ -20,4 +21,5 @@ export function addToGoogleCalendar(checklist: any) {
     const googleUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${start}/${end}`;
     
     window.open(googleUrl, '_blank');
+    toastState.info("Ouverture de Google Agenda...");
 }

@@ -4,6 +4,7 @@ import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { onMount } from 'svelte';
 import { ModelRepository } from '$lib/ts/repositories/ModelRepository';
+import { toastState } from '$lib/ts/toastState.svelte';
 
 export function createPageState(modelId: string) {
     let model = $state<Model | null>(null);
@@ -63,7 +64,12 @@ export function createPageState(modelId: string) {
             const rawModel = $state.snapshot(model);
             if (rawModel) {
                 rawModel.id = existing.id;
-                await ModelRepository.save(rawModel);
+                try {
+                    await ModelRepository.save(rawModel);
+                } catch (e) {
+                    console.error("Erreur de sauvegarde:", e);
+                    toastState.error("Erreur lors de l'enregistrement");
+                }
             }
         }
     }
@@ -101,6 +107,7 @@ export function createPageState(modelId: string) {
         expandedCategories = newExpanded;
 
         await save();
+        toastState.success(`Catégorie "${nameToAdd}" ajoutée au modèle`);
         closeAddCategoryModal();
     }
 
@@ -146,6 +153,7 @@ export function createPageState(modelId: string) {
         ];
 
         await save();
+        toastState.success(`Élément "${nameToAdd}" ajouté au modèle`);
         closeAddItemModal();
     }
 
@@ -159,12 +167,15 @@ export function createPageState(modelId: string) {
 
     async function deleteItem(categoryIndex: number, itemIndex: number) {
         if (!model) return;
+        const name = model.elements[categoryIndex].items[itemIndex].item;
         model.elements[categoryIndex].items.splice(itemIndex, 1);
         await save();
+        toastState.success(`Élément "${name}" retiré du modèle`);
     }
 
     async function deleteCategory(index: number) {
         if (!model) return;
+        const name = model.elements[index].category;
         model.elements.splice(index, 1);
         
         const newExpanded = new Set<number>();
@@ -175,6 +186,7 @@ export function createPageState(modelId: string) {
         expandedCategories = newExpanded;
         
         await save();
+        toastState.success(`Catégorie "${name}" retirée du modèle`);
     }
 
     function quit() {

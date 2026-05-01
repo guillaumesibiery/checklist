@@ -4,6 +4,7 @@ import { type User, type Checklist } from '$lib/ts/db';
 import { UserRepository } from './repositories/UserRepository';
 import { ChecklistRepository } from './repositories/ChecklistRepository';
 import { ModelRepository } from './repositories/ModelRepository';
+import { toastState } from './toastState.svelte';
 
 export function createLayoutState() {
     let user = $state<User | null>(null);
@@ -156,12 +157,14 @@ export function createLayoutState() {
             };
 
             await ChecklistRepository.create(newChecklist);
+            toastState.success(`Checklist "${checklistName}" créée`);
             showCreateModal = false;
             checklistName = '';
             selectedModel = '';
             goto(`${base}/checklist/${newChecklist.checklistId}/`);
         } catch (error) {
             console.error('Erreur lors de la création de la checklist:', error);
+            toastState.error("Erreur lors de la création de la checklist");
         } finally {
             isCreating = false;
         }

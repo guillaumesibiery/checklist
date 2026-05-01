@@ -1,6 +1,7 @@
 import { type Checklist } from '$lib/ts/db';
 import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 import { ChecklistRepository } from '$lib/ts/repositories/ChecklistRepository';
+import { toastState } from '$lib/ts/toastState.svelte';
 
 export function createPageState() {
     let checklists = $state<Checklist[]>([]);
@@ -32,8 +33,10 @@ export function createPageState() {
     async function deleteChecklist() {
         if (!checklistToDelete || !checklistToDelete.id) return;
         
+        const name = checklistToDelete.checklistName;
         await ChecklistRepository.delete(checklistToDelete.id);
         await loadChecklists();
+        toastState.success(`Checklist "${name}" supprimée`);
         cancelDelete();
     }
 
