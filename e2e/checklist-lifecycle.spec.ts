@@ -41,9 +41,9 @@ test('Checklist life cycle', async ({ page }) => {
   await page.getByRole('button', { name: 'Ajouter un élément' }).first().click();
   await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Gonflage pneus');
   
-  await page.locator('.flex.items-center.bg-secondary.rounded-xl > button:nth-child(3)').click();
-  await page.locator('.flex.items-center.bg-secondary.rounded-xl > button:nth-child(3)').click();
-  await page.locator('.flex.items-center.bg-secondary.rounded-xl > button:nth-child(3)').click();
+  await page.locator('.flex.items-center.bg-secondary.dark\\:bg-gray-700.rounded-2xl > button:nth-child(3)').click();
+  await page.locator('.flex.items-center.bg-secondary.dark\\:bg-gray-700.rounded-2xl > button:nth-child(3)').click();
+  await page.locator('.flex.items-center.bg-secondary.dark\\:bg-gray-700.rounded-2xl > button:nth-child(3)').click();
 
   await page.getByTestId('add-checklist-item').click();
 

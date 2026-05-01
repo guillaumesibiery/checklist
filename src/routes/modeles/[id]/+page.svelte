@@ -8,6 +8,9 @@
     import BottomActionMenu from '$lib/components/BottomActionMenu.svelte';
     import Category from '$lib/components/Category.svelte';
     import ModelItem from '$lib/components/ModelItem.svelte';
+    import Modal from '$lib/components/Modal.svelte';
+    import Button from '$lib/components/Button.svelte';
+    import Input from '$lib/components/Input.svelte';
     import './page.css';
 
     const state = createPageState(page.params.id as string);
@@ -36,14 +39,16 @@
 
         <!-- Content -->
         <main class="pt-28 px-4 space-y-6">
-            <button class="w-full py-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors active:scale-95 cursor-pointer"
-                    onclick={state.openAddCategoryModal}
-                    in:fade>
+            <Button 
+                variant="ghost"
+                onclick={state.openAddCategoryModal}
+                class="w-full border-2 border-dashed border-primary/30 active:scale-95"
+            >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6" aria-hidden="true">
                     {@html icons.plus}
                 </svg>
                 Ajouter une catégorie
-            </button>
+            </Button>
 
             {#each state.model.elements as element, catIndex}
                 <Category 
@@ -76,148 +81,116 @@
         </BottomActionMenu>
 
         <!-- Modal d'ajout de catégorie -->
-        {#if state.isAddCategoryModalOpen}
-            <!-- svelte-ignore a11y_click_events_have_key_events -->
-            <!-- svelte-ignore a11y_no_static_element_interactions -->
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
-                 transition:fade={{ duration: 200 }}
-                 onclick={state.closeAddCategoryModal}>
-                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
-                     transition:scale={{ duration: 300, start: 0.9 }}
-                     onclick={(e) => e.stopPropagation()}
-                     role="dialog"
-                     aria-modal="true"
-                     tabindex="-1">
-                    <div class="p-8">
-                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-6 text-center transition-colors">Nouvelle catégorie</h2>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label for="categoryName" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider transition-colors">Nom de la catégorie</label>
-                                <input type="text" 
-                                       id="categoryName"
-                                       value={state.newCategoryName}
-                                       oninput={(e) => {
-                                           const input = e.currentTarget;
-                                           const filtered = filterInput(input.value);
-                                           state.newCategoryName = filtered;
-                                           input.value = filtered;
-                                       }}
-                                       placeholder="Ex: Bagages, Accessoires..."
-                                       class="w-full px-4 py-3 bg-secondary dark:bg-gray-700 rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main dark:text-white placeholder:text-text-main/30 dark:placeholder:text-gray-500 transition-colors"
-                                       onkeydown={(e) => e.key === 'Enter' && state.newCategoryName.trim() && !state.categoryExists && state.addCategory()}>
-                                {#if state.categoryExists}
-                                    <p class="mt-2 text-xs text-red-500 ml-1 font-medium" transition:fade>
-                                        Une catégorie avec ce nom existe déjà
-                                    </p>
-                                {/if}
-                            </div>
-                        </div>
+        <Modal
+            isOpen={state.isAddCategoryModalOpen}
+            onclose={state.closeAddCategoryModal}
+            title="Nouvelle catégorie"
+        >
+            <div class="space-y-4">
+                <Input 
+                    id="categoryName"
+                    label="Nom de la catégorie"
+                    bind:value={state.newCategoryName}
+                    oninput={(e) => {
+                        const input = e.currentTarget;
+                        const filtered = filterInput(input.value);
+                        state.newCategoryName = filtered;
+                        input.value = filtered;
+                    }}
+                    placeholder="Ex: Bagages, Accessoires..."
+                    error={state.categoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
+                />
 
-                        <div class="flex flex-col gap-3 mt-8">
-                            <button data-testid="add-model-category" class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50 cursor-pointer"
-                                    disabled={!state.newCategoryName.trim() || state.categoryExists}
-                                    onclick={state.addCategory}>
-                                Ajouter
-                            </button>
-                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform cursor-pointer transition-colors"
-                                    onclick={state.closeAddCategoryModal}>
-                                Annuler
-                            </button>
-                        </div>
-                    </div>
+                <div class="flex flex-col gap-3 mt-8">
+                    <Button 
+                        testId="add-model-category"
+                        disabled={!state.newCategoryName.trim() || state.categoryExists}
+                        onclick={state.addCategory}
+                        fullWidth
+                    >
+                        Ajouter
+                    </Button>
+                    <Button variant="secondary" onclick={state.closeAddCategoryModal} fullWidth>
+                        Annuler
+                    </Button>
                 </div>
             </div>
-        {/if}
+        </Modal>
 
         <!-- Modal d'ajout d'élément -->
-        {#if state.isAddItemModalOpen}
-            <!-- svelte-ignore a11y_click_events_have_key_events -->
-            <!-- svelte-ignore a11y_no_static_element_interactions -->
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
-                 transition:fade={{ duration: 200 }}
-                 onclick={state.closeAddItemModal}>
-                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
-                     transition:scale={{ duration: 300, start: 0.9 }}
-                     onclick={(e) => e.stopPropagation()}
-                     role="dialog"
-                     aria-modal="true"
-                     tabindex="-1">
-                    <div class="p-8">
-                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-6 text-center transition-colors">Nouvel élément</h2>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label for="itemName" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider transition-colors">Nom de l'élément</label>
-                                <input type="text" 
-                                       id="itemName"
-                                       value={state.newItemName}
-                                       oninput={(e) => {
-                                           const input = e.currentTarget;
-                                           const filtered = filterInput(input.value);
-                                           state.newItemName = filtered;
-                                           input.value = filtered;
-                                       }}
-                                       placeholder="Ex: T-shirts, Couches..."
-                                       class="w-full px-4 py-3 bg-secondary dark:bg-gray-700 rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main dark:text-white placeholder:text-text-main/30 dark:placeholder:text-gray-500 transition-colors"
-                                       onkeydown={(e) => e.key === 'Enter' && state.newItemName.trim() && !state.itemExists && state.addItem()}>
-                                {#if state.itemExists}
-                                    <p class="mt-2 text-xs text-red-500 ml-1 font-medium" transition:fade>
-                                        Un élément avec ce nom existe déjà
-                                    </p>
-                                {/if}
-                            </div>
+        <Modal
+            isOpen={state.isAddItemModalOpen}
+            onclose={state.closeAddItemModal}
+            title="Nouvel élément"
+        >
+            <div class="space-y-6">
+                <Input 
+                    id="itemName"
+                    label="Nom de l'élément"
+                    bind:value={state.newItemName}
+                    oninput={(e) => {
+                        const input = e.currentTarget;
+                        const filtered = filterInput(input.value);
+                        state.newItemName = filtered;
+                        input.value = filtered;
+                    }}
+                    placeholder="Ex: T-shirts, Couches..."
+                    error={state.itemExists ? 'Un élément avec ce nom existe déjà' : ''}
+                />
 
-                            <div>
-                                <label for="itemQuantity" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider transition-colors">Quantité par défaut</label>
-                                <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-xl p-1 w-fit transition-colors">
-                                    <button class="w-10 h-10 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
-                                            onclick={() => state.newItemQuantity = Math.max(1, state.newItemQuantity - 1)}
-                                            aria-label="Diminuer la quantité"
-                                            title="Diminuer la quantité">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6" aria-hidden="true">
-                                            {@html icons.minus}
-                                        </svg>
-                                    </button>
-                                    <input type="number" 
-                                           id="itemQuantity"
-                                           bind:value={state.newItemQuantity}
-                                           min="1"
-                                           class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-text-main dark:text-white transition-colors">
-                                    <button class="w-10 h-10 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
-                                            onclick={() => state.newItemQuantity = state.newItemQuantity + 1}
-                                            aria-label="Augmenter la quantité"
-                                            title="Augmenter la quantité">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6" aria-hidden="true">
-                                            {@html icons.plus}
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col gap-3 mt-8">
-                            <button data-testid="add-model-item" class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50 cursor-pointer"
-                                    disabled={!state.newItemName.trim() || state.itemExists}
-                                    onclick={state.addItem}>
-                                Ajouter
-                            </button>
-                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform cursor-pointer transition-colors"
-                                    onclick={state.closeAddItemModal}>
-                                Annuler
-                            </button>
-                        </div>
+                <div>
+                    <label for="itemQuantity" class="block text-sm font-bold text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider transition-colors">Quantité par défaut</label>
+                    <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-2xl p-1 w-fit transition-colors">
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onclick={() => state.newItemQuantity = Math.max(1, state.newItemQuantity - 1)}
+                            class="w-10 h-10 p-0"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6" aria-hidden="true">
+                                {@html icons.minus}
+                            </svg>
+                        </Button>
+                        <input type="number" 
+                                id="itemQuantity"
+                                bind:value={state.newItemQuantity}
+                                min="1"
+                                class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-text-main dark:text-white transition-colors">
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onclick={() => state.newItemQuantity = state.newItemQuantity + 1}
+                            class="w-10 h-10 p-0"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6" aria-hidden="true">
+                                {@html icons.plus}
+                            </svg>
+                        </Button>
                     </div>
                 </div>
+
+                <div class="flex flex-col gap-3 mt-8">
+                    <Button 
+                        testId="add-model-item"
+                        disabled={!state.newItemName.trim() || state.itemExists}
+                        onclick={state.addItem}
+                        fullWidth
+                    >
+                        Ajouter
+                    </Button>
+                    <Button variant="secondary" onclick={state.closeAddItemModal} fullWidth>
+                        Annuler
+                    </Button>
+                </div>
             </div>
-        {/if}
+        </Modal>
     {:else}
         <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center" in:fade>
             <h1 class="text-2xl font-bold text-red-500">Modèle non trouvé</h1>
             <p class="mt-2 text-text-main/60 dark:text-gray-400 transition-colors">Nous n'avons pas pu charger votre modèle.</p>
-            <button onclick={state.quit} class="mt-8 px-6 py-3 bg-primary text-text-inverse rounded-xl font-bold shadow-lg active:scale-95 transition-transform cursor-pointer">
+            <Button onclick={state.quit} class="mt-8">
                 Retour aux modèles
-            </button>
+            </Button>
         </div>
     {/if}
 </div>

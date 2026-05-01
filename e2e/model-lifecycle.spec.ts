@@ -45,13 +45,13 @@ test('Model life cycle', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Ajouter un élément' }).click();
   await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('T-shirts');
-  await page.getByRole('button', { name: 'Augmenter la quantité' }).click();
-  await page.getByRole('button', { name: 'Augmenter la quantité' }).click();
+  await page.locator('button').nth(5).click();
+  await page.locator('button').nth(5).click();
   await page.getByTestId('add-model-item').click();
 
   await page.getByRole('button', { name: 'Ajouter un élément' }).click();
   await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Pantalons');
-  await page.getByRole('dialog').getByRole('button', { name: 'Augmenter la quantité' }).click();
+  await page.locator('.flex.items-center.bg-secondary.dark\\:bg-gray-700.rounded-2xl > button:nth-child(3)').click();
   await page.getByTestId('add-model-item').click();
 
   await page.getByRole('button', { name: 'Ajouter une catégorie' }).click();

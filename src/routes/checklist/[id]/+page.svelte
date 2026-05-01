@@ -8,6 +8,9 @@
     import BottomActionMenu from '$lib/components/BottomActionMenu.svelte';
     import Category from '$lib/components/Category.svelte';
     import ChecklistItem from '$lib/components/ChecklistItem.svelte';
+    import Modal from '$lib/components/Modal.svelte';
+    import Button from '$lib/components/Button.svelte';
+    import Input from '$lib/components/Input.svelte';
     import './page.css';
 
     const readOnly = page.url.searchParams.get('readOnly') === 'true';
@@ -65,14 +68,16 @@
         <!-- Content -->
         <main class="pt-28 px-4 space-y-6">
             {#if !state.readOnly && state.isEditMode}
-                <button class="w-full py-4 bg-white dark:bg-gray-800 rounded-2xl border-2 border-dashed border-primary/30 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors active:scale-95"
-                        onclick={state.openAddCategoryModal}
-                        in:fade>
+                <Button 
+                    variant="ghost"
+                    onclick={state.openAddCategoryModal}
+                    class="w-full border-2 border-dashed border-primary/30 active:scale-95"
+                >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                         {@html icons.plus}
                     </svg>
                     Ajouter une catégorie
-                </button>
+                </Button>
             {/if}
 
             {#each state.checklist.elements as element, catIndex}
@@ -133,265 +138,226 @@
         </BottomActionMenu>
 
         <!-- Modal de confirmation de finalisation -->
-        {#if state.isFinalizeModalOpen}
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
-                 transition:fade={{ duration: 200 }}>
-                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
-                     transition:scale={{ duration: 300, start: 0.9 }}
-                     role="dialog"
-                     aria-modal="true">
-                    <div class="p-8 text-center">
-                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-primary">
-                                {@html icons.check}
-                            </svg>
-                        </div>
-                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-4 transition-colors">Archiver la checklist ?</h2>
-                        
-                        {#if state.checklist.progress !== '100'}
-                            <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 transition-colors">
-                                Attention : votre checklist n'est pas encore terminée (<span class="text-primary font-bold">{state.checklist.progress}%</span>). Voulez-vous tout de même l'archiver ?
-                            </p>
-                        {:else}
-                            <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 transition-colors">
-                                Félicitations ! Votre checklist est terminée à <span class="text-primary font-bold">100%</span>. Voulez-vous la classer dans l'historique ?
-                            </p>
-                        {/if}
+        <Modal
+            isOpen={state.isFinalizeModalOpen}
+            onclose={state.closeFinalizeModal}
+            title="Archiver la checklist ?"
+        >
+            <div class="flex flex-col items-center">
+                <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-primary">
+                        {@html icons.check}
+                    </svg>
+                </div>
+                
+                {#if state.checklist.progress !== 100}
+                    <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 text-center transition-colors">
+                        Attention : votre checklist n'est pas encore terminée (<span class="text-primary font-bold">{state.checklist.progress}%</span>). Voulez-vous tout de même l'archiver ?
+                    </p>
+                {:else}
+                    <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 text-center transition-colors">
+                        Félicitations ! Votre checklist est terminée à <span class="text-primary font-bold">100%</span>. Voulez-vous la classer dans l'historique ?
+                    </p>
+                {/if}
 
-                        <div class="flex flex-col gap-3">
-                            <button class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform"
-                                    onclick={state.finalize}>
-                                Valider
-                            </button>
-                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform transition-colors"
-                                    onclick={state.closeFinalizeModal}>
-                                Annuler
-                            </button>
-                        </div>
-                    </div>
+                <div class="flex flex-col gap-3 w-full">
+                    <Button onclick={state.finalize} fullWidth>
+                        Valider
+                    </Button>
+                    <Button variant="secondary" onclick={state.closeFinalizeModal} fullWidth>
+                        Annuler
+                    </Button>
                 </div>
             </div>
-        {/if}
+        </Modal>
 
         <!-- Modal de confirmation de partage -->
-        {#if state.isShareModalOpen}
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
-                 transition:fade={{ duration: 200 }}>
-                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
-                     transition:scale={{ duration: 300, start: 0.9 }}
-                     role="dialog"
-                     aria-modal="true">
-                    <div class="p-8 text-center">
-                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-primary">
-                                {@html icons.share}
-                            </svg>
-                        </div>
-                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-4 transition-colors">Partager les éléments manquants ?</h2>
-                        <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 transition-colors">
-                            Souhaitez-vous partager la liste des éléments dont la quantité n'est pas encore atteinte ?
-                        </p>
+        <Modal
+            isOpen={state.isShareModalOpen}
+            onclose={state.closeShareModal}
+            title="Partager les éléments manquants ?"
+        >
+            <div class="flex flex-col items-center">
+                <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-primary">
+                        {@html icons.share}
+                    </svg>
+                </div>
+                <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 text-center transition-colors">
+                    Souhaitez-vous partager la liste des éléments dont la quantité n'est pas encore atteinte ?
+                </p>
 
-                        <div class="flex flex-col gap-3">
-                            <button class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform"
-                                    onclick={state.openShareOptionsModal}>
-                                Valider
-                            </button>
-                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform transition-colors"
-                                    onclick={state.closeShareModal}>
-                                Annuler
-                            </button>
-                        </div>
-                    </div>
+                <div class="flex flex-col gap-3 w-full">
+                    <Button onclick={state.openShareOptionsModal} fullWidth>
+                        Valider
+                    </Button>
+                    <Button variant="secondary" onclick={state.closeShareModal} fullWidth>
+                        Annuler
+                    </Button>
                 </div>
             </div>
-        {/if}
+        </Modal>
 
         <!-- Modal d'options de partage -->
-        {#if state.isShareOptionsModalOpen}
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
-                 transition:fade={{ duration: 200 }}>
-                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
-                     transition:scale={{ duration: 300, start: 0.9 }}
-                     role="dialog"
-                     aria-modal="true">
-                    <div class="p-8">
-                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-6 text-center transition-colors">Partager via...</h2>
-                        
-                        <div class="grid gap-4" class:grid-cols-1={!state.isMobile} class:grid-cols-3={state.isMobile}>
-                            {#if state.isMobile}
-                                <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group"
-                                        onclick={state.shareViaWhatsApp}>
-                                    <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
-                                            {@html icons.whatsapp}
-                                        </svg>
-                                    </div>
-                                    <span class="text-[10px] font-bold text-text-main dark:text-gray-300 uppercase tracking-tighter transition-colors">WhatsApp</span>
-                                </button>
-
-                                <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group"
-                                        onclick={state.shareViaSMS}>
-                                    <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
-                                            {@html icons.sms}
-                                        </svg>
-                                    </div>
-                                    <span class="text-[10px] font-bold text-text-main dark:text-gray-300 uppercase tracking-tighter transition-colors">SMS</span>
-                                </button>
-                            {/if}
-
-                            <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group"
-                                    onclick={state.shareViaEmail}>
-                                <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
-                                        {@html icons.email}
-                                    </svg>
-                                </div>
-                                <span class="text-[10px] font-bold text-text-main dark:text-gray-300 uppercase tracking-tighter transition-colors">Email</span>
-                            </button>
+        <Modal
+            isOpen={state.isShareOptionsModalOpen}
+            onclose={state.closeShareOptionsModal}
+            title="Partager via..."
+        >
+            <div class="grid gap-4" class:grid-cols-1={!state.isMobile} class:grid-cols-3={state.isMobile}>
+                {#if state.isMobile}
+                    <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group cursor-pointer"
+                            onclick={state.shareViaWhatsApp}>
+                        <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                                {@html icons.whatsapp}
+                            </svg>
                         </div>
+                        <span class="text-[10px] font-bold text-text-main dark:text-gray-300 uppercase tracking-tighter transition-colors">WhatsApp</span>
+                    </button>
 
-                        <button class="w-full mt-8 py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform transition-colors"
-                                onclick={state.closeShareOptionsModal}>
-                            Fermer
-                        </button>
+                    <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group cursor-pointer"
+                            onclick={state.shareViaSMS}>
+                        <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                                {@html icons.sms}
+                            </svg>
+                        </div>
+                        <span class="text-[10px] font-bold text-text-main dark:text-gray-300 uppercase tracking-tighter transition-colors">SMS</span>
+                    </button>
+                {/if}
+
+                <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group cursor-pointer"
+                        onclick={state.shareViaEmail}>
+                    <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                            {@html icons.email}
+                        </svg>
                     </div>
-                </div>
+                    <span class="text-[10px] font-bold text-text-main dark:text-gray-300 uppercase tracking-tighter transition-colors">Email</span>
+                </button>
             </div>
-        {/if}
+
+            <div class="mt-8">
+                <Button variant="secondary" onclick={state.closeShareOptionsModal} fullWidth>
+                    Fermer
+                </Button>
+            </div>
+        </Modal>
 
         <!-- Modal d'ajout de catégorie -->
-        {#if state.isAddCategoryModalOpen}
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
-                 transition:fade={{ duration: 200 }}>
-                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
-                     transition:scale={{ duration: 300, start: 0.9 }}
-                     role="dialog"
-                     aria-modal="true">
-                    <div class="p-8">
-                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-6 text-center transition-colors">Nouvelle catégorie</h2>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label for="categoryName" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 transition-colors">Nom de la catégorie</label>
-                                <input type="text" 
-                                       id="categoryName"
-                                       value={state.newCategoryName}
-                                       oninput={(e) => {
-                                           const input = e.currentTarget;
-                                           const filtered = filterInput(input.value);
-                                           state.newCategoryName = filtered;
-                                           input.value = filtered;
-                                       }}
-                                       placeholder="Ex: Bagages, Accessoires..."
-                                       class="w-full px-4 py-3 bg-secondary dark:bg-gray-700 rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main dark:text-white placeholder:text-text-main/30 dark:placeholder:text-gray-500 transition-colors"
-                                       onkeydown={(e) => e.key === 'Enter' && state.newCategoryName.trim() && !state.categoryExists && state.addCategory()}
-                                       autofocus>
-                                {#if state.categoryExists}
-                                    <p class="mt-2 text-xs text-red-500 ml-1" transition:fade>
-                                        Une catégorie avec ce nom existe déjà
-                                    </p>
-                                {/if}
-                            </div>
-                        </div>
+        <Modal
+            isOpen={state.isAddCategoryModalOpen}
+            onclose={state.closeAddCategoryModal}
+            title="Nouvelle catégorie"
+        >
+            <div class="space-y-4">
+                <Input 
+                    id="categoryName"
+                    label="Nom de la catégorie"
+                    bind:value={state.newCategoryName}
+                    oninput={(e) => {
+                        const input = e.currentTarget;
+                        const filtered = filterInput(input.value);
+                        state.newCategoryName = filtered;
+                        input.value = filtered;
+                    }}
+                    placeholder="Ex: Bagages, Accessoires..."
+                    error={state.categoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
+                    autofocus
+                />
 
-                        <div class="flex flex-col gap-3 mt-8">
-                            <button data-testid="add-checklist-category" class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50"
-                                    disabled={!state.newCategoryName.trim() || state.categoryExists}
-                                    onclick={state.addCategory}>
-                                Ajouter
-                            </button>
-                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform transition-colors"
-                                    onclick={state.closeAddCategoryModal}>
-                                Annuler
-                            </button>
-                        </div>
-                    </div>
+                <div class="flex flex-col gap-3 mt-8">
+                    <Button 
+                        testId="add-checklist-category"
+                        disabled={!state.newCategoryName.trim() || state.categoryExists}
+                        onclick={state.addCategory}
+                        fullWidth
+                    >
+                        Ajouter
+                    </Button>
+                    <Button variant="secondary" onclick={state.closeAddCategoryModal} fullWidth>
+                        Annuler
+                    </Button>
                 </div>
             </div>
-        {/if}
+        </Modal>
 
         <!-- Modal d'ajout d'élément -->
-        {#if state.isAddItemModalOpen}
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
-                 transition:fade={{ duration: 200 }}>
-                <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transition-colors duration-300"
-                     transition:scale={{ duration: 300, start: 0.9 }}
-                     role="dialog"
-                     aria-modal="true">
-                    <div class="p-8">
-                        <h2 class="text-2xl font-bold text-text-main dark:text-white mb-6 text-center transition-colors">Nouvel élément</h2>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label for="itemName" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 transition-colors">Nom de l'élément</label>
-                                <input type="text" 
-                                       id="itemName"
-                                       value={state.newItemName}
-                                       oninput={(e) => {
-                                           const input = e.currentTarget;
-                                           const filtered = filterInput(input.value);
-                                           state.newItemName = filtered;
-                                           input.value = filtered;
-                                       }}
-                                       placeholder="Ex: T-shirts, Couches..."
-                                       class="w-full px-4 py-3 bg-secondary dark:bg-gray-700 rounded-xl border-none focus:ring-2 focus:ring-primary text-text-main dark:text-white placeholder:text-text-main/30 dark:placeholder:text-gray-500 transition-colors"
-                                       onkeydown={(e) => e.key === 'Enter' && state.newItemName.trim() && !state.itemExists && state.addItem()}
-                                       autofocus>
-                                {#if state.itemExists}
-                                    <p class="mt-2 text-xs text-red-500 ml-1" transition:fade>
-                                        Un élément avec ce nom existe déjà
-                                    </p>
-                                {/if}
-                            </div>
+        <Modal
+            isOpen={state.isAddItemModalOpen}
+            onclose={state.closeAddItemModal}
+            title="Nouvel élément"
+        >
+            <div class="space-y-6">
+                <Input 
+                    id="itemName"
+                    label="Nom de l'élément"
+                    bind:value={state.newItemName}
+                    oninput={(e) => {
+                        const input = e.currentTarget;
+                        const filtered = filterInput(input.value);
+                        state.newItemName = filtered;
+                        input.value = filtered;
+                    }}
+                    placeholder="Ex: T-shirts, Couches..."
+                    error={state.itemExists ? 'Un élément avec ce nom existe déjà' : ''}
+                    autofocus
+                />
 
-                            <div>
-                                <label for="itemQuantity" class="block text-sm font-medium text-text-main/60 dark:text-gray-400 mb-1 ml-1 transition-colors">Quantité attendue</label>
-                                <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-xl p-1 w-fit transition-colors">
-                                    <button class="w-10 h-10 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all"
-                                            onclick={() => state.newItemQuantity = Math.max(1, state.newItemQuantity - 1)}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                            {@html icons.minus}
-                                        </svg>
-                                    </button>
-                                    <input type="number" 
-                                           id="itemQuantity"
-                                           bind:value={state.newItemQuantity}
-                                           min="1"
-                                           class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-text-main dark:text-white transition-colors">
-                                    <button class="w-10 h-10 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all"
-                                            onclick={() => state.newItemQuantity = state.newItemQuantity + 1}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                            {@html icons.plus}
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col gap-3 mt-8">
-                            <button data-testid="add-checklist-item" class="w-full py-4 bg-primary text-text-inverse rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform disabled:opacity-50"
-                                    disabled={!state.newItemName.trim() || state.itemExists}
-                                    onclick={state.addItem}>
-                                Ajouter
-                            </button>
-                            <button class="w-full py-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold text-lg active:scale-95 transition-transform transition-colors"
-                                    onclick={state.closeAddItemModal}>
-                                Annuler
-                            </button>
-                        </div>
+                <div>
+                    <label for="itemQuantity" class="block text-sm font-bold text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider">Quantité attendue</label>
+                    <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-2xl p-1 w-fit transition-colors">
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onclick={() => state.newItemQuantity = Math.max(1, state.newItemQuantity - 1)}
+                            class="w-10 h-10 p-0"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                {@html icons.minus}
+                            </svg>
+                        </Button>
+                        <input type="number" 
+                                id="itemQuantity"
+                                bind:value={state.newItemQuantity}
+                                min="1"
+                                class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-text-main dark:text-white transition-colors">
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onclick={() => state.newItemQuantity = state.newItemQuantity + 1}
+                            class="w-10 h-10 p-0"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                {@html icons.plus}
+                            </svg>
+                        </Button>
                     </div>
                 </div>
+
+                <div class="flex flex-col gap-3 mt-8">
+                    <Button 
+                        testId="add-checklist-item"
+                        disabled={!state.newItemName.trim() || state.itemExists}
+                        onclick={state.addItem}
+                        fullWidth
+                    >
+                        Ajouter
+                    </Button>
+                    <Button variant="secondary" onclick={state.closeAddItemModal} fullWidth>
+                        Annuler
+                    </Button>
+                </div>
             </div>
-        {/if}
+        </Modal>
     {:else}
         <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center" in:fade>
             <h1 class="text-2xl font-bold text-red-500">Checklist non trouvée</h1>
             <p class="mt-2 text-text-main/60 dark:text-gray-400 transition-colors">Nous n'avons pas pu charger votre checklist.</p>
-            <button onclick={state.quit} class="mt-8 px-6 py-3 bg-header-gradient text-text-inverse rounded-xl font-bold active:scale-95 transition-transform">
+            <Button onclick={state.quit} class="mt-8">
                 Retour à l'accueil
-            </button>
+            </Button>
         </div>
     {/if}
 </div>
