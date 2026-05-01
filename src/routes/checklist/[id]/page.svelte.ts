@@ -319,7 +319,9 @@ export function createPageState(id: string, readOnly: boolean = false) {
         const compact = compactChecklist(checklist);
         const base64 = encodeChecklist(compact);
         
-        const url = new URL(window.location.origin + base);
+        // On s'assure que l'URL finit par un slash si base n'est pas vide (pour le scope PWA)
+        const normalizedBase = base.endsWith('/') ? base : base + '/';
+        const url = new URL(window.location.origin + normalizedBase);
         url.searchParams.set('import', base64);
         return url.toString();
     }

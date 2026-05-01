@@ -24,6 +24,7 @@ export function createLayoutState() {
     let finishedChecklistsCount = $state(0);
 
     let importData = $state<Checklist | null>(null);
+    let isUpdateImport = $state(false);
     let showImportModal = $state(false);
 
     async function loadAvailableModels() {
@@ -65,6 +66,9 @@ export function createLayoutState() {
                     // Validation basique
                     if (data.checklistId && data.checklistName && data.elements) {
                         importData = data as Checklist;
+                        // Vérifier si la checklist existe déjà
+                        const existing = await ChecklistRepository.getByUuid(importData.checklistId);
+                        isUpdateImport = !!existing;
                         showImportModal = true;
                     }
                 } catch (e) {
@@ -227,32 +231,76 @@ export function createLayoutState() {
     async function confirmImport() {
         if (!importData || !user) return;
         try {
+            const checklistToSave = $state.snapshot(importData);
             const now = new Date().toISOString();
-            // On complète les données manquantes pour l'import
-            importData.userId = user.uuid;
-            importData.creationDate = now;
-            importData.lastModifiedDate = now;
-            importData.status = 'IN_PROGRESS';
-            importData.modelName = importData.modelName || 'Checklist importée';
             
-            // On s'assure que addedByUser est vrai pour les éléments importés
-            importData.elements.forEach(el => {
-                el.addedByUser = true;
-                el.items.forEach(item => item.addedByUser = true);
-            });
+            const existing = await ChecklistRepository.getByUuid(checklistToSave.checklistId);
             
-            await ChecklistRepository.create(importData);
-            toastState.success(`Checklist de ${importData.userName} importée`);
-            const targetId = importData.checklistId;
+            if (existing) {
+                // Mise à jour : on garde l'ID interne et les quantités ajoutées
+                checklistToSave.id = existing.id;
+                checklistToSave.userId = existing.userId;
+                checklistToSave.creationDate = existing.creationDate;
+                checklistToSave.lastModifiedDate = now;
+                checklistToSave.status = existing.status;
+                checklistToSave.modelName = existing.modelName;
+
+                // Fusion des éléments en gardant les quantités
+                checklistToSave.elements.forEach(newEl => {
+                    const oldEl = existing.elements.find(e => e.category === newEl.category);
+                    newEl.addedByUser = true;
+                    newEl.items.forEach(newItem => {
+                        newItem.addedByUser = true;
+                        if (oldEl) {
+                            const oldItem = oldEl.items.find(i => i.item === newItem.item);
+                            if (oldItem) {
+                                newItem['added-quantity'] = oldItem['added-quantity'];
+                            }
+                        }
+                    });
+                    
+                    // Recalculer le progrès de la catégorie après fusion des quantités
+                    const total = newEl.items.length;
+                    const added = newEl.items.filter(i => i['added-quantity'] >= i['wanted-quantity']).length;
+                    newEl.progress = total > 0 ? Math.round((added / total) * 100) : 0;
+                });
+
+                // Recalculer le progrès global
+                const totalItems = checklistToSave.elements.reduce((acc, el) => acc + el.items.length, 0);
+                const addedItems = checklistToSave.elements.reduce((acc, el) => 
+                    acc + el.items.filter(i => i['added-quantity'] >= i['wanted-quantity']).length, 0);
+                checklistToSave.progress = totalItems > 0 ? Math.round((addedItems / totalItems) * 100) : 0;
+
+                await ChecklistRepository.save(checklistToSave);
+                toastState.success(`Checklist "${checklistToSave.checklistName}" mise à jour`);
+            } else {
+                // Création : comportement existant
+                checklistToSave.userId = user.uuid;
+                checklistToSave.creationDate = now;
+                checklistToSave.lastModifiedDate = now;
+                checklistToSave.status = 'IN_PROGRESS';
+                checklistToSave.modelName = checklistToSave.modelName || 'Checklist importée';
+                
+                checklistToSave.elements.forEach(el => {
+                    el.addedByUser = true;
+                    el.items.forEach(item => {
+                        item.addedByUser = true;
+                    });
+                });
+                
+                await ChecklistRepository.create(checklistToSave);
+                toastState.success(`Checklist de ${checklistToSave.userName} importée`);
+            }
+
+            const targetId = checklistToSave.checklistId;
             importData = null;
             showImportModal = false;
             
-            // Nettoyer l'URL
             const url = new URL(window.location.href);
             url.searchParams.delete('import');
             window.history.replaceState({}, '', url.toString());
 
-            goto(`${base}/checklist/${targetId}/`);
+            goto(`${base}/checklist/${targetId}`);
         } catch (e) {
             console.error("Erreur lors de l'import:", e);
             toastState.error("Erreur lors de l'importation");
@@ -293,6 +341,7 @@ export function createLayoutState() {
         set checklistName(val: string) { handleNameChange(val); },
         set selectedModel(val: string) { selectedModel = val; },
         get importData() { return importData; },
+        get isUpdateImport() { return isUpdateImport; },
         get showImportModal() { return showImportModal; },
         init,
         logout,

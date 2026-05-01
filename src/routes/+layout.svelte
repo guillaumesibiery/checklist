@@ -86,7 +86,7 @@
         <Modal
             isOpen={layoutState.showImportModal}
             onclose={layoutState.cancelImport}
-            title="Importer une checklist ?"
+            title={layoutState.isUpdateImport ? "Mettre à jour la checklist ?" : "Importer une checklist ?"}
         >
             {#if layoutState.importData}
                 <div class="flex flex-col items-center mb-6">
@@ -95,9 +95,16 @@
                             {@html icons.share}
                         </svg>
                     </div>
-                    <p class="text-text-main/60 dark:text-gray-400 text-center mt-2 font-medium">
-                        Voulez-vous importer la checklist <span class="text-text-main dark:text-white font-bold italic">"{layoutState.importData.checklistName}"</span> partagée par <span class="text-text-main dark:text-white font-bold">{layoutState.importData.userName}</span> ?
-                    </p>
+                    {#if layoutState.isUpdateImport}
+                        <p class="text-text-main/60 dark:text-gray-400 text-center mt-2 font-medium">
+                            Une version de la checklist <span class="text-text-main dark:text-white font-bold italic">"{layoutState.importData.checklistName}"</span> existe déjà. 
+                            Voulez-vous la mettre à jour avec les nouveaux éléments tout en conservant votre progression actuelle ?
+                        </p>
+                    {:else}
+                        <p class="text-text-main/60 dark:text-gray-400 text-center mt-2 font-medium">
+                            Voulez-vous importer la checklist <span class="text-text-main dark:text-white font-bold italic">"{layoutState.importData.checklistName}"</span> partagée par <span class="text-text-main dark:text-white font-bold">{layoutState.importData.userName}</span> ?
+                        </p>
+                    {/if}
                 </div>
                 
                 <div class="flex flex-col gap-3">
@@ -105,7 +112,7 @@
                         onclick={layoutState.confirmImport}
                         fullWidth
                     >
-                        Valider l'import
+                        {layoutState.isUpdateImport ? "Mettre à jour" : "Valider l'import"}
                     </Button>
                     <Button 
                         variant="secondary"

@@ -39,6 +39,9 @@ export default defineConfig({
 				display: 'standalone',
 				scope: base,
 				start_url: base,
+				launch_handler: {
+					client_mode: 'navigate-existing'
+				},
 				icons: [
 					{
 						src: 'logo.png',
