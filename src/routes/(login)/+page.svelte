@@ -4,6 +4,8 @@
   import { createPageState } from './page.svelte.ts';
   import { layoutState } from '$lib/ts/layoutState.svelte.ts';
   import Modal from '$lib/components/Modal.svelte';
+  import Button from '$lib/components/Button.svelte';
+  import Input from '$lib/components/Input.svelte';
   import { icons } from '$lib/ts/icons';
   import './page.css';
 
@@ -102,45 +104,39 @@
 
 </div>
 
-<!-- Modal Creation -->
 <Modal 
     isOpen={state.showModal} 
     onclose={() => { state.showModal = false; state.firstName = ''; state.existingUserError = false; }}
     title="Créer un utilisateur"
 >
     <div class="space-y-4">
-        <div>
-            <label for="firstName" class="block text-sm font-bold text-text-main/60 dark:text-gray-400 mb-1 ml-1 uppercase tracking-wider">Prénom</label>
-            <input
-                type="text"
-                id="firstName"
-                maxlength="50"
-                oninput={state.handleInput}
-                bind:value={state.firstName}
-                class="w-full p-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl border-2 border-transparent focus:border-primary outline-none transition-all font-medium {state.existingUserError ? 'border-red-500' : ''}"
-                placeholder="Votre prénom"
-                autofocus
-            />
-            {#if state.existingUserError}
-                <p class="mt-1 ml-1 text-xs text-red-500 font-medium" transition:fade>Un utilisateur avec ce prénom existe déjà</p>
-            {/if}
-        </div>
+        <Input 
+            id="firstName"
+            label="Prénom"
+            bind:value={state.firstName}
+            oninput={state.handleInput}
+            maxlength={50}
+            error={state.existingUserError ? 'Un utilisateur avec ce prénom existe déjà' : ''}
+            placeholder="Votre prénom"
+            autofocus
+        />
 
         <div class="flex flex-col gap-3 pt-4">
-            <button
-                data-testid="create-users"
+            <Button
+                testId="create-users"
                 onclick={state.createUser}
                 disabled={!state.isValid}
-                class="w-full py-4 px-4 bg-primary text-text-inverse rounded-2xl font-bold hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+                fullWidth
             >
                 Créer
-            </button>
-            <button
+            </Button>
+            <Button
+                variant="secondary"
                 onclick={() => { state.showModal = false; state.firstName = ''; state.existingUserError = false; }}
-                class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+                fullWidth
             >
                 Annuler
-            </button>
+            </Button>
         </div>
     </div>
 </Modal>
@@ -164,17 +160,19 @@
         </p>
     </div>
     <div class="flex flex-col gap-3">
-        <button
+        <Button
+            variant="danger"
             onclick={state.confirmDeleteUser}
-            class="w-full py-4 px-4 bg-red-500 text-white rounded-2xl font-bold hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-red-500/20"
+            fullWidth
         >
             Valider la suppression
-        </button>
-        <button
+        </Button>
+        <Button
+            variant="secondary"
             onclick={() => state.showDeleteModal = false}
-            class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+            fullWidth
         >
             Annuler
-        </button>
+        </Button>
     </div>
 </Modal>

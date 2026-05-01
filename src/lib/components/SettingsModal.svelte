@@ -1,5 +1,6 @@
 <script lang="ts">
     import Modal from './Modal.svelte';
+    import Button from './Button.svelte';
     import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 
     interface Props {
@@ -50,12 +51,13 @@
         </div>
 
         <div class="pt-4">
-            <button 
+            <Button 
+                variant="secondary"
                 onclick={onclose}
-                class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+                fullWidth
             >
                 Fermer
-            </button>
+            </Button>
         </div>
     </div>
 </Modal>

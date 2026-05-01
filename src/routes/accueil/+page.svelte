@@ -6,6 +6,11 @@
     import { layoutState } from '$lib/ts/layoutState.svelte';
     import { formatDate } from '$lib/ts/date';
     import { addToGoogleCalendar } from '$lib/ts/calendar';
+    import Badge from '$lib/components/Badge.svelte';
+    import Button from '$lib/components/Button.svelte';
+    import ListSkeleton from '$lib/components/ListSkeleton.svelte';
+    import Modal from '$lib/components/Modal.svelte';
+    import { icons } from '$lib/ts/icons';
 
     const state = createPageState();
 
@@ -40,11 +45,7 @@
         </div>
         
         {#if state.isLoadingChecklists}
-            <div class="space-y-4">
-                {#each Array(3) as _}
-                    <div class="h-24 bg-secondary dark:bg-gray-800 rounded-[2rem] animate-pulse transition-colors"></div>
-                {/each}
-            </div>
+            <ListSkeleton count={3} />
         {:else if state.checklists.length > 0}
             <div class="grid gap-4">
                 {#each state.checklists as checklist}
@@ -71,7 +72,7 @@
                                 <!-- Texte en blanc (révélé par la barre via clip-path) -->
                                 <div 
                                     class="absolute inset-0 flex items-center justify-center text-[10px] font-black text-white transition-all duration-500" 
-                                    style="clip-path: inset(0 {100 - Number(checklist.progress)}% 0 0)"
+                                    style="clip-path: inset(0 {100 - checklist.progress}% 0 0)"
                                 >
                                     {checklist.progress}%
                                 </div>
@@ -81,34 +82,36 @@
                         <!-- Ligne du bas : Date et Boutons d'action -->
                         <div class="flex items-center justify-between px-6 pb-5 mt-0">
                             <!-- Date (style badge utilisateur) -->
-                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/10 dark:border-primary/20 inline-flex items-center gap-1.5">
+                            <Badge>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
                                     <path fill-rule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.75c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25V8.75c0-.69-.56-1.25-1.25-1.25H4.75Z" clip-rule="evenodd" />
                                 </svg>
                                 {checklist.lastModifiedDate ? formatDate(checklist.lastModifiedDate) : formatDate(checklist.creationDate)}
-                            </span>
+                            </Badge>
 
                             <!-- Boutons d'action -->
                             <div class="flex items-center gap-2">
-                                <button 
+                                <Button 
+                                    variant="ghost"
+                                    size="sm"
                                     onclick={() => addToGoogleCalendar(checklist)}
-                                    class="p-2 text-primary hover:bg-primary/10 rounded-full transition-all cursor-pointer"
-                                    title="Ajouter à Google Agenda"
+                                    class="p-2"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                         <path d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM7.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM8.25 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM9.75 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM10.5 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM12.75 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM14.25 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 13.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
                                         <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9h-16.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd" />
                                     </svg>
-                                </button>
-                                <button 
+                                </Button>
+                                <Button 
+                                    variant="ghost"
+                                    size="sm"
                                     onclick={() => state.confirmDelete(checklist)}
-                                    class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full transition-all cursor-pointer"
-                                    title="Supprimer la checklist"
+                                    class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Zm4.33.75a.75.75 0 0 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Z" clip-rule="evenodd" />
+                                        {@html icons.trash}
                                     </svg>
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     </div>
@@ -122,60 +125,48 @@
                     </svg>
                 </div>
                 <p class="text-gray-500 dark:text-gray-400 font-medium text-center transition-colors">Aucune checklist en cours pour le moment.</p>
-                <button 
+                <Button 
                     onclick={layoutState.toggleCreateModal}
-                    class="mt-6 px-6 py-3 bg-primary text-text-inverse font-bold rounded-2xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                    class="mt-6"
                 >
                     Créer une checklist
-                </button>
+                </Button>
             </div>
         {/if}
     </div>
 </div>
 
-<!-- Modal de confirmation de suppression (Local à la page car spécifique à la liste) -->
-{#if state.showDeleteModal && state.checklistToDelete}
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div 
-        class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
-        transition:fade={{ duration: 200 }}
-        onclick={state.cancelDelete}
-    >
-        <div 
-            class="bg-white dark:bg-gray-800 rounded-[2rem] p-8 w-full max-w-sm shadow-2xl transition-colors duration-300"
-            transition:scale={{ duration: 200, start: 0.9 }}
-            onclick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            tabindex="-1"
-        >
-            <div class="flex flex-col items-center mb-6">
-                <div class="p-4 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full mb-4 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
-                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5 0l.5 8.5a.75.75 0 1 0 1.5 0l-.5-8.5Zm4.33.75a.75.75 0 0 0-1.5 0l.5 8.5a.75.75 0 0 0 1.5 0l-.5-8.5Z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-                <h2 class="text-xl font-bold text-center text-text-main dark:text-white transition-colors">Supprimer la checklist ?</h2>
-                <p class="text-text-main/60 dark:text-gray-400 text-center mt-2 font-medium transition-colors">
-                    Voulez-vous vraiment supprimer <span class="text-text-main dark:text-white font-bold italic transition-colors">"{state.checklistToDelete.checklistName}"</span> ? Cette action est irréversible.
-                </p>
-            </div>
-            
-            <div class="flex flex-col gap-3">
-                <button 
-                    onclick={state.deleteChecklist}
-                    class="w-full py-4 px-4 bg-red-500 text-white rounded-2xl font-bold hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-red-500/20"
-                >
-                    Valider la suppression
-                </button>
-                <button 
-                    onclick={state.cancelDelete}
-                    class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
-                >
-                    Annuler
-                </button>
-            </div>
+<!-- Modal de confirmation de suppression -->
+<Modal
+    isOpen={state.showDeleteModal}
+    onclose={state.cancelDelete}
+    title="Supprimer la checklist ?"
+>
+    <div class="flex flex-col items-center mb-6">
+        <div class="p-4 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full mb-4 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                {@html icons.trash}
+            </svg>
         </div>
+        <p class="text-text-main/60 dark:text-gray-400 text-center mt-2 font-medium transition-colors">
+            Voulez-vous vraiment supprimer <span class="text-text-main dark:text-white font-bold italic transition-colors">"{state.checklistToDelete?.checklistName}"</span> ? Cette action est irréversible.
+        </p>
     </div>
-{/if}
+    
+    <div class="flex flex-col gap-3">
+        <Button 
+            variant="danger"
+            onclick={state.deleteChecklist}
+            fullWidth
+        >
+            Valider la suppression
+        </Button>
+        <Button 
+            variant="secondary"
+            onclick={state.cancelDelete}
+            fullWidth
+        >
+            Annuler
+        </Button>
+    </div>
+</Modal>

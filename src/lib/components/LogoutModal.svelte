@@ -1,5 +1,6 @@
 <script lang="ts">
     import Modal from './Modal.svelte';
+    import Button from './Button.svelte';
     import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 
     interface Props {
@@ -12,17 +13,18 @@
 
 <Modal {isOpen} {onclose} title="Se déconnecter ?">
     <div class="flex flex-col gap-3">
-        <button 
+        <Button 
             onclick={layoutState.logout}
-            class="w-full py-4 px-4 bg-primary text-text-inverse rounded-2xl font-bold hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-primary/20"
+            fullWidth
         >
             Oui, me déconnecter
-        </button>
-        <button 
+        </Button>
+        <Button 
+            variant="secondary"
             onclick={onclose}
-            class="w-full py-4 px-4 bg-secondary dark:bg-gray-700 text-text-main dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+            fullWidth
         >
             Annuler
-        </button>
+        </Button>
     </div>
 </Modal>

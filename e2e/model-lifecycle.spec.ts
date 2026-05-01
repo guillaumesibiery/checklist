@@ -29,7 +29,7 @@ test('Model life cycle', async ({ page }) => {
   await page.getByRole('button', { name: 'Modèles' }).click();
   await expect(page).toHaveURL(/\/modeles/);
 
-  await page.getByRole('button', { name: 'Créer un modèle' }).click();
+  await page.getByRole('button', { name: 'Créer mon premier modèle' }).click();
   await page.getByRole('textbox', { name: 'Nom du modèle' }).fill('Voyage pro');
   await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
 
@@ -105,9 +105,10 @@ test('Model life cycle', async ({ page }) => {
   await expect(page).toHaveURL(/\/modeles/);
 
   //Suppression du modèle
-  await page.getByRole('button', { name: 'Supprimer le modèle' }).click();
-  await page.getByRole('button', { name: 'Supprimer', exact: true }).click();
 
-  await expect(page.getByRole('main')).toContainText('Aucun modèle de checklist pour le moment.');
+  await page.getByRole('button').nth(2).click();
+  await page.getByRole('button', { name: 'Supprimer définitivement' }).click();
+
+  await expect(page.getByRole('main')).toContainText('Aucun modèle personnalisé pour le moment.');
 
 });
