@@ -22,7 +22,7 @@ test('Checklist life cycle', async ({ page }) => {
 
   // 3. Vérification de la redirection vers /accueil
   await expect(page).toHaveURL(/\/accueil/);
-  await expect(page.getByText(`Bonjour, ${testUserName}`)).toBeVisible();
+  await expect(page.getByText(`Bonjour ${testUserName}`)).toBeVisible();
 
   await page.getByRole('button', { name: 'Créer une checklist' }).click();
   await page.getByRole('textbox', { name: 'Nom de la checklist' }).fill(testChecklistName);
@@ -90,7 +90,7 @@ test('Checklist life cycle', async ({ page }) => {
   await page.getByRole('button', { name: 'Quitter' }).click();
 
   await expect(page).toHaveURL(/\/accueil/);
-  await expect(page.getByText(`Bonjour, ${testUserName}`)).toBeVisible();
+  await expect(page.getByText(`Bonjour ${testUserName}`)).toBeVisible();
 
   //Suppression
   await page.getByRole('button').nth(2).click();  

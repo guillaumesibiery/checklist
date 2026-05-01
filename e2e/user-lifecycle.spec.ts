@@ -20,7 +20,7 @@ test('User life cycle', async ({ page }) => {
 
   // 3. Vérification de la redirection vers /accueil
   await expect(page).toHaveURL(/\/accueil/);
-  await expect(page.getByText(`Bonjour, ${testUserName}`)).toBeVisible();
+  await expect(page.getByText(`Bonjour ${testUserName}`)).toBeVisible();
 
   // 4. Déconnexion
   await page.getByRole('button', { name: 'Déconnexion' }).click();

@@ -357,21 +357,19 @@ export function createPageState(id: string, readOnly: boolean = false) {
     async function shareViaCopy() {
         if (!checklist) return;
         const url = getShareUrl();
-        const text = getFriendlyText();
+        const plainText = `Voici ma checklist ${checklist.checklistName}. Cliquez sur ce lien pour l'importer : ${url}`;
+        const html = `Voici ma checklist ${checklist.checklistName}. Cliquez sur ce <a href="${url}">lien</a> pour l'importer`;
 
         try {
-            // Tentative de copie avec format HTML pour "masquer" le lien dans les éditeurs riches
-            const html = `<a href="${url}">${text}</a>`;
             const blobHtml = new Blob([html], { type: 'text/html' });
-            const blobText = new Blob([url], { type: 'text/plain' });
+            const blobText = new Blob([plainText], { type: 'text/plain' });
             const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
             
             await navigator.clipboard.write(data);
             toastState.success("Lien copié dans le presse-papier !");
         } catch (err) {
-            // Fallback si ClipboardItem n'est pas supporté
             try {
-                await navigator.clipboard.writeText(url);
+                await navigator.clipboard.writeText(plainText);
                 toastState.success("Lien copié dans le presse-papier !");
             } catch (copyErr) {
                 console.error('Erreur lors de la copie :', copyErr);
@@ -383,21 +381,21 @@ export function createPageState(id: string, readOnly: boolean = false) {
     function shareViaEmail() {
         if (!checklist) return;
         const subject = encodeURIComponent(`Checklist partagée : ${checklist.checklistName}`);
-        const body = encodeURIComponent(`Bonjour,\n\nVoici une checklist partagée avec vous : "${checklist.checklistName}"\n\nCliquez sur ce lien pour l'importer dans votre application :\n${getFriendlyText()}\n${getShareUrl()}`);
+        const body = encodeURIComponent(`Voici ma checklist ${checklist.checklistName}. Cliquez sur ce lien pour l'importer :\n${getShareUrl()}`);
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
         toastState.info("Ouverture de votre application email...");
     }
 
     function shareViaSMS() {
         if (!checklist) return;
-        const body = encodeURIComponent(`Voici une checklist partagée : ${getFriendlyText()}\n\nImportez-la ici : ${getShareUrl()}`);
+        const body = encodeURIComponent(`Voici ma checklist ${checklist.checklistName}. Cliquez sur ce lien pour l'importer : ${getShareUrl()}`);
         window.location.href = `sms:?body=${body}`;
         toastState.info("Ouverture de votre application SMS...");
     }
 
     function shareViaWhatsApp() {
         if (!checklist) return;
-        const text = encodeURIComponent(`Voici une checklist partagée : *${getFriendlyText()}*\n\nImportez-la ici : ${getShareUrl()}`);
+        const text = encodeURIComponent(`Voici ma checklist *${checklist.checklistName}*. Cliquez sur ce lien pour l'importer : ${getShareUrl()}`);
         window.open(`https://wa.me/?text=${text}`, '_blank');
         toastState.info("Ouverture de WhatsApp...");
     }

@@ -23,7 +23,7 @@ test('Model life cycle', async ({ page }) => {
 
   // Vérification de la redirection vers /accueil
   await expect(page).toHaveURL(/\/accueil/);
-  await expect(page.getByText(`Bonjour, ${testUserName}`)).toBeVisible();
+  await expect(page.getByText(`Bonjour ${testUserName}`)).toBeVisible();
   
   //Création du modèle
   await page.getByRole('button', { name: 'Modèles' }).click();

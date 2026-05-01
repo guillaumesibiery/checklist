@@ -10,6 +10,8 @@ test('Finalize checklist flow', async ({ page }) => {
   await page.locator('#firstName').fill(testUserName);
   await page.getByTestId('create-users').click();
 
+  await expect(page.getByText(`Bonjour ${testUserName}`)).toBeVisible();
+
   // 2. Création checklist
   await page.getByRole('button', { name: 'Créer une checklist' }).click();
   await page.getByRole('textbox', { name: 'Nom de la checklist' }).fill(testChecklistName);
