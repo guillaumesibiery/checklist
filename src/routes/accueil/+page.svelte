@@ -60,7 +60,7 @@
                             <div class="w-full h-6 bg-primary/10 dark:bg-primary/20 rounded-full relative overflow-hidden">
                                 <!-- Barre de remplissage -->
                                 <div 
-                                    class="h-full bg-primary rounded-full transition-all duration-500" 
+                                    class="h-full bg-header-gradient rounded-full transition-all duration-500" 
                                     style="width: {checklist.progress}%"
                                 ></div>
                                 
