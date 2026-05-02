@@ -22,7 +22,7 @@
     });
 </script>
 
-<div in:fade={{ duration: 300 }} class="p-6 transition-colors duration-300">
+<div in:fade={{ duration: 300 }} class="px-4 pt-6 pb-6 transition-colors duration-300">
     {#if state.models.length > 0}
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-bold text-text-main dark:text-white uppercase tracking-wider text-sm opacity-60 transition-colors">Modèles de checklist</h2>
@@ -30,9 +30,6 @@
                 size="sm"
                 onclick={state.toggleCreateModal}
             >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                    {@html icons.plus}
-                </svg>
                 Nouveau modèle
             </Button>
         </div>

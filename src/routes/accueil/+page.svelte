@@ -20,7 +20,7 @@
     });
 </script>
 
-<div in:fade={{ duration: 300 }} class="px-6 pt-6 pb-6 transition-colors duration-300">
+<div in:fade={{ duration: 300 }} class="px-4 pt-6 pb-6 transition-colors duration-300">
     <!-- Bloc de bienvenue utilisateur -->
     {#if layoutState.user}
         <div class="flex items-center gap-4 mb-6" in:fly={{ y: -20, duration: 400 }}>

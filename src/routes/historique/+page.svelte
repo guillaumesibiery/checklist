@@ -21,7 +21,7 @@
 
 </script>
 
-<div in:fade={{ duration: 300 }} class="p-6 transition-colors duration-300">
+<div in:fade={{ duration: 300 }} class="px-4 pt-6 pb-6 transition-colors duration-300">
 
     {#if state.isLoadingChecklists}
         <ListSkeleton count={3} />
