@@ -23,9 +23,9 @@
     }: Props = $props();
 </script>
 
-<div class="group relative overflow-hidden bg-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 rounded-[2rem] hover:bg-primary/10 dark:hover:bg-primary/20 transition-all active:scale-[0.98]">
+<div class="group relative overflow-hidden bg-primary/5 dark:bg-primary/10 border border-primary/10 dark:border-primary/20 rounded-3xl hover:bg-primary/10 dark:hover:bg-primary/20 transition-all active:scale-[0.98]">
     {#if href}
-        <a {href} class="home-checklist-name block px-6 pt-5 pb-3" data-testid={testId}>
+        <a {href} class="home-checklist-name block px-4 pt-5 pb-3" data-testid={testId}>
             <h3 class="font-bold text-xl text-text-main dark:text-white mb-4">
                 {title}
             </h3>
@@ -34,7 +34,7 @@
             {/if}
         </a>
     {:else if onclick}
-        <button class="w-full text-left cursor-pointer block px-6 pt-5 pb-3" {onclick} data-testid={testId}>
+        <button class="w-full text-left cursor-pointer block px-4 pt-5 pb-3" {onclick} data-testid={testId}>
             <h3 class="font-bold text-xl text-text-main dark:text-white mb-4">
                 {title}
             </h3>
@@ -43,7 +43,7 @@
             {/if}
         </button>
     {:else}
-        <div class="px-6 pt-5 pb-3">
+        <div class="px-4 pt-5 pb-3">
             <h3 class="font-bold text-xl text-text-main dark:text-white mb-4">
                 {title}
             </h3>
@@ -54,7 +54,7 @@
     {/if}
 
     <!-- Ligne du bas : Infos et Actions -->
-    <div class="flex items-center justify-between px-6 pb-5 mt-0">
+    <div class="flex items-center justify-between px-4 pb-5 mt-0">
         <!-- Informations (Badges, etc.) -->
         <div class="flex flex-col items-start gap-2">
             {#if info}
