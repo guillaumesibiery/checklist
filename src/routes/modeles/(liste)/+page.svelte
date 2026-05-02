@@ -23,10 +23,9 @@
 </script>
 
 <div in:fade={{ duration: 300 }} class="p-6 transition-colors duration-300">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-bold text-text-main dark:text-white uppercase tracking-wider text-sm opacity-60 transition-colors">Modèles de checklist</h2>
-        
-        {#if state.models.length > 0}
+    {#if state.models.length > 0}
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-text-main dark:text-white uppercase tracking-wider text-sm opacity-60 transition-colors">Modèles de checklist</h2>
             <Button 
                 size="sm"
                 onclick={state.toggleCreateModal}
@@ -36,8 +35,8 @@
                 </svg>
                 Nouveau modèle
             </Button>
-        {/if}
-    </div>
+        </div>
+    {/if}
     
     {#if state.isLoadingModels}
         <ListSkeleton count={2} />
@@ -79,7 +78,7 @@
             {/each}
         </div>
     {:else}
-        <div class="flex flex-col items-center justify-center py-12 px-4 bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 rounded-[2rem] transition-colors">
+        <div class="flex flex-col items-center justify-center py-12 px-4 rounded-[2rem] transition-colors">
             <div class="p-4 bg-primary/10 dark:bg-primary/20 rounded-full mb-4 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-primary opacity-40">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />

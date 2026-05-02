@@ -22,13 +22,14 @@
 </script>
 
 <div in:fade={{ duration: 300 }} class="p-6 transition-colors duration-300">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-bold text-text-main dark:text-white uppercase tracking-wider text-sm opacity-60 transition-colors">Historique des checklists</h2>
-    </div>
-    
+
     {#if state.isLoadingChecklists}
         <ListSkeleton count={3} />
     {:else if state.checklists.length > 0}
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-text-main dark:text-white uppercase tracking-wider text-sm opacity-60 transition-colors">Historique des checklists</h2>
+        </div>
+
         <div class="grid gap-4">
             {#each state.checklists as checklist}
                 <Card
@@ -103,7 +104,7 @@
             {/each}
         </div>
     {:else}
-        <div class="flex flex-col items-center justify-center py-12 px-4 bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 rounded-[2rem] transition-colors">
+        <div class="flex flex-col items-center justify-center py-12 px-4 rounded-[2rem] transition-colors">
             <div class="p-4 bg-primary/10 dark:bg-primary/20 rounded-full mb-4 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-primary opacity-40">
                     {@html icons.historique}
