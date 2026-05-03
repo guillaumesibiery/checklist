@@ -12,15 +12,15 @@
     const wantedQty = $derived(item['wanted-quantity']);
 </script>
 
-<div class="p-4 flex items-center gap-3">
+<div class="p-4 px-3 flex items-center gap-1">
     <div class="flex-grow flex flex-col min-w-0">
-        <span class="text-text-main dark:text-white font-medium truncate transition-colors">
+        <span class="text-text-main dark:text-white text-sm truncate transition-colors">
             {item.item}
         </span>
     </div>
 
     <!-- Controls -->
-    <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-lg p-1 transition-colors">
+    <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-lg transition-colors">
         <button class="w-8 h-8 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
                 onclick={() => onupdateQuantity(-1)}
                 aria-label="Diminuer la quantité"

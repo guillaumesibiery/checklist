@@ -9,7 +9,7 @@
     const isPath = (path: string) => page.url.pathname === `${base}/${path}`;
 </script>
 
-<footer class="fixed bottom-0 left-0 right-0 m-4">
+<footer class="fixed bottom-0 left-0 right-0 m-3">
     <nav class="bg-white dark:bg-[#111828] border border-secondary dark:border-gray-800 p-2 grid grid-cols-5 items-end z-10 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] rounded-2xl transition-colors duration-300" transition:fade>
         <!-- Accueil -->
         <div class="flex justify-center">

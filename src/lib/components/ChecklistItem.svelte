@@ -28,19 +28,19 @@
     const isAddedByUser = $derived(item.addedByUser === "true" || item.addedByUser === true);
 </script>
 
-<div class="p-4 flex items-center gap-3 transition-opacity duration-300"
+<div class="p-4 px-3 flex items-center gap-2 transition-opacity duration-300"
      class:opacity-40={isDisabled}>
     
     <!-- Enable/Disable checkbox -->
     <input type="checkbox" 
-           class="w-6 h-6 rounded border-2 border-primary text-primary accent-primary focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all duration-200 disabled:opacity-50" 
+           class="w-5 h-5 rounded border-2 border-primary text-primary accent-primary focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all duration-200 disabled:opacity-50" 
            checked={!isDisabled}
            disabled={readOnly}
            onchange={ontoggleDisabled}>
 
     <!-- Item Name & Quantity Info -->
     <div class="flex-grow flex flex-col min-w-0">
-        <span class="text-text-main dark:text-white font-medium truncate transition-colors" 
+        <span class="text-text-main dark:text-white text-sm truncate transition-colors" 
               class:line-through={isDisabled}>
             {item.item}
         </span>
@@ -66,7 +66,7 @@
                     </div>
                 </button>
             {:else}
-                <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-lg p-1 transition-colors">
+                <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-lg transition-colors">
                     <button class="w-8 h-8 flex items-center justify-center text-text-main dark:text-white hover:text-primary active:scale-95 transition-all cursor-pointer"
                             onclick={() => onupdateQuantity(-1)}
                             aria-label="Diminuer la quantité">
