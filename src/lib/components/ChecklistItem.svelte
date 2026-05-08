@@ -32,11 +32,13 @@
      class:opacity-40={isDisabled}>
     
     <!-- Enable/Disable checkbox -->
-    <input type="checkbox" 
-           class="w-5 h-5 rounded border-2 border-primary text-primary accent-primary focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all duration-200 disabled:opacity-50" 
-           checked={!isDisabled}
-           disabled={readOnly}
-           onchange={ontoggleDisabled}>
+    {#if isEditMode}
+        <input type="checkbox" 
+            class="w-5 h-5 rounded border-2 border-primary text-primary accent-primary focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all duration-200 disabled:opacity-50" 
+            checked={!isDisabled}
+            disabled={readOnly}
+            onchange={ontoggleDisabled}>
+    {/if}
 
     <!-- Item Name & Quantity Info -->
     <div class="flex-grow flex flex-col min-w-0">
@@ -52,7 +54,7 @@
     </div>
 
     <!-- Controls -->
-    {#if !isDisabled && !readOnly}
+    {#if !isDisabled && !readOnly && !isEditMode}
         <div class="flex items-center gap-2" in:scale>
             {#if wantedQty === 1}
                 <button class="w-12 h-6 rounded-full relative transition-colors duration-300 cursor-pointer"
