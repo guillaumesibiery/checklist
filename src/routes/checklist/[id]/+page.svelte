@@ -100,6 +100,7 @@
                             ontoggleItem={() => state.toggleItem(catIndex, itemIndex)}
                             onupdateQuantity={(delta) => state.updateQuantity(catIndex, itemIndex, delta)}
                             ondeleteItem={() => state.deleteItem(catIndex, itemIndex)}
+                            oneditItem={() => state.openEditItemModal(element.category, itemIndex)}
                         />
                     {/each}
                 </Category>
@@ -296,7 +297,7 @@
         <Modal
             isOpen={state.isAddItemModalOpen}
             onclose={state.closeAddItemModal}
-            title="Nouvel élément"
+            title={state.isEditingItem ? "Modifier l'élément" : "Nouvel élément"}
         >
             <div class="space-y-6">
                 <Input 
@@ -352,7 +353,7 @@
                         onclick={state.addItem}
                         fullWidth
                     >
-                        Ajouter
+                        {state.isEditingItem ? "Enregistrer" : "Ajouter"}
                     </Button>
                     <Button variant="secondary" onclick={state.closeAddItemModal} fullWidth>
                         Annuler

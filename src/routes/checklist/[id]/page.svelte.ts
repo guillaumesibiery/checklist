@@ -20,6 +20,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
     let newItemName = $state("");
     let newItemQuantity = $state(1);
     let currentCategoryNameForNewItem = $state<string | null>(null);
+    let editingItemIndex = $state<number | null>(null);
     let isMobile = $state(false);
 
     onMount(async () => {
@@ -193,11 +194,26 @@ export function createPageState(id: string, readOnly: boolean = false) {
         isAddItemModalOpen = true;
         newItemName = "";
         newItemQuantity = 1;
+        editingItemIndex = null;
+    }
+
+    function openEditItemModal(categoryName: string, itemIndex: number) {
+        if (readOnly) return;
+        const category = checklist?.elements.find(e => e.category === categoryName);
+        if (!category) return;
+        
+        const item = category.items[itemIndex];
+        currentCategoryNameForNewItem = categoryName;
+        editingItemIndex = itemIndex;
+        newItemName = item.item;
+        newItemQuantity = Number(item['wanted-quantity']) || 1;
+        isAddItemModalOpen = true;
     }
 
     function closeAddItemModal() {
         isAddItemModalOpen = false;
         currentCategoryNameForNewItem = null;
+        editingItemIndex = null;
     }
 
     async function addItem() {
@@ -208,30 +224,45 @@ export function createPageState(id: string, readOnly: boolean = false) {
         
         if (!category) return;
 
+        // Si on édite, on vérifie les doublons en ignorant l'item en cours
         const exists = category.items.some(
-            item => item.item.toLowerCase() === nameToAdd.toLowerCase()
+            (item, index) => index !== editingItemIndex && item.item.toLowerCase() === nameToAdd.toLowerCase()
         );
 
         if (exists) return;
 
-        // Vider le champ immédiatement pour éviter le flash du message d'erreur
         const quantityToAdd = newItemQuantity;
+        const itemName = newItemName;
+
+        if (editingItemIndex !== null) {
+            // Modification
+            const item = category.items[editingItemIndex];
+            item.item = nameToAdd;
+            item['wanted-quantity'] = quantityToAdd;
+            // Si la quantité voulue est devenue inférieure à la quantité ajoutée, on ajuste
+            if (Number(item['added-quantity']) > quantityToAdd) {
+                item['added-quantity'] = quantityToAdd;
+            }
+            toastState.success(`Élément "${itemName}" modifié`);
+        } else {
+            // Ajout
+            category.items = [
+                {
+                    item: nameToAdd,
+                    'wanted-quantity': quantityToAdd,
+                    'added-quantity': 0,
+                    disabled: false,
+                    addedByUser: true
+                },
+                ...category.items
+            ];
+            toastState.success(`Élément "${itemName}" ajouté`);
+        }
+
         newItemName = "";
         newItemQuantity = 1;
 
-        category.items = [
-            {
-                item: nameToAdd,
-                'wanted-quantity': quantityToAdd,
-                'added-quantity': 0,
-                disabled: false,
-                addedByUser: true
-            },
-            ...category.items
-        ];
-
         await save();
-        toastState.success(`Élément "${nameToAdd}" ajouté`);
         closeAddItemModal();
     }
 
@@ -420,7 +451,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
             const category = checklist.elements.find(e => e.category === currentCategoryNameForNewItem);
             if (!category) return false;
             return category.items.some(
-                item => item.item.toLowerCase() === newItemName.trim().toLowerCase()
+                (item, index) => index !== editingItemIndex && item.item.toLowerCase() === newItemName.trim().toLowerCase()
             );
         },
         get categoryExists() {
@@ -430,6 +461,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
             );
         },
         get isMobile() { return isMobile; },
+        get isEditingItem() { return editingItemIndex !== null; },
         get readOnly() { return readOnly; },
         get isEditMode() { return isEditMode; },
         toggleEditMode() { isEditMode = !isEditMode; },
@@ -449,6 +481,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
         closeAddCategoryModal,
         addCategory,
         openAddItemModal,
+        openEditItemModal,
         closeAddItemModal,
         addItem,
         deleteItem,

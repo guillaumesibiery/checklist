@@ -10,6 +10,7 @@
         ontoggleItem: () => void;
         onupdateQuantity: (delta: number) => void;
         ondeleteItem: () => void;
+        oneditItem: () => void;
     }
 
     let { 
@@ -19,7 +20,8 @@
         ontoggleDisabled, 
         ontoggleItem, 
         onupdateQuantity, 
-        ondeleteItem 
+        ondeleteItem,
+        oneditItem
     }: Props = $props();
 
     const isDisabled = $derived(item.disabled === 'true' || item.disabled === true);
@@ -103,14 +105,23 @@
         </div>
     {/if}
 
-    <!-- Delete item button -->
-    {#if isAddedByUser && !readOnly && isEditMode}
-        <button class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0 cursor-pointer"
-                onclick={ondeleteItem}
-                aria-label="Supprimer l'élément">
+    <!-- Actions: Edit & Delete -->
+    {#if !readOnly && isEditMode}
+        <button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors flex-shrink-0 cursor-pointer"
+                onclick={oneditItem}
+                aria-label="Modifier l'élément">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                {@html icons.trash}
+                {@html icons.pencil}
             </svg>
         </button>
+        {#if isAddedByUser}
+            <button class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0 cursor-pointer"
+                    onclick={ondeleteItem}
+                    aria-label="Supprimer l'élément">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                    {@html icons.trash}
+                </svg>
+            </button>
+        {/if}
     {/if}
 </div>
