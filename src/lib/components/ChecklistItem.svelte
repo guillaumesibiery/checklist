@@ -41,16 +41,28 @@
     {/if}
 
     <!-- Item Name & Quantity Info -->
-    <div class="flex-grow flex flex-col min-w-0">
-        <span class="text-text-main dark:text-white text-sm truncate transition-colors" 
-              class:line-through={isDisabled}>
-            {item.item}
-        </span>
-        {#if wantedQty > 1}
-            <span class="text-xs text-text-main/50 dark:text-gray-400 transition-colors" class:line-through={isDisabled}>
-                Quantité : {wantedQty}
-            </span>
-        {/if}
+    <div class="flex-grow flex flex-col min-w-0 ">
+        <div class="flex items-center gap-1">
+            {#if addedQty >= wantedQty}
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#699e4b" 
+                        class="w-5 h-5">
+                        {@html icons.checkCircle}
+                    </svg>
+                </div>
+            {/if}
+            <div>
+            <div class=" text-text-main dark:text-white text-sm transition-colors" 
+                class:line-through={isDisabled}>
+                {item.item}
+            </div>
+            {#if wantedQty > 1}
+                <div class="text-xs text-text-main/50 dark:text-gray-400 transition-colors" class:line-through={isDisabled}>
+                    Quantité : {wantedQty}
+                </div>
+            {/if}
+            </div>
+        </div>
     </div>
 
     <!-- Controls -->

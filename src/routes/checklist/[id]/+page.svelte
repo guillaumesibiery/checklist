@@ -125,7 +125,7 @@
                 <ActionButton 
                     onclick={state.openFinalizeModal} 
                     disabled={state.isEditMode}
-                    icon={icons.check}
+                    icon={icons.archive}
                     label="Archiver"
                 />
             {/if}
@@ -146,7 +146,7 @@
             <div class="flex flex-col items-center">
                 <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-primary">
-                        {@html icons.check}
+                        {@html icons.archive}
                     </svg>
                 </div>
                 
