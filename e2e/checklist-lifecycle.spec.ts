@@ -51,12 +51,17 @@ test('Checklist life cycle', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Niveau d\'huile');
   await page.getByTestId('add-checklist-item').click();
 
-  await page.getByRole('button').filter({ hasText: /^$/ }).nth(4).click();
-  await page.getByRole('button').filter({ hasText: /^$/ }).nth(4).click();
-  await page.getByRole('button').filter({ hasText: /^$/ }).nth(4).click();
-  await page.getByRole('button').filter({ hasText: /^$/ }).nth(4).click();
+  await page.getByTestId('checklist-edit-mode').click();
+
+  await page.locator('section').filter({ hasText: 'Voiture 0% Niveau d\'huile' }).getByLabel('Augmenter la quantité').click();
+  await page.locator('section').filter({ hasText: 'Voiture 20% Niveau d\'huile' }).getByLabel('Augmenter la quantité').click();
+  await page.locator('section').filter({ hasText: 'Voiture 40% Niveau d\'huile' }).getByLabel('Augmenter la quantité').click();
+  await page.locator('section').filter({ hasText: 'Voiture 60% Niveau d\'huile' }).getByLabel('Augmenter la quantité').click();
 
   await expect(page.locator('body')).toContainText('Gonflage pneus Quantité : 4 4');
+
+  await page.getByTestId('checklist-edit-mode').click();
+
   await page.getByRole('button', { name: 'Supprimer l\'élément' }).first().click();
 
   await expect(page.getByText('Niveau d\'huile')).toHaveCount(0);
@@ -79,13 +84,13 @@ test('Checklist life cycle', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Mettre alarme en route');
   await page.getByTestId('add-checklist-item').click();
 
+  await page.getByTestId('checklist-edit-mode').click();
+
   await expect(page.locator('body')).toContainText('Maison 0%');
   await expect(page.locator('body')).toContainText('Mettre alarme en route');
 
   await expect(page.locator('body')).toContainText('Voiture 100%');
   await expect(page.locator('body')).toContainText('Gonflage pneus Quantité : 4 4');
-
-  await page.getByTestId('checklist-edit-mode').click();
 
   await page.getByRole('button', { name: 'Quitter' }).click();
 
