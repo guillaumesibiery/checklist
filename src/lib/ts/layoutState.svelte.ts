@@ -126,7 +126,7 @@ export function createLayoutState() {
     }
 
     async function handleNameChange(name: string) {
-        const validPattern = /^[a-zA-Z0-9 àâäéèêëïîôöùûüçÀÂÄÉÈÊËÏÎÔÖÙÛÜÇ'-]*$/;
+        const validPattern = /^[\p{L}\p{N}\p{Emoji}\s._'\-]*$/u;
         if (name && !validPattern.test(name)) {
             return;
         }
