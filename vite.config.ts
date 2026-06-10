@@ -27,7 +27,7 @@ export default defineConfig({
 		tailwindcss(), 
 		sveltekit(),
 		SvelteKitPWA({
-			registerType: 'autoUpdate',
+			registerType: 'prompt',
 			injectRegister: 'auto',
 			includeAssets: ['favicon.svg', 'icon.png', 'robots.txt', 'models/*.json'],
 			manifest: {

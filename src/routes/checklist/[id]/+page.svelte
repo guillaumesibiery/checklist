@@ -85,11 +85,12 @@
                     title={element.category}
                     progress={element.progress}
                     isExpanded={state.expandedCategories.has(catIndex)}
-                    canDelete={(element.addedByUser === "true" || element.addedByUser === true) && !state.readOnly && state.isEditMode}
+                    canDelete={!state.readOnly && state.isEditMode}
                     showAddButton={!state.readOnly && state.isEditMode}
                     ontoggle={() => state.toggleCategory(catIndex)}
                     ondelete={() => state.deleteCategory(catIndex)}
                     onadditem={() => state.openAddItemModal(element.category)}
+                    oneditcategory={() => state.openEditCategoryModal(catIndex)}
                 >
                     {#each element.items as item, itemIndex}
                         <ChecklistItem 
@@ -287,6 +288,44 @@
                         Ajouter
                     </Button>
                     <Button variant="secondary" onclick={state.closeAddCategoryModal} fullWidth>
+                        Annuler
+                    </Button>
+                </div>
+            </div>
+        </Modal>
+
+        <!-- Modal de renommage de catégorie -->
+        <Modal
+            isOpen={state.isEditCategoryModalOpen}
+            onclose={state.closeEditCategoryModal}
+            title="Renommer la catégorie"
+        >
+            <div class="space-y-4">
+                <Input 
+                    id="editCategoryName"
+                    label="Nouveau nom"
+                    bind:value={state.editCategoryName}
+                    oninput={(e) => {
+                        const input = e.currentTarget;
+                        const filtered = filterInput(input.value);
+                        state.editCategoryName = filtered;
+                        input.value = filtered;
+                    }}
+                    placeholder="Ex: Bagages, Accessoires..."
+                    error={state.editCategoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
+                    autofocus
+                />
+
+                <div class="flex flex-col gap-3 mt-8">
+                    <Button 
+                        testId="rename-checklist-category"
+                        disabled={!state.editCategoryName.trim() || state.editCategoryExists || state.editCategoryUnchanged}
+                        onclick={state.renameCategory}
+                        fullWidth
+                    >
+                        Renommer
+                    </Button>
+                    <Button variant="secondary" onclick={state.closeEditCategoryModal} fullWidth>
                         Annuler
                     </Button>
                 </div>

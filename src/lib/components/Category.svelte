@@ -11,6 +11,7 @@
         ontoggle: () => void;
         ondelete: () => void;
         onadditem: () => void;
+        oneditcategory?: () => void;
         children: any; // Snippet
     }
 
@@ -23,6 +24,7 @@
         ontoggle, 
         ondelete, 
         onadditem, 
+        oneditcategory,
         children 
     }: Props = $props();
 </script>
@@ -56,6 +58,15 @@
                 </span>
             {/if}
             {#if canDelete}
+                {#if oneditcategory}
+                    <button class="p-2 text-primary hover:bg-primary/10 dark:hover:bg-primary/20 rounded-lg transition-colors cursor-pointer"
+                            onclick={(e) => { e.stopPropagation(); oneditcategory(); }}
+                            aria-label="Modifier le nom de la catégorie">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                            {@html icons.pencil}
+                        </svg>
+                    </button>
+                {/if}
                 <button class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
                         onclick={(e) => { e.stopPropagation(); ondelete(); }}
                         aria-label="Supprimer la catégorie">

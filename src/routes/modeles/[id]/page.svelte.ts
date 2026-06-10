@@ -18,6 +18,11 @@ export function createPageState(modelId: string) {
     let newItemName = $state("");
     let newItemQuantity = $state(1);
     let currentCategoryNameForNewItem = $state<string | null>(null);
+    let editingItemIndex = $state<number | null>(null);
+    
+    let isEditCategoryModalOpen = $state(false);
+    let editCategoryName = $state("");
+    let editCategoryIndex = $state<number | null>(null);
 
     onMount(async () => {
         const m = await ModelRepository.getByUuid(modelId);
@@ -121,6 +126,7 @@ export function createPageState(modelId: string) {
     function closeAddItemModal() {
         isAddItemModalOpen = false;
         currentCategoryNameForNewItem = null;
+        editingItemIndex = null;
     }
 
     async function addItem() {
@@ -131,30 +137,57 @@ export function createPageState(modelId: string) {
         
         if (!category) return;
 
+        // Vérification des doublons en excluant l'item en cours d'édition
         const exists = category.items.some(
-            item => item.item.toLowerCase() === nameToAdd.toLowerCase()
+            (item, index) => index !== editingItemIndex && item.item.toLowerCase() === nameToAdd.toLowerCase()
         );
 
         if (exists) return;
 
         const quantityToAdd = newItemQuantity;
+        const itemName = newItemName;
+
+        if (editingItemIndex !== null) {
+            // Modification d'un élément existant
+            const item = category.items[editingItemIndex];
+            item.item = nameToAdd;
+            item['wanted-quantity'] = quantityToAdd;
+            toastState.success(`Élément "${itemName}" modifié`);
+        } else {
+            // Ajout d'un nouvel élément
+            category.items = [
+                {
+                    item: nameToAdd,
+                    'wanted-quantity': quantityToAdd,
+                    'added-quantity': 0,
+                    disabled: false,
+                    addedByUser: true
+                },
+                ...category.items
+            ];
+            toastState.success(`Élément "${nameToAdd}" ajouté au modèle`);
+        }
+
         newItemName = "";
         newItemQuantity = 1;
 
-        category.items = [
-            {
-                item: nameToAdd,
-                'wanted-quantity': quantityToAdd,
-                'added-quantity': 0,
-                disabled: false,
-                addedByUser: true
-            },
-            ...category.items
-        ];
-
         await save();
-        toastState.success(`Élément "${nameToAdd}" ajouté au modèle`);
         closeAddItemModal();
+    }
+
+    /**
+     * Ouvre la modale d'édition d'un élément existant
+     */
+    function openEditItemModal(categoryName: string, itemIndex: number) {
+        const category = model?.elements.find(e => e.category === categoryName);
+        if (!category) return;
+
+        const item = category.items[itemIndex];
+        currentCategoryNameForNewItem = categoryName;
+        editingItemIndex = itemIndex;
+        newItemName = item.item;
+        newItemQuantity = Number(item['wanted-quantity']) || 1;
+        isAddItemModalOpen = true;
     }
 
     async function updateItemQuantity(categoryIndex: number, itemIndex: number, delta: number) {
@@ -189,6 +222,57 @@ export function createPageState(modelId: string) {
         toastState.success(`Catégorie "${name}" retirée du modèle`);
     }
 
+    /**
+     * Ouvre la modale de renommage pour la catégorie à l'index donné
+     */
+    function openEditCategoryModal(index: number) {
+        if (!model) return;
+        editCategoryIndex = index;
+        editCategoryName = model.elements[index].category;
+        isEditCategoryModalOpen = true;
+    }
+
+    /**
+     * Ferme la modale de renommage de catégorie
+     */
+    function closeEditCategoryModal() {
+        isEditCategoryModalOpen = false;
+        editCategoryIndex = null;
+        editCategoryName = "";
+    }
+
+    /**
+     * Renomme la catégorie à l'index courant si le nouveau nom est valide et unique
+     */
+    async function renameCategory() {
+        if (!model || editCategoryIndex === null || !editCategoryName.trim()) return;
+
+        const newName = editCategoryName.trim();
+        const oldName = model.elements[editCategoryIndex].category;
+
+        // Pas de changement si le nom est identique
+        if (newName === oldName) {
+            closeEditCategoryModal();
+            return;
+        }
+
+        // Vérification de doublon (insensible à la casse), en excluant la catégorie en cours
+        const exists = model.elements.some(
+            (e, idx) => idx !== editCategoryIndex && e.category.toLowerCase() === newName.toLowerCase()
+        );
+
+        if (exists) return;
+
+        // On vide le champ pour éviter le flash d'erreur pendant la fermeture
+        editCategoryName = "";
+
+        model.elements[editCategoryIndex].category = newName;
+
+        await save();
+        toastState.success(`Catégorie renommée en "${newName}"`);
+        closeEditCategoryModal();
+    }
+
     function quit() {
         goto(`${base}/modeles/`);
     }
@@ -205,12 +289,13 @@ export function createPageState(modelId: string) {
         set newItemName(value: string) { newItemName = value; },
         get newItemQuantity() { return newItemQuantity; },
         set newItemQuantity(value: number) { newItemQuantity = value; },
+        get isEditingItem() { return editingItemIndex !== null; },
         get itemExists() {
             if (!model || currentCategoryNameForNewItem === null || !newItemName.trim()) return false;
             const category = model.elements.find(e => e.category === currentCategoryNameForNewItem);
             if (!category) return false;
             return category.items.some(
-                item => item.item.toLowerCase() === newItemName.trim().toLowerCase()
+                (item, index) => index !== editingItemIndex && item.item.toLowerCase() === newItemName.trim().toLowerCase()
             );
         },
         get categoryExists() {
@@ -219,16 +304,33 @@ export function createPageState(modelId: string) {
                 e => e.category.toLowerCase() === newCategoryName.trim().toLowerCase()
             );
         },
+        get isEditCategoryModalOpen() { return isEditCategoryModalOpen; },
+        get editCategoryName() { return editCategoryName; },
+        set editCategoryName(value: string) { editCategoryName = value; },
+        get editCategoryExists() {
+            if (!model || editCategoryIndex === null || !editCategoryName.trim()) return false;
+            return model.elements.some(
+                (e, idx) => idx !== editCategoryIndex && e.category.toLowerCase() === editCategoryName.trim().toLowerCase()
+            );
+        },
+        get editCategoryUnchanged() {
+            if (!model || editCategoryIndex === null) return true;
+            return editCategoryName.trim() === model.elements[editCategoryIndex].category;
+        },
         toggleCategory,
         quit,
         openAddCategoryModal,
         closeAddCategoryModal,
         addCategory,
         openAddItemModal,
+        openEditItemModal,
         closeAddItemModal,
         addItem,
         updateItemQuantity,
         deleteItem,
-        deleteCategory
+        deleteCategory,
+        openEditCategoryModal,
+        closeEditCategoryModal,
+        renameCategory
     };
 }

@@ -261,4 +261,65 @@ describe('Checklist State - Add Category', () => {
         state.toggleEditMode();
         expect(state.isEditMode).toBe(false);
     });
+
+    it('devrait renommer une catégorie si le nouveau nom est unique', async () => {
+        const state = createPageState(checklistId);
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        expect(state.checklist?.elements[0].category).toBe('Cat1');
+
+        state.openEditCategoryModal(0);
+        state.editCategoryName = 'CatRenamed';
+        await state.renameCategory();
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        expect(state.checklist?.elements[0].category).toBe('CatRenamed');
+
+        // Vérifier en base
+        const updated = await db.checklists.where('checklistId').equals(checklistId).first();
+        expect(updated?.elements[0].category).toBe('CatRenamed');
+    });
+
+    it('ne devrait pas renommer une catégorie si le nom existe déjà (insensible à la casse)', async () => {
+        const state = createPageState(checklistId);
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Ajouter une deuxième catégorie
+        state.newCategoryName = 'Cat2';
+        await state.addCategory();
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        expect(state.checklist?.elements.length).toBe(2);
+
+        // Tenter de renommer Cat1 en 'cat2' (doublon insensible à la casse)
+        state.openEditCategoryModal(1); // Cat1 est maintenant à l'index 1
+        state.editCategoryName = 'cat2';
+        await state.renameCategory();
+
+        // Le nom ne doit pas avoir changé
+        expect(state.checklist?.elements[1].category).toBe('Cat1');
+    });
+
+    it('devrait fermer la modale sans modifier si le nom est identique', async () => {
+        const state = createPageState(checklistId);
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        state.openEditCategoryModal(0);
+        // On garde le même nom
+        await state.renameCategory();
+
+        expect(state.checklist?.elements[0].category).toBe('Cat1');
+        expect(state.isEditCategoryModalOpen).toBe(false);
+    });
+
+    it('ne devrait pas renommer une catégorie avec un nom vide', async () => {
+        const state = createPageState(checklistId);
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        state.openEditCategoryModal(0);
+        state.editCategoryName = '   ';
+        await state.renameCategory();
+
+        expect(state.checklist?.elements[0].category).toBe('Cat1');
+    });
 });

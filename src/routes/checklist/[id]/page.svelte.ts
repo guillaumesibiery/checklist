@@ -22,6 +22,9 @@ export function createPageState(id: string, readOnly: boolean = false) {
     let currentCategoryNameForNewItem = $state<string | null>(null);
     let editingItemIndex = $state<number | null>(null);
     let isMobile = $state(false);
+    let isEditCategoryModalOpen = $state(false);
+    let editCategoryName = $state("");
+    let editCategoryIndex = $state<number | null>(null);
 
     onMount(async () => {
         isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -283,21 +286,70 @@ export function createPageState(id: string, readOnly: boolean = false) {
         const element = checklist.elements[index];
         
         // Sécurité : on ne supprime que si c'est une catégorie ajoutée par l'utilisateur
-        if (element.addedByUser) {
-            const name = element.category;
-            checklist.elements.splice(index, 1);
-            
-            // Mise à jour des catégories dépliées
-            const newExpanded = new Set<number>();
-            expandedCategories.forEach(idx => {
-                if (idx < index) newExpanded.add(idx);
-                else if (idx > index) newExpanded.add(idx - 1);
-            });
-            expandedCategories = newExpanded;
-            
-            await save();
-            toastState.success(`Catégorie "${name}" supprimée`);
+        const name = element.category;
+        checklist.elements.splice(index, 1);
+        
+        // Mise à jour des catégories dépliées
+        const newExpanded = new Set<number>();
+        expandedCategories.forEach(idx => {
+            if (idx < index) newExpanded.add(idx);
+            else if (idx > index) newExpanded.add(idx - 1);
+        });
+        expandedCategories = newExpanded;
+        
+        await save();
+        toastState.success(`Catégorie "${name}" supprimée`);
+    }
+
+    /**
+     * Ouvre la modale de renommage pour la catégorie à l'index donné
+     */
+    function openEditCategoryModal(index: number) {
+        if (readOnly || !checklist) return;
+        editCategoryIndex = index;
+        editCategoryName = checklist.elements[index].category;
+        isEditCategoryModalOpen = true;
+    }
+
+    /**
+     * Ferme la modale de renommage de catégorie
+     */
+    function closeEditCategoryModal() {
+        isEditCategoryModalOpen = false;
+        editCategoryIndex = null;
+        editCategoryName = "";
+    }
+
+    /**
+     * Renomme la catégorie à l'index courant si le nouveau nom est valide et unique
+     */
+    async function renameCategory() {
+        if (!checklist || readOnly || editCategoryIndex === null || !editCategoryName.trim()) return;
+
+        const newName = editCategoryName.trim();
+        const oldName = checklist.elements[editCategoryIndex].category;
+
+        // Pas de changement si le nom est identique
+        if (newName === oldName) {
+            closeEditCategoryModal();
+            return;
         }
+
+        // Vérification de doublon (insensible à la casse), en excluant la catégorie en cours
+        const exists = checklist.elements.some(
+            (e, idx) => idx !== editCategoryIndex && e.category.toLowerCase() === newName.toLowerCase()
+        );
+
+        if (exists) return;
+
+        // On vide le champ pour éviter le flash d'erreur pendant la fermeture
+        editCategoryName = "";
+
+        checklist.elements[editCategoryIndex].category = newName;
+
+        await save();
+        toastState.success(`Catégorie renommée en "${newName}"`);
+        closeEditCategoryModal();
     }
 
     function quit() {
@@ -460,6 +512,19 @@ export function createPageState(id: string, readOnly: boolean = false) {
                 e => e.category.toLowerCase() === newCategoryName.trim().toLowerCase()
             );
         },
+        get isEditCategoryModalOpen() { return isEditCategoryModalOpen; },
+        get editCategoryName() { return editCategoryName; },
+        set editCategoryName(value: string) { editCategoryName = value; },
+        get editCategoryExists() {
+            if (!checklist || editCategoryIndex === null || !editCategoryName.trim()) return false;
+            return checklist.elements.some(
+                (e, idx) => idx !== editCategoryIndex && e.category.toLowerCase() === editCategoryName.trim().toLowerCase()
+            );
+        },
+        get editCategoryUnchanged() {
+            if (!checklist || editCategoryIndex === null) return true;
+            return editCategoryName.trim() === checklist.elements[editCategoryIndex].category;
+        },
         get isMobile() { return isMobile; },
         get isEditingItem() { return editingItemIndex !== null; },
         get readOnly() { return readOnly; },
@@ -486,6 +551,9 @@ export function createPageState(id: string, readOnly: boolean = false) {
         addItem,
         deleteItem,
         deleteCategory,
+        openEditCategoryModal,
+        closeEditCategoryModal,
+        renameCategory,
         shareNative,
         shareViaCopy,
         shareViaEmail,

@@ -34,7 +34,7 @@
     {:else if state.model}
         <!-- Header Style Checklist -->
         <header class="fixed top-0 left-0 right-0 bg-primary text-text-inverse p-4 z-10 flex flex-col items-center min-h-20 justify-center pt-[calc(1rem+env(safe-area-inset-top))]" in:fly={{ y: -50 }}>
-            <h1 class="text-xl font-bold truncate w-full text-center px-8">Modèle "{state.model.modelName}"</h1>
+            <h1 class="text-xl font-bold w-full text-center px-8">Modèle "{state.model.modelName}"</h1>
         </header>
 
         <!-- Content -->
@@ -59,12 +59,14 @@
                     ontoggle={() => state.toggleCategory(catIndex)}
                     ondelete={() => state.deleteCategory(catIndex)}
                     onadditem={() => state.openAddItemModal(element.category)}
+                    oneditcategory={() => state.openEditCategoryModal(catIndex)}
                 >
                     {#each element.items as item, itemIndex}
                         <ModelItem 
                             {item}
                             onupdateQuantity={(delta) => state.updateItemQuantity(catIndex, itemIndex, delta)}
                             ondeleteItem={() => state.deleteItem(catIndex, itemIndex)}
+                            oneditItem={() => state.openEditItemModal(element.category, itemIndex)}
                         />
                     {/each}
                 </Category>
@@ -117,11 +119,49 @@
             </div>
         </Modal>
 
-        <!-- Modal d'ajout d'élément -->
+        <!-- Modal de renommage de catégorie -->
+        <Modal
+            isOpen={state.isEditCategoryModalOpen}
+            onclose={state.closeEditCategoryModal}
+            title="Renommer la catégorie"
+        >
+            <div class="space-y-4">
+                <Input 
+                    id="editCategoryName"
+                    label="Nouveau nom"
+                    bind:value={state.editCategoryName}
+                    oninput={(e) => {
+                        const input = e.currentTarget;
+                        const filtered = filterInput(input.value);
+                        state.editCategoryName = filtered;
+                        input.value = filtered;
+                    }}
+                    placeholder="Ex: Bagages, Accessoires..."
+                    error={state.editCategoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
+                    autofocus
+                />
+
+                <div class="flex flex-col gap-3 mt-8">
+                    <Button 
+                        testId="rename-model-category"
+                        disabled={!state.editCategoryName.trim() || state.editCategoryExists || state.editCategoryUnchanged}
+                        onclick={state.renameCategory}
+                        fullWidth
+                    >
+                        Renommer
+                    </Button>
+                    <Button variant="secondary" onclick={state.closeEditCategoryModal} fullWidth>
+                        Annuler
+                    </Button>
+                </div>
+            </div>
+        </Modal>
+
+        <!-- Modal d'ajout/édition d'élément -->
         <Modal
             isOpen={state.isAddItemModalOpen}
             onclose={state.closeAddItemModal}
-            title="Nouvel élément"
+            title={state.isEditingItem ? "Modifier l'élément" : "Nouvel élément"}
         >
             <div class="space-y-6">
                 <Input 
@@ -176,7 +216,7 @@
                         onclick={state.addItem}
                         fullWidth
                     >
-                        Ajouter
+                        {state.isEditingItem ? "Enregistrer" : "Ajouter"}
                     </Button>
                     <Button variant="secondary" onclick={state.closeAddItemModal} fullWidth>
                         Annuler
