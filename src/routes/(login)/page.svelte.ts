@@ -5,6 +5,7 @@ import { base } from '$app/paths';
 import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 import { UserRepository } from '$lib/ts/repositories/UserRepository';
 import { toastState } from '$lib/ts/toastState.svelte';
+import { checkForUpdate, type UpdateCheckResult } from '$lib/ts/updateService';
 
 export function createPageState() {
   let users = liveQuery(() => UserRepository.getAll());
@@ -15,6 +16,11 @@ export function createPageState() {
   let userToDelete = $state<number | null>(null);
   let userToDeleteName = $state('');
   let showDeleteModal = $state(false);
+
+  // État de la vérification de mise à jour
+  let showUpdateModal = $state(false);
+  let updateChecking = $state(false);
+  let updateResult = $state<UpdateCheckResult | null>(null);
 
   // Validation
   let isValid = $derived(
@@ -79,6 +85,29 @@ export function createPageState() {
           showDeleteModal = false;
       }
   }
+
+  /**
+   * Vérifie les mises à jour depuis GitHub et rafraîchit le service worker.
+   * Affiche une modal avec le résultat de la vérification.
+   */
+  async function handleCheckUpdate() {
+      updateChecking = true;
+      updateResult = null;
+      showUpdateModal = true;
+
+      // Rafraîchissement du service worker
+      if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.getRegistration();
+          if (registration) {
+              await registration.update();
+          }
+      }
+
+      // Vérification de la version sur GitHub
+      updateResult = await checkForUpdate();
+      updateChecking = false;
+  }
+
   return {
     get users() { return users; },
     get showModal() { return showModal; },
@@ -91,10 +120,15 @@ export function createPageState() {
     get showDeleteModal() { return showDeleteModal; },
     set showDeleteModal(v) { showDeleteModal = v; },
     get isValid() { return isValid; },
+    get showUpdateModal() { return showUpdateModal; },
+    set showUpdateModal(v) { showUpdateModal = v; },
+    get updateChecking() { return updateChecking; },
+    get updateResult() { return updateResult; },
     handleInput,
     createUser,
     login,
     promptDeleteUser,
-    confirmDeleteUser
+    confirmDeleteUser,
+    handleCheckUpdate
   };
 }
