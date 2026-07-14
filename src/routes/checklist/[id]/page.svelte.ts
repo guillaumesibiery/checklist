@@ -461,26 +461,46 @@ export function createPageState(id: string, readOnly: boolean = false) {
         }
     }
 
+    function getFormattedText() {
+        if (!checklist) return "";
+        let text = `Checklist : ${checklist.checklistName}\n\n`;
+
+        checklist.elements.forEach(category => {
+            text += `${category.category.toUpperCase()}\n`;
+            category.items.forEach(item => {
+                const checked = (Number(item['added-quantity']) >= Number(item['wanted-quantity']) && !item.disabled) ? '[x]' : '[ ]';
+                text += `${checked} ${item['wanted-quantity']} ${item.item}\n`;
+            });
+            text += '\n';
+        });
+
+        text += `Lien d'importation : ${getShareUrl()}`;
+        return text;
+    }
+
     function shareViaEmail() {
         if (!checklist) return;
-        const subject = encodeURIComponent(`Checklist partagée : ${checklist.checklistName}`);
-        const body = encodeURIComponent(`Voici ma checklist ${checklist.checklistName}. Cliquez sur ce lien pour l'importer :\n${getShareUrl()}`);
+        const subject = encodeURIComponent(`Checklist : ${checklist.checklistName}`);
+        const body = encodeURIComponent(getFormattedText());
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
         toastState.info("Ouverture de votre application email...");
+        closeShareModal();
     }
 
     function shareViaSMS() {
         if (!checklist) return;
-        const body = encodeURIComponent(`Voici ma checklist ${checklist.checklistName}. Cliquez sur ce lien pour l'importer : ${getShareUrl()}`);
+        const body = encodeURIComponent(getFormattedText());
         window.location.href = `sms:?body=${body}`;
         toastState.info("Ouverture de votre application SMS...");
+        closeShareModal();
     }
 
     function shareViaWhatsApp() {
         if (!checklist) return;
-        const text = encodeURIComponent(`Voici ma checklist *${checklist.checklistName}*. Cliquez sur ce lien pour l'importer : ${getShareUrl()}`);
+        const text = encodeURIComponent(getFormattedText());
         window.open(`https://wa.me/?text=${text}`, '_blank');
         toastState.info("Ouverture de WhatsApp...");
+        closeShareModal();
     }
 
     return {

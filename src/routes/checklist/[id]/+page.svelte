@@ -112,7 +112,7 @@
         <BottomActionMenu>
             {#if !state.readOnly}
                 <ActionButton 
-                    onclick={state.shareNative} 
+                    onclick={state.openShareModal} 
                     disabled={state.isEditMode}
                     icon={icons.share}
                     label="Partager"
@@ -173,26 +173,55 @@
             </div>
         </Modal>
 
-        <!-- Modal de confirmation de partage -->
+        <!-- Modal de choix de partage -->
         <Modal
             isOpen={state.isShareModalOpen}
             onclose={state.closeShareModal}
-            title="Partager la checklist ?"
+            title="Comment partager ?"
         >
-            <div class="flex flex-col items-center">
-                <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-primary">
-                        {@html icons.share}
-                    </svg>
-                </div>
-                <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 text-center transition-colors">
-                    Souhaitez-vous partager la checklist ?
-                </p>
+            <div class="flex flex-col gap-4">
+                <button class="flex items-center gap-4 p-4 bg-secondary dark:bg-gray-700 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-2xl transition-colors group cursor-pointer text-left"
+                        onclick={() => { state.closeShareModal(); state.shareNative(); }}>
+                    <div class="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center flex-shrink-0 group-active:scale-90 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            {@html icons.share}
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="font-bold text-text-main dark:text-white">Vers une autre application Checklist</div>
+                        <div class="text-xs text-text-main/60 dark:text-gray-400 mt-1">Génère un lien d'importation pour une application Checklist</div>
+                    </div>
+                </button>
 
-                <div class="flex flex-col gap-3 w-full">
-                    <Button onclick={state.openShareOptionsModal} fullWidth>
-                        Valider
-                    </Button>
+                <button class="flex items-center gap-4 p-4 bg-secondary dark:bg-gray-700 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-2xl transition-colors group cursor-pointer text-left"
+                        onclick={state.shareViaEmail}>
+                    <div class="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center flex-shrink-0 group-active:scale-90 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            {@html icons.email}
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="font-bold text-text-main dark:text-white">En clair via Email</div>
+                        <div class="text-xs text-text-main/60 dark:text-gray-400 mt-1">Envoie le contenu au format texte</div>
+                    </div>
+                </button>
+
+                {#if state.isMobile}
+                    <button class="flex items-center gap-4 p-4 bg-secondary dark:bg-gray-700 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-2xl transition-colors group cursor-pointer text-left"
+                            onclick={state.shareViaSMS}>
+                        <div class="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center flex-shrink-0 group-active:scale-90 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                {@html icons.sms}
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-bold text-text-main dark:text-white">En clair via SMS</div>
+                            <div class="text-xs text-text-main/60 dark:text-gray-400 mt-1">Envoie le contenu au format texte</div>
+                        </div>
+                    </button>
+                {/if}
+
+                <div class="mt-4">
                     <Button variant="secondary" onclick={state.closeShareModal} fullWidth>
                         Annuler
                     </Button>
