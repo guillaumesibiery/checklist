@@ -3,5 +3,5 @@
  * Alphanumériques (incluant accents), espaces, tirets, underscores, apostrophes, points et emojis.
  */
 export function filterInput(value: string): string {
-    return value.replace(/[^\p{L}\p{N}\p{Emoji}\s._'\-]/gu, '');
+    return value.replace(/[^\p{L}\p{N}\p{Emoji}\s._%//'\-]/gu, '');
 }
