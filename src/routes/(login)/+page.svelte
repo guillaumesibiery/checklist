@@ -35,7 +35,6 @@
             <!-- Skeleton Loader -->
             <div class="flex justify-center items-center gap-6 overflow-x-auto pb-4">
                 <div class="animate-pulse w-32 h-32 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
-                <div class="animate-pulse w-32 h-32 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
             </div>
         {:else if $users.length === 0}
             <!-- No users: Centered button -->
@@ -90,7 +89,7 @@
         </span>
         <button
             onclick={state.handleCheckUpdate}
-            class="text-[10px] text-primary/60 hover:text-primary dark:text-primary/40 dark:hover:text-primary font-medium underline underline-offset-2 transition-colors cursor-pointer"
+            class="text-[10px] text-primary font-medium underline underline-offset-2 transition-colors cursor-pointer"
         >
             Vérifier les mises à jour
         </button>

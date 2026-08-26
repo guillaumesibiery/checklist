@@ -39,14 +39,13 @@
             onclick={ontoggle}>
         <div class="flex items-center gap-1">
             {#if progress !== undefined && progress == 100}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#699e4b" 
-                 class="w-5 h-5">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#699e4b">
                     {@html icons.checkCircle}
                 </svg>
             {/if}
             <h2 class="text-base font-bold text-text-main dark:text-white transition-colors">{title}</h2>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
-                 class="w-5 h-5 text-primary transition-transform duration-300"
+                 class=" text-primary transition-transform duration-300"
                  class:rotate-180={!isExpanded}>
                 {@html icons.chevronDown}
             </svg>
