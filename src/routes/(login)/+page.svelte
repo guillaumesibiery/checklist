@@ -90,7 +90,7 @@
         </span>
         <button
             onclick={state.handleCheckUpdate}
-            class="text-[10px] text-primary/60 visited:text-primary hover:text-primary dark:text-primary/40 dark:hover:text-primary font-medium underline underline-offset-2 transition-colors cursor-pointer"
+            class="text-[10px] text-primary/60 hover:text-primary dark:text-primary/40 dark:hover:text-primary font-medium underline underline-offset-2 transition-colors cursor-pointer"
         >
             Vérifier les mises à jour
         </button>

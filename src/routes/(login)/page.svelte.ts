@@ -95,12 +95,16 @@ export function createPageState() {
       updateResult = null;
       showUpdateModal = true;
 
-      // Rafraîchissement du service worker
-      if ('serviceWorker' in navigator) {
-          const registration = await navigator.serviceWorker.getRegistration();
-          if (registration) {
-              await registration.update();
+      // Rafraîchissement du service worker (ignoré si hors-ligne)
+      try {
+          if ('serviceWorker' in navigator) {
+              const registration = await navigator.serviceWorker.getRegistration();
+              if (registration) {
+                  await registration.update();
+              }
           }
+      } catch {
+          // Erreur réseau ignorée : la vérification de version gère le cas hors-ligne
       }
 
       // Vérification de la version sur GitHub
