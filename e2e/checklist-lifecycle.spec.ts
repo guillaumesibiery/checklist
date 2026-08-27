@@ -39,12 +39,8 @@ test('Checklist life cycle', async ({ page }) => {
   await page.getByTestId('add-checklist-category').click();
 
   await page.getByRole('button', { name: 'Ajouter un élément' }).first().click();
-  await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Gonflage pneus');
+  await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Faire niveau d\'huile');
   
-  await page.locator('.flex.items-center.bg-secondary.dark\\:bg-gray-700.rounded-2xl > button:nth-child(3)').click();
-  await page.locator('.flex.items-center.bg-secondary.dark\\:bg-gray-700.rounded-2xl > button:nth-child(3)').click();
-  await page.locator('.flex.items-center.bg-secondary.dark\\:bg-gray-700.rounded-2xl > button:nth-child(3)').click();
-
   await page.getByTestId('add-checklist-item').click();
 
   await page.getByRole('button', { name: '% Voiture Options de la catégorie' }).getByLabel('Options de la catégorie').click();
@@ -53,7 +49,11 @@ test('Checklist life cycle', async ({ page }) => {
   await page.getByTestId('rename-checklist-category').click();
  
   await page.getByRole('button', { name: 'Ajouter un élément' }).first().click();
-  await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Niveau d\'huile');
+  await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Gonflage pneus');
+  await page.locator('.flex.items-center.bg-secondary.dark\\:bg-gray-700.rounded-2xl > button:nth-child(3)').click();
+  await page.locator('.flex.items-center.bg-secondary.dark\\:bg-gray-700.rounded-2xl > button:nth-child(3)').click();
+  await page.locator('.flex.items-center.bg-secondary.dark\\:bg-gray-700.rounded-2xl > button:nth-child(3)').click();
+
   await page.getByTestId('add-checklist-item').click();
 
   await page.getByTestId('checklist-edit-mode').click();
@@ -69,7 +69,7 @@ test('Checklist life cycle', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Supprimer l\'élément' }).first().click();
 
-  await expect(page.getByText('Niveau d\'huile')).toHaveCount(0);
+  await expect(page.getByText('Faire niveau d\'huile')).toHaveCount(0);
 
   await page.getByTestId('checklist-edit-mode').click();
 
