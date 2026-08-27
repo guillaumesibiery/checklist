@@ -71,7 +71,8 @@ test('Model life cycle', async ({ page }) => {
   await expect(page.locator('body')).toContainText('Passeport 1');
   
   //Suppression d'une catégorie
-  await page.locator('section').filter({ hasText: 'Documents Ajouter un élément' }).getByLabel('Supprimer la catégorie').click();
+  await page.getByRole('button', { name: 'Documents Options de la caté' }).getByLabel('Options de la catégorie').click();
+  await page.getByRole('button', { name: 'Supprimer', exact: true }).click();
   await expect(page.getByText('Documents')).toHaveCount(0);
 
   //Suppression d'un élément
@@ -89,6 +90,7 @@ test('Model life cycle', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Modèle "Voyage pro"' })).toBeVisible();
 
   await page.getByRole('button', { name: 'Ajouter une catégorie' }).click();
+  
   await page.getByRole('textbox', { name: 'Nom de la catégorie' }).fill('Documents');
   await page.getByTestId('add-model-category').click();
 

@@ -47,9 +47,10 @@ test('Checklist life cycle', async ({ page }) => {
 
   await page.getByTestId('add-checklist-item').click();
 
-  await page.locator('section').filter({ hasText: 'Voiture 0% Ajouter un élément' }).getByLabel('Modifier l\'élément').click();
-  await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Gonflage pneus voiture');
-  await page.getByTestId('add-checklist-item').click();
+  await page.getByRole('button', { name: '% Voiture Options de la catégorie' }).getByLabel('Options de la catégorie').click();
+  await page.getByText('Modifier').click();
+  await page.getByRole('textbox', { name: 'Nouveau nom' }).fill('Gonflage pneus voiture');
+  await page.getByTestId('rename-checklist-category').click();
  
   await page.getByRole('button', { name: 'Ajouter un élément' }).first().click();
   await page.getByRole('textbox', { name: 'Nom de l\'élément' }).fill('Niveau d\'huile');
@@ -57,12 +58,12 @@ test('Checklist life cycle', async ({ page }) => {
 
   await page.getByTestId('checklist-edit-mode').click();
 
-  await page.locator('section').filter({ hasText: 'Voiture 0% Niveau d\'huile' }).getByLabel('Augmenter la quantité').click();
-  await page.locator('section').filter({ hasText: 'Voiture 20% Niveau d\'huile' }).getByLabel('Augmenter la quantité').click();
-  await page.locator('section').filter({ hasText: 'Voiture 40% Niveau d\'huile' }).getByLabel('Augmenter la quantité').click();
-  await page.locator('section').filter({ hasText: 'Voiture 60% Niveau d\'huile' }).getByLabel('Augmenter la quantité').click();
-
-  await expect(page.locator('body')).toContainText('Gonflage pneus voiture Quantité : 4 4');
+  await page.locator('section').filter({ hasText: '0% Gonflage pneus voiture' }).getByLabel('Augmenter la quantité').click();
+  await page.locator('section').filter({ hasText: '20% Gonflage pneus voiture' }).getByLabel('Augmenter la quantité').click();
+  await page.locator('section').filter({ hasText: '40% Gonflage pneus voiture' }).getByLabel('Augmenter la quantité').click();
+  await page.locator('section').filter({ hasText: '60% Gonflage pneus voiture' }).getByLabel('Augmenter la quantité').click();
+  
+  await expect(page.locator('body')).toContainText('Quantité : 4');
 
   await page.getByTestId('checklist-edit-mode').click();
 
@@ -90,11 +91,11 @@ test('Checklist life cycle', async ({ page }) => {
 
   await page.getByTestId('checklist-edit-mode').click();
 
-  await expect(page.locator('body')).toContainText('Maison 0%');
+  await expect(page.locator('body')).toContainText('0% Maison');
   await expect(page.locator('body')).toContainText('Mettre alarme en route');
 
-  await expect(page.locator('body')).toContainText('Voiture 100%');
-  await expect(page.locator('body')).toContainText('Gonflage pneus voiture Quantité : 4 4');
+  await expect(page.locator('body')).toContainText('100% Gonflage pneus voiture');
+  await expect(page.locator('body')).toContainText('Gonflage pneus Quantité : 4 4');
 
   await page.getByRole('button', { name: 'Quitter' }).click();
 
