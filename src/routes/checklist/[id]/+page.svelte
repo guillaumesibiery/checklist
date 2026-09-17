@@ -14,7 +14,24 @@
     import './page.css';
 
     const readOnly = page.url.searchParams.get('readOnly') === 'true';
-    const state = createPageState(page.params.id as string, readOnly);
+    const pageState = createPageState(page.params.id as string, readOnly);
+
+    let previousProgress = $state<number | undefined>(undefined);
+
+    $effect(() => {
+        if (pageState.checklist) {
+            const currentProgress = pageState.checklist.progress;
+            if (currentProgress === 100 && previousProgress !== undefined && previousProgress !== 100) {
+                // Délai pour laisser les animations visuelles se terminer
+                setTimeout(() => {
+                    if (!pageState.isFinalizeModalOpen) {
+                        pageState.openFinalizeModal();
+                    }
+                }, 800);
+            }
+            previousProgress = currentProgress;
+        }
+    });
 
     function getIcon(name: keyof typeof icons) {
         return icons[name];
@@ -22,7 +39,7 @@
 </script>
 
 <div class="min-h-screen bg-secondary dark:bg-[#05010d] pb-24 transition-colors duration-300">
-    {#if state.loading}
+    {#if pageState.loading}
         <div class="fixed top-0 left-0 right-0 h-24 bg-primary p-4 z-10 shadow-lg flex flex-col justify-end">
             <div class="animate-pulse h-6 bg-white/20 rounded w-1/2 mb-4"></div>
             <div class="animate-pulse h-2 bg-white/20 rounded w-full"></div>
@@ -37,40 +54,40 @@
                 </div>
             {/each}
         </div>
-    {:else if state.checklist}
+    {:else if pageState.checklist}
         <!-- Header -->
         <header class="fixed top-0 left-0 right-0 bg-primary text-text-inverse p-4 z-10 flex flex-col items-center pt-[calc(1rem+env(safe-area-inset-top))]" in:fly={{ y: -50 }}>
-            <h1 class="text-lg font-bold truncate w-full text-center px-8 mb-2">{state.checklist.checklistName}</h1>
+            <h1 class="text-lg font-bold truncate w-full text-center px-8 mb-2">{pageState.checklist.checklistName}</h1>
             
             <!-- Barre de progression avec % intégré -->
             <div class="w-full max-w-md h-6 bg-white/20 rounded-full relative overflow-hidden transition-colors">
                 <!-- Barre de remplissage (blanche) -->
                 <div 
                     class="h-full bg-white rounded-full transition-all duration-500 ease-out" 
-                    style="width: {state.checklist.progress}%"
+                    style="width: {pageState.checklist.progress}%"
                 ></div>
                 
                 <!-- Texte en blanc (par défaut sur le fond transparent) -->
                 <div class="absolute inset-0 flex items-center justify-center text-[10px] font-black text-white">
-                    {state.checklist.progress}%
+                    {pageState.checklist.progress}%
                 </div>
                 
                 <!-- Texte en couleur primaire (révélé par la barre blanche via clip-path) -->
                 <div 
                     class="absolute inset-0 flex items-center justify-center text-[10px] font-black text-primary transition-all duration-500" 
-                    style="clip-path: inset(0 {100 - Number(state.checklist.progress)}% 0 0)"
+                    style="clip-path: inset(0 {100 - Number(pageState.checklist.progress)}% 0 0)"
                 >
-                    {state.checklist.progress}%
+                    {pageState.checklist.progress}%
                 </div>
             </div>
         </header>
 
         <!-- Content -->
         <main class="pt-28 px-4 space-y-6">
-            {#if !state.readOnly && state.isEditMode}
+            {#if !pageState.readOnly && pageState.isEditMode}
                 <Button 
                     variant="ghost"
-                    onclick={state.openAddCategoryModal}
+                    onclick={pageState.openAddCategoryModal}
                     class="w-full border-2 border-dashed border-primary/30 active:scale-95"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
@@ -80,28 +97,28 @@
                 </Button>
             {/if}
 
-            {#each state.checklist.elements as element, catIndex}
+            {#each pageState.checklist.elements as element, catIndex}
                 <Category 
                     title={element.category}
                     progress={element.progress}
-                    isExpanded={state.expandedCategories.has(catIndex)}
-                    canDelete={!state.readOnly && state.isEditMode}
-                    showAddButton={!state.readOnly && state.isEditMode}
-                    ontoggle={() => state.toggleCategory(catIndex)}
-                    ondelete={() => state.deleteCategory(catIndex)}
-                    onadditem={() => state.openAddItemModal(element.category)}
-                    oneditcategory={() => state.openEditCategoryModal(catIndex)}
+                    isExpanded={pageState.expandedCategories.has(catIndex)}
+                    canDelete={!pageState.readOnly && pageState.isEditMode}
+                    showAddButton={!pageState.readOnly && pageState.isEditMode}
+                    ontoggle={() => pageState.toggleCategory(catIndex)}
+                    ondelete={() => pageState.deleteCategory(catIndex)}
+                    onadditem={() => pageState.openAddItemModal(element.category)}
+                    oneditcategory={() => pageState.openEditCategoryModal(catIndex)}
                 >
                     {#each element.items as item, itemIndex}
                         <ChecklistItem 
                             {item}
-                            readOnly={state.readOnly}
-                            isEditMode={state.isEditMode}
-                            ontoggleDisabled={() => state.toggleDisabled(catIndex, itemIndex)}
-                            ontoggleItem={() => state.toggleItem(catIndex, itemIndex)}
-                            onupdateQuantity={(delta) => state.updateQuantity(catIndex, itemIndex, delta)}
-                            ondeleteItem={() => state.deleteItem(catIndex, itemIndex)}
-                            oneditItem={() => state.openEditItemModal(element.category, itemIndex)}
+                            readOnly={pageState.readOnly}
+                            isEditMode={pageState.isEditMode}
+                            ontoggleDisabled={() => pageState.toggleDisabled(catIndex, itemIndex)}
+                            ontoggleItem={() => pageState.toggleItem(catIndex, itemIndex)}
+                            onupdateQuantity={(delta) => pageState.updateQuantity(catIndex, itemIndex, delta)}
+                            ondeleteItem={() => pageState.deleteItem(catIndex, itemIndex)}
+                            oneditItem={() => pageState.openEditItemModal(element.category, itemIndex)}
                         />
                     {/each}
                 </Category>
@@ -110,39 +127,39 @@
 
         <!-- Footer Menu -->
         <BottomActionMenu>
-            {#if !state.readOnly}
+            {#if !pageState.readOnly}
                 <ActionButton 
-                    onclick={state.openShareModal} 
-                    disabled={state.isEditMode}
+                    onclick={pageState.openShareModal} 
+                    disabled={pageState.isEditMode}
                     icon={icons.share}
                     label="Partager"
                 />
                 <ActionButton 
-                    onclick={state.toggleEditMode} 
+                    onclick={pageState.toggleEditMode} 
                     testId="checklist-edit-mode"
-                    icon={state.isEditMode ? icons.eye : icons.squaresPlus}
-                    label={state.isEditMode ? 'Consulter' : 'Modifier'}
+                    icon={pageState.isEditMode ? icons.eye : icons.squaresPlus}
+                    label={pageState.isEditMode ? 'Consulter' : 'Modifier'}
                     ariaLabel="Modifier"
                 />
                 <ActionButton 
-                    onclick={state.openFinalizeModal} 
-                    disabled={state.isEditMode}
+                    onclick={pageState.openFinalizeModal} 
+                    disabled={pageState.isEditMode}
                     icon={icons.archive}
                     label="Archiver"
                 />
             {/if}
             <ActionButton 
-                onclick={state.quit} 
-                disabled={!state.readOnly && state.isEditMode}
+                onclick={pageState.quit} 
+                disabled={!pageState.readOnly && pageState.isEditMode}
                 icon={icons.logout}
-                label={state.readOnly ? 'Retour' : 'Quitter'}
+                label={pageState.readOnly ? 'Retour' : 'Quitter'}
             />
         </BottomActionMenu>
 
         <!-- Modal de confirmation de finalisation -->
         <Modal
-            isOpen={state.isFinalizeModalOpen}
-            onclose={state.closeFinalizeModal}
+            isOpen={pageState.isFinalizeModalOpen}
+            onclose={pageState.closeFinalizeModal}
             title="Archiver la checklist ?"
         >
             <div class="flex flex-col items-center">
@@ -152,9 +169,9 @@
                     </svg>
                 </div>
                 
-                {#if state.checklist.progress !== 100}
+                {#if pageState.checklist.progress !== 100}
                     <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 text-center transition-colors">
-                        Attention : votre checklist n'est pas encore terminée (<span class="text-primary font-bold">{state.checklist.progress}%</span>). Voulez-vous tout de même l'archiver ?
+                        Attention : votre checklist n'est pas encore terminée (<span class="text-primary font-bold">{pageState.checklist.progress}%</span>). Voulez-vous tout de même l'archiver ?
                     </p>
                 {:else}
                     <p class="text-text-main/60 dark:text-gray-400 mb-8 px-4 text-center transition-colors">
@@ -163,10 +180,10 @@
                 {/if}
 
                 <div class="flex flex-col gap-3 w-full">
-                    <Button onclick={state.finalize} fullWidth>
+                    <Button onclick={pageState.finalize} fullWidth>
                         Valider
                     </Button>
-                    <Button variant="secondary" onclick={state.closeFinalizeModal} fullWidth>
+                    <Button variant="secondary" onclick={pageState.closeFinalizeModal} fullWidth>
                         Annuler
                     </Button>
                 </div>
@@ -175,13 +192,13 @@
 
         <!-- Modal de choix de partage -->
         <Modal
-            isOpen={state.isShareModalOpen}
-            onclose={state.closeShareModal}
+            isOpen={pageState.isShareModalOpen}
+            onclose={pageState.closeShareModal}
             title="Comment partager ?"
         >
             <div class="flex flex-col gap-4">
                 <button class="flex items-center gap-4 p-4 bg-secondary dark:bg-gray-700 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-2xl transition-colors group cursor-pointer text-left"
-                        onclick={() => { state.closeShareModal(); state.shareNative(); }}>
+                        onclick={() => { pageState.closeShareModal(); pageState.shareNative(); }}>
                     <div class="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center flex-shrink-0 group-active:scale-90 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                             {@html icons.share}
@@ -194,7 +211,7 @@
                 </button>
 
                 <button class="flex items-center gap-4 p-4 bg-secondary dark:bg-gray-700 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-2xl transition-colors group cursor-pointer text-left"
-                        onclick={state.shareViaEmail}>
+                        onclick={pageState.shareViaEmail}>
                     <div class="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center flex-shrink-0 group-active:scale-90 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                             {@html icons.email}
@@ -206,9 +223,9 @@
                     </div>
                 </button>
 
-                {#if state.isMobile}
+                {#if pageState.isMobile}
                     <button class="flex items-center gap-4 p-4 bg-secondary dark:bg-gray-700 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-2xl transition-colors group cursor-pointer text-left"
-                            onclick={state.shareViaSMS}>
+                            onclick={pageState.shareViaSMS}>
                         <div class="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center flex-shrink-0 group-active:scale-90 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                 {@html icons.sms}
@@ -222,7 +239,7 @@
                 {/if}
 
                 <div class="mt-4">
-                    <Button variant="secondary" onclick={state.closeShareModal} fullWidth>
+                    <Button variant="secondary" onclick={pageState.closeShareModal} fullWidth>
                         Annuler
                     </Button>
                 </div>
@@ -230,13 +247,13 @@
         </Modal>
 
         <Modal
-            isOpen={state.isShareOptionsModalOpen}
-            onclose={state.closeShareOptionsModal}
+            isOpen={pageState.isShareOptionsModalOpen}
+            onclose={pageState.closeShareOptionsModal}
             title="Partager via..."
         >
-            <div class="grid gap-4" class:grid-cols-2={!state.isMobile} class:grid-cols-3={state.isMobile}>
+            <div class="grid gap-4" class:grid-cols-2={!pageState.isMobile} class:grid-cols-3={pageState.isMobile}>
                 <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group cursor-pointer"
-                        onclick={state.shareViaCopy}>
+                        onclick={pageState.shareViaCopy}>
                     <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
                             {@html icons.copy}
@@ -245,9 +262,9 @@
                     <span class="text-[10px] font-bold text-text-main dark:text-gray-300 uppercase tracking-tighter transition-colors">Copier</span>
                 </button>
 
-                {#if state.isMobile}
+                {#if pageState.isMobile}
                     <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group cursor-pointer"
-                            onclick={state.shareViaWhatsApp}>
+                            onclick={pageState.shareViaWhatsApp}>
                         <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
                                 {@html icons.whatsapp}
@@ -257,7 +274,7 @@
                     </button>
 
                     <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group cursor-pointer"
-                            onclick={state.shareViaSMS}>
+                            onclick={pageState.shareViaSMS}>
                         <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
                                 {@html icons.sms}
@@ -268,7 +285,7 @@
                 {/if}
 
                 <button class="flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-secondary dark:hover:bg-gray-700 transition-colors group cursor-pointer"
-                        onclick={state.shareViaEmail}>
+                        onclick={pageState.shareViaEmail}>
                     <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center group-active:scale-90 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
                             {@html icons.email}
@@ -279,7 +296,7 @@
             </div>
 
             <div class="mt-8">
-                <Button variant="secondary" onclick={state.closeShareOptionsModal} fullWidth>
+                <Button variant="secondary" onclick={pageState.closeShareOptionsModal} fullWidth>
                     Fermer
                 </Button>
             </div>
@@ -287,36 +304,36 @@
 
         <!-- Modal d'ajout de catégorie -->
         <Modal
-            isOpen={state.isAddCategoryModalOpen}
-            onclose={state.closeAddCategoryModal}
+            isOpen={pageState.isAddCategoryModalOpen}
+            onclose={pageState.closeAddCategoryModal}
             title="Nouvelle catégorie"
         >
             <div class="space-y-4">
                 <Input 
                     id="categoryName"
                     label="Nom de la catégorie"
-                    bind:value={state.newCategoryName}
+                    bind:value={pageState.newCategoryName}
                     oninput={(e) => {
                         const input = e.currentTarget;
                         const filtered = filterInput(input.value);
-                        state.newCategoryName = filtered;
+                        pageState.newCategoryName = filtered;
                         input.value = filtered;
                     }}
                     placeholder="Ex: Bagages, Accessoires..."
-                    error={state.categoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
+                    error={pageState.categoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
                     autofocus
                 />
 
                 <div class="flex flex-col gap-3 mt-8">
                     <Button 
                         testId="add-checklist-category"
-                        disabled={!state.newCategoryName.trim() || state.categoryExists}
-                        onclick={state.addCategory}
+                        disabled={!pageState.newCategoryName.trim() || pageState.categoryExists}
+                        onclick={pageState.addCategory}
                         fullWidth
                     >
                         Ajouter
                     </Button>
-                    <Button variant="secondary" onclick={state.closeAddCategoryModal} fullWidth>
+                    <Button variant="secondary" onclick={pageState.closeAddCategoryModal} fullWidth>
                         Annuler
                     </Button>
                 </div>
@@ -325,36 +342,36 @@
 
         <!-- Modal de renommage de catégorie -->
         <Modal
-            isOpen={state.isEditCategoryModalOpen}
-            onclose={state.closeEditCategoryModal}
+            isOpen={pageState.isEditCategoryModalOpen}
+            onclose={pageState.closeEditCategoryModal}
             title="Renommer la catégorie"
         >
             <div class="space-y-4">
                 <Input 
                     id="editCategoryName"
                     label="Nouveau nom"
-                    bind:value={state.editCategoryName}
+                    bind:value={pageState.editCategoryName}
                     oninput={(e) => {
                         const input = e.currentTarget;
                         const filtered = filterInput(input.value);
-                        state.editCategoryName = filtered;
+                        pageState.editCategoryName = filtered;
                         input.value = filtered;
                     }}
                     placeholder="Ex: Bagages, Accessoires..."
-                    error={state.editCategoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
+                    error={pageState.editCategoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
                     autofocus
                 />
 
                 <div class="flex flex-col gap-3 mt-8">
                     <Button 
                         testId="rename-checklist-category"
-                        disabled={!state.editCategoryName.trim() || state.editCategoryExists || state.editCategoryUnchanged}
-                        onclick={state.renameCategory}
+                        disabled={!pageState.editCategoryName.trim() || pageState.editCategoryExists || pageState.editCategoryUnchanged}
+                        onclick={pageState.renameCategory}
                         fullWidth
                     >
                         Renommer
                     </Button>
-                    <Button variant="secondary" onclick={state.closeEditCategoryModal} fullWidth>
+                    <Button variant="secondary" onclick={pageState.closeEditCategoryModal} fullWidth>
                         Annuler
                     </Button>
                 </div>
@@ -363,23 +380,23 @@
 
         <!-- Modal d'ajout d'élément -->
         <Modal
-            isOpen={state.isAddItemModalOpen}
-            onclose={state.closeAddItemModal}
-            title={state.isEditingItem ? "Modifier l'élément" : "Nouvel élément"}
+            isOpen={pageState.isAddItemModalOpen}
+            onclose={pageState.closeAddItemModal}
+            title={pageState.isEditingItem ? "Modifier l'élément" : "Nouvel élément"}
         >
             <div class="space-y-6">
                 <Input 
                     id="itemName"
                     label="Nom de l'élément"
-                    bind:value={state.newItemName}
+                    bind:value={pageState.newItemName}
                     oninput={(e) => {
                         const input = e.currentTarget;
                         const filtered = filterInput(input.value);
-                        state.newItemName = filtered;
+                        pageState.newItemName = filtered;
                         input.value = filtered;
                     }}
                     placeholder="Ex: T-shirts, Couches..."
-                    error={state.itemExists ? 'Un élément avec ce nom existe déjà' : ''}
+                    error={pageState.itemExists ? 'Un élément avec ce nom existe déjà' : ''}
                     autofocus
                 />
 
@@ -389,7 +406,7 @@
                         <Button 
                             variant="ghost" 
                             size="sm" 
-                            onclick={() => state.newItemQuantity = Math.max(1, state.newItemQuantity - 1)}
+                            onclick={() => pageState.newItemQuantity = Math.max(1, pageState.newItemQuantity - 1)}
                             class="w-10 h-10 p-0"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
@@ -398,13 +415,13 @@
                         </Button>
                         <input type="number" 
                                 id="itemQuantity"
-                                bind:value={state.newItemQuantity}
+                                bind:value={pageState.newItemQuantity}
                                 min="1"
                                 class="w-12 text-center bg-transparent border-none focus:ring-0 font-bold text-text-main dark:text-white transition-colors">
                         <Button 
                             variant="ghost" 
                             size="sm" 
-                            onclick={() => state.newItemQuantity = state.newItemQuantity + 1}
+                            onclick={() => pageState.newItemQuantity = pageState.newItemQuantity + 1}
                             class="w-10 h-10 p-0"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
@@ -417,13 +434,13 @@
                 <div class="flex flex-col gap-3 mt-8">
                     <Button 
                         testId="add-checklist-item"
-                        disabled={!state.newItemName.trim() || state.itemExists}
-                        onclick={state.addItem}
+                        disabled={!pageState.newItemName.trim() || pageState.itemExists}
+                        onclick={pageState.addItem}
                         fullWidth
                     >
-                        {state.isEditingItem ? "Enregistrer" : "Ajouter"}
+                        {pageState.isEditingItem ? "Enregistrer" : "Ajouter"}
                     </Button>
-                    <Button variant="secondary" onclick={state.closeAddItemModal} fullWidth>
+                    <Button variant="secondary" onclick={pageState.closeAddItemModal} fullWidth>
                         Annuler
                     </Button>
                 </div>
@@ -433,7 +450,7 @@
         <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center" in:fade>
             <h1 class="text-2xl font-bold text-red-500">Checklist non trouvée</h1>
             <p class="mt-2 text-text-main/60 dark:text-gray-400 transition-colors">Nous n'avons pas pu charger votre checklist.</p>
-            <Button onclick={state.quit} class="mt-8">
+            <Button onclick={pageState.quit} class="mt-8">
                 Retour à l'accueil
             </Button>
         </div>

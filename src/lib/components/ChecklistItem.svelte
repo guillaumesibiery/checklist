@@ -33,13 +33,19 @@
 <div class="p-4 px-3 flex items-center gap-2 transition-opacity duration-300"
      class:opacity-40={isDisabled}>
     
-    <!-- Enable/Disable checkbox -->
+    <!-- Bouton toggle pour activer/désactiver en mode édition -->
     {#if isEditMode}
-        <input type="checkbox" 
-            class="w-5 h-5 rounded border-2 border-primary text-primary accent-primary focus:ring-primary focus:ring-offset-0 cursor-pointer transition-all duration-200 disabled:opacity-50" 
-            checked={!isDisabled}
-            disabled={readOnly}
-            onchange={ontoggleDisabled}>
+        <button class="w-12 h-6 rounded-full relative transition-colors duration-300 cursor-pointer flex-shrink-0"
+                class:bg-primary={!isDisabled}
+                class:bg-secondary={isDisabled}
+                class:dark:bg-gray-700={isDisabled}
+                disabled={readOnly}
+                onclick={ontoggleDisabled}
+                aria-label="Activer/Désactiver l'élément">
+            <div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 shadow-sm"
+                 class:translate-x-6={!isDisabled}>
+            </div>
+        </button>
     {/if}
 
     <!-- Item Name & Quantity Info -->
@@ -67,19 +73,25 @@
         </div>
     </div>
 
-    <!-- Controls -->
+    <!-- Contrôles : checkbox animée ou compteur de quantité -->
     {#if !isDisabled && !readOnly && !isEditMode}
         <div class="flex items-center gap-2" in:scale>
             {#if wantedQty === 1}
-                <button class="w-12 h-6 rounded-full relative transition-colors duration-300 cursor-pointer"
-                        class:bg-primary={addedQty === 1}
-                        class:bg-secondary={addedQty === 0}
-                        class:dark:bg-gray-700={addedQty === 0}
+                <!-- Checkbox animée avec check vert -->
+                <button class="w-6 h-6 rounded-md border-2 flex items-center justify-center cursor-pointer transition-all duration-300 flex-shrink-0"
+                        class:border-[#699e4b]={addedQty >= wantedQty}
+                        class:bg-[#699e4b]={addedQty >= wantedQty}
+                        class:border-gray-300={addedQty < wantedQty}
+                        class:dark:border-gray-500={addedQty < wantedQty}
                         onclick={ontoggleItem}
                         aria-label="Cocher l'élément">
-                    <div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 shadow-sm"
-                         class:translate-x-6={addedQty === 1}>
-                    </div>
+                    {#if addedQty >= wantedQty}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"
+                             class="w-4 h-4 animate-checkbox-check"
+                             in:scale={{ duration: 250, start: 0.5 }}>
+                            {@html icons.check}
+                        </svg>
+                    {/if}
                 </button>
             {:else}
                 <div class="flex items-center bg-secondary dark:bg-gray-700 rounded-lg transition-colors">

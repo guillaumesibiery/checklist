@@ -1,6 +1,7 @@
 <script lang="ts">
     import { fade, scale } from 'svelte/transition';
     import { icons } from '$lib/ts/icons';
+    import { toastState } from '$lib/ts/toastState.svelte';
 
     interface Props {
         title: string;
@@ -29,6 +30,26 @@
     }: Props = $props();
 
     let isMenuOpen = $state(false);
+    /** Progression précédente pour détecter la transition vers 100% */
+    let previousProgress = $state(progress);
+    /** Indique si la catégorie est complétée à 100% */
+    const isCompleted = $derived(progress === 100);
+
+    /**
+     * Détecte le passage à 100% pour afficher une notification et replier la catégorie
+     */
+    $effect(() => {
+        if (progress === 100 && previousProgress !== undefined && previousProgress !== 100) {
+            toastState.success(`Catégorie '${title}' complétée à 100%`);
+            // Replier la catégorie si elle est ouverte, avec un délai pour laisser jouer l'animation de la dernière checkbox
+            if (isExpanded) {
+                setTimeout(() => {
+                    ontoggle();
+                }, 600); // 600ms pour laisser le temps au composant de s'animer (transition svelte 250ms + CSS 300ms)
+            }
+        }
+        previousProgress = progress;
+    });
 
     function toggleMenu(e: Event) {
         e.stopPropagation();
@@ -40,7 +61,11 @@
     }
 </script>
 
-<section class="bg-white dark:bg-gray-800 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] rounded-2xl transition-colors relative">
+<section class="bg-white dark:bg-gray-800 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] rounded-2xl transition-all relative"
+     class:outline-2={isCompleted}
+     class:outline-[#699e4b]={isCompleted}
+     style:outline-offset={isCompleted ? '-2px' : undefined}
+     style:outline-style={isCompleted ? 'solid' : undefined}>
     <!-- Header de la catégorie -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <!-- svelte-ignore a11y_click_events_have_key_events -->
