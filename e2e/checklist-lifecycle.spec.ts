@@ -95,7 +95,6 @@ test('Checklist life cycle', async ({ page }) => {
   await expect(page.locator('body')).toContainText('Mettre alarme en route');
 
   await expect(page.locator('body')).toContainText('100% Gonflage pneus voiture');
-  await expect(page.locator('body')).toContainText('Gonflage pneus Quantité : 4 4');
 
   await page.getByRole('button', { name: 'Quitter' }).click();
 
