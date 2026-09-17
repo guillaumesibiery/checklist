@@ -35,9 +35,19 @@ export function createPageState(id: string, readOnly: boolean = false) {
                 element.items.sort((a, b) => a.item.localeCompare(b.item, 'fr', { sensitivity: 'base' }));
             });
             checklist = c;
-            // Par défaut, on ouvre toutes les catégories au chargement
+
+            // S'il n'y a aucune catégorie, on bascule en mode édition par défaut
+            if (c.elements.length === 0 && !readOnly) {
+                isEditMode = true;
+            }
+
+            // Par défaut, on ouvre les catégories qui ne sont pas à 100%
             const initialSet = new Set<number>();
-            c.elements.forEach((_, index) => initialSet.add(index));
+            c.elements.forEach((element, index) => {
+                if (element.progress !== 100) {
+                    initialSet.add(index);
+                }
+            });
             expandedCategories = initialSet;
         }
         loading = false;
