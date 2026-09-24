@@ -4,8 +4,7 @@
     import { filterInput } from '$lib/ts/modalInputFilter';
     import { fade, fly, scale } from 'svelte/transition';
     import { icons } from '$lib/ts/icons';
-    import ActionButton from '$lib/components/ActionButton.svelte';
-    import BottomActionMenu from '$lib/components/BottomActionMenu.svelte';
+
     import Category from '$lib/components/Category.svelte';
     import ModelItem from '$lib/components/ModelItem.svelte';
     import Modal from '$lib/components/Modal.svelte';
@@ -34,7 +33,18 @@
     {:else if state.model}
         <!-- Header Style Checklist -->
         <header class="fixed top-0 left-0 right-0 bg-primary text-text-inverse p-4 z-10 flex flex-col items-center min-h-20 justify-center pt-[calc(1rem+env(safe-area-inset-top))]" in:fly={{ y: -50 }}>
-            <h1 class="text-xl font-bold w-full text-center px-8">Modèle "{state.model.modelName}"</h1>
+            <div class="relative w-full flex items-center justify-center">
+                <button 
+                    onclick={state.quit}
+                    class="absolute left-0 p-2 -ml-2 text-text-inverse hover:bg-white/10 rounded-full transition-colors cursor-pointer"
+                    aria-label="Retour"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        {@html icons.arrowLeft}
+                    </svg>
+                </button>
+                <h1 class="text-xl font-bold truncate px-8">Modèle "{state.model.modelName}"</h1>
+            </div>
         </header>
 
         <!-- Content -->
@@ -73,14 +83,7 @@
             {/each}
         </main>
 
-        <!-- Footer Menu -->
-        <BottomActionMenu justify="justify-center">
-            <ActionButton 
-                onclick={state.quit} 
-                icon={icons.logout}
-                label="Quitter"
-            />
-        </BottomActionMenu>
+
 
         <!-- Modal d'ajout de catégorie -->
         <Modal

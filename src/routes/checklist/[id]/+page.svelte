@@ -58,7 +58,19 @@
     {:else if pageState.checklist}
         <!-- Header -->
         <header class="fixed top-0 left-0 right-0 bg-primary text-text-inverse p-4 z-10 flex flex-col items-center pt-[calc(1rem+env(safe-area-inset-top))]" in:fly={{ y: -50 }}>
-            <h1 class="text-lg font-bold truncate w-full text-center px-8 mb-2">{pageState.checklist.checklistName}</h1>
+            <div class="relative w-full flex items-center mb-2">
+                <button 
+                    onclick={pageState.quit}
+                    disabled={!pageState.readOnly && pageState.isEditMode}
+                    class="absolute left-0 p-2 -ml-2 text-text-inverse hover:bg-white/10 rounded-full transition-colors cursor-pointer disabled:opacity-50"
+                    aria-label="Retour"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        {@html icons.arrowLeft}
+                    </svg>
+                </button>
+                <h1 class="text-lg font-bold truncate w-full text-center px-8">{pageState.checklist.checklistName}</h1>
+            </div>
             
             <!-- Barre de progression avec % intégré -->
             <div class="w-full max-w-md h-6 bg-white/20 rounded-full relative overflow-hidden transition-colors">
@@ -204,8 +216,8 @@
         </main>
 
         <!-- Footer Menu -->
-        <BottomActionMenu>
-            {#if !pageState.readOnly}
+        {#if !pageState.readOnly}
+            <BottomActionMenu>
                 <ActionButton 
                     onclick={pageState.openShareModal} 
                     disabled={pageState.isEditMode}
@@ -225,14 +237,8 @@
                     icon={icons.archive}
                     label="Archiver"
                 />
-            {/if}
-            <ActionButton 
-                onclick={pageState.quit} 
-                disabled={!pageState.readOnly && pageState.isEditMode}
-                icon={icons.logout}
-                label={pageState.readOnly ? 'Retour' : 'Quitter'}
-            />
-        </BottomActionMenu>
+            </BottomActionMenu>
+        {/if}
 
         <!-- Modal de confirmation de finalisation -->
         <Modal

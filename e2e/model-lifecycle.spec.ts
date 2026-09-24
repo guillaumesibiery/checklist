@@ -80,7 +80,7 @@ test('Model life cycle', async ({ page }) => {
   await expect(page.getByText('Pantalons 2')).toHaveCount(0);
 
   //Sortie
-  await page.getByRole('button', { name: 'Quitter' }).click();
+  await page.getByRole('button', { name: 'Retour' }).click();
   await expect(page).toHaveURL(/\/modeles/);
 
   await expect(page.locator('h3')).toContainText('Voyage pro');
@@ -104,7 +104,7 @@ test('Model life cycle', async ({ page }) => {
   await expect(page.locator('body')).toContainText('Documents');
   await expect(page.locator('body')).toContainText('Passeport 1');
 
-  await page.getByRole('button', { name: 'Quitter' }).click();
+  await page.getByRole('button', { name: 'Retour' }).click();
   await expect(page).toHaveURL(/\/modeles/);
 
   //Suppression du modèle

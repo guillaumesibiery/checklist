@@ -73,7 +73,7 @@ test('Checklist life cycle', async ({ page }) => {
 
   await page.getByTestId('checklist-edit-mode').click();
 
-  await page.getByRole('button', { name: 'Quitter' }).click();
+  await page.getByRole('button', { name: 'Retour' }).click();
   
   // Modification
   await page.locator('.home-checklist-name').first().click();
@@ -96,7 +96,7 @@ test('Checklist life cycle', async ({ page }) => {
 
   await expect(page.locator('body')).toContainText('100% Gonflage pneus voiture');
 
-  await page.getByRole('button', { name: 'Quitter' }).click();
+  await page.getByRole('button', { name: 'Retour' }).click();
 
   await expect(page).toHaveURL(/\/accueil/);
   await expect(page.getByText(`Bonjour ${testUserName}`)).toBeVisible();
