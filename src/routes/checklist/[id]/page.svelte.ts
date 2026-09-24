@@ -6,6 +6,29 @@ import { ChecklistRepository } from '$lib/ts/repositories/ChecklistRepository';
 import { toastState } from '$lib/ts/toastState.svelte';
 import { compactChecklist, encodeChecklist } from '$lib/ts/share';
 
+/**
+ * Vérifie si un item est considéré comme coché (quantité ajoutée >= quantité voulue)
+ */
+function isItemChecked(item: ChecklistItem): boolean {
+    const wanted = Number(item['wanted-quantity']) || 0;
+    const added = Number(item['added-quantity']) || 0;
+    return added >= wanted;
+}
+
+/**
+ * Trie les items : non cochés en premier (ordre alphabétique), puis cochés (ordre alphabétique)
+ */
+function sortItemsByCheckedState(items: ChecklistItem[]): void {
+    items.sort((a, b) => {
+        const aChecked = isItemChecked(a);
+        const bChecked = isItemChecked(b);
+        // Les items non cochés viennent en premier
+        if (aChecked !== bChecked) return aChecked ? 1 : -1;
+        // Au sein d'un même groupe, tri alphabétique
+        return a.item.localeCompare(b.item, 'fr', { sensitivity: 'base' });
+    });
+}
+
 export function createPageState(id: string, readOnly: boolean = false) {
     let checklist = $state<Checklist | null>(null);
     let loading = $state(true);
@@ -30,9 +53,9 @@ export function createPageState(id: string, readOnly: boolean = false) {
         isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         const c = await ChecklistRepository.getByUuid(id);
         if (c) {
-            // Trier les items par ordre alphabétique
+            // Trier les items : non cochés (alpha) puis cochés (alpha)
             c.elements.forEach(element => {
-                element.items.sort((a, b) => a.item.localeCompare(b.item, 'fr', { sensitivity: 'base' }));
+                sortItemsByCheckedState(element.items);
             });
             checklist = c;
 
@@ -66,9 +89,9 @@ export function createPageState(id: string, readOnly: boolean = false) {
     async function save() {
         if (!checklist || readOnly) return;
         
-        // Trier les items par ordre alphabétique avant la sauvegarde
+        // Trier les items : non cochés (alpha) puis cochés (alpha)
         checklist.elements.forEach(element => {
-            element.items.sort((a, b) => a.item.localeCompare(b.item, 'fr', { sensitivity: 'base' }));
+            sortItemsByCheckedState(element.items);
         });
 
         // 1. Recalculer le progrès (mise à jour du Proxy Svelte)
@@ -525,6 +548,25 @@ export function createPageState(id: string, readOnly: boolean = false) {
     return {
         get checklist() { return checklist; },
         get loading() { return loading; },
+        /** Catégories non complétées (avec leur index original dans elements) */
+        get incompleteCategories(): { element: typeof checklist extends null ? never : NonNullable<typeof checklist>['elements'][number]; originalIndex: number }[] {
+            if (!checklist) return [];
+            return checklist.elements
+                .map((element, index) => ({ element, originalIndex: index }))
+                .filter(({ element }) => element.progress !== 100);
+        },
+        /** Catégories complétées à 100% (avec leur index original dans elements) */
+        get completedCategories(): { element: typeof checklist extends null ? never : NonNullable<typeof checklist>['elements'][number]; originalIndex: number }[] {
+            if (!checklist) return [];
+            return checklist.elements
+                .map((element, index) => ({ element, originalIndex: index }))
+                .filter(({ element }) => element.progress === 100);
+        },
+        /** Indique si au moins une catégorie est complétée */
+        get hasCompletedCategories(): boolean {
+            if (!checklist) return false;
+            return checklist.elements.some(e => e.progress === 100);
+        },
         get expandedCategories() { return expandedCategories; },
         get isFinalizeModalOpen() { return isFinalizeModalOpen; },
         get isShareModalOpen() { return isShareModalOpen; },

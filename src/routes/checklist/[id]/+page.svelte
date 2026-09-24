@@ -3,6 +3,7 @@
     import { createPageState } from './page.svelte.ts';
     import { filterInput } from '$lib/ts/modalInputFilter';
     import { fade, fly, scale } from 'svelte/transition';
+    import { flip } from 'svelte/animate';
     import { icons } from '$lib/ts/icons';
     import ActionButton from '$lib/components/ActionButton.svelte';
     import BottomActionMenu from '$lib/components/BottomActionMenu.svelte';
@@ -97,32 +98,109 @@
                 </Button>
             {/if}
 
-            {#each pageState.checklist.elements as element, catIndex}
-                <Category 
-                    title={element.category}
-                    progress={element.progress}
-                    isExpanded={pageState.expandedCategories.has(catIndex)}
-                    canDelete={!pageState.readOnly && pageState.isEditMode}
-                    showAddButton={!pageState.readOnly && pageState.isEditMode}
-                    ontoggle={() => pageState.toggleCategory(catIndex)}
-                    ondelete={() => pageState.deleteCategory(catIndex)}
-                    onadditem={() => pageState.openAddItemModal(element.category)}
-                    oneditcategory={() => pageState.openEditCategoryModal(catIndex)}
-                >
-                    {#each element.items as item, itemIndex}
-                        <ChecklistItem 
-                            {item}
-                            readOnly={pageState.readOnly}
-                            isEditMode={pageState.isEditMode}
-                            ontoggleDisabled={() => pageState.toggleDisabled(catIndex, itemIndex)}
-                            ontoggleItem={() => pageState.toggleItem(catIndex, itemIndex)}
-                            onupdateQuantity={(delta) => pageState.updateQuantity(catIndex, itemIndex, delta)}
-                            ondeleteItem={() => pageState.deleteItem(catIndex, itemIndex)}
-                            oneditItem={() => pageState.openEditItemModal(element.category, itemIndex)}
-                        />
-                    {/each}
-                </Category>
-            {/each}
+            {#if !pageState.readOnly}
+                <!-- Catégories non complétées -->
+                {#each pageState.incompleteCategories as { element, originalIndex } (element.category)}
+                    <div animate:flip={{ duration: 400 }}>
+                        <Category 
+                            title={element.category}
+                            progress={element.progress}
+                            isExpanded={pageState.expandedCategories.has(originalIndex)}
+                            canDelete={pageState.isEditMode}
+                            showAddButton={pageState.isEditMode}
+                            ontoggle={() => pageState.toggleCategory(originalIndex)}
+                            ondelete={() => pageState.deleteCategory(originalIndex)}
+                            onadditem={() => pageState.openAddItemModal(element.category)}
+                            oneditcategory={() => pageState.openEditCategoryModal(originalIndex)}
+                        >
+                            {#each element.items as item (item.item)}
+                                <div animate:flip={{ duration: 300 }}>
+                                    <ChecklistItem 
+                                        {item}
+                                        readOnly={pageState.readOnly}
+                                        isEditMode={pageState.isEditMode}
+                                        ontoggleDisabled={() => pageState.toggleDisabled(originalIndex, element.items.indexOf(item))}
+                                        ontoggleItem={() => pageState.toggleItem(originalIndex, element.items.indexOf(item))}
+                                        onupdateQuantity={(delta) => pageState.updateQuantity(originalIndex, element.items.indexOf(item), delta)}
+                                        ondeleteItem={() => pageState.deleteItem(originalIndex, element.items.indexOf(item))}
+                                        oneditItem={() => pageState.openEditItemModal(element.category, element.items.indexOf(item))}
+                                    />
+                                </div>
+                            {/each}
+                        </Category>
+                    </div>
+                {/each}
+
+                <!-- Séparateur entre catégories non complétées et complétées -->
+                {#if pageState.hasCompletedCategories}
+                    <div class="flex items-center gap-3 py-2" transition:fade={{ duration: 200 }}>
+                        <div class="flex-1 h-px bg-[#699e4b]/30"></div>
+                        <span class="text-xs font-bold text-[#699e4b] uppercase tracking-wider whitespace-nowrap">
+                            Catégorie{pageState.completedCategories.length > 1 ? 's' : ''} complétée{pageState.completedCategories.length > 1 ? 's' : ''}
+                        </span>
+                        <div class="flex-1 h-px bg-[#699e4b]/30"></div>
+                    </div>
+                {/if}
+
+                <!-- Catégories complétées à 100% -->
+                {#each pageState.completedCategories as { element, originalIndex } (element.category)}
+                    <div animate:flip={{ duration: 400 }}>
+                        <Category 
+                            title={element.category}
+                            progress={element.progress}
+                            isExpanded={pageState.expandedCategories.has(originalIndex)}
+                            canDelete={pageState.isEditMode}
+                            showAddButton={pageState.isEditMode}
+                            ontoggle={() => pageState.toggleCategory(originalIndex)}
+                            ondelete={() => pageState.deleteCategory(originalIndex)}
+                            onadditem={() => pageState.openAddItemModal(element.category)}
+                            oneditcategory={() => pageState.openEditCategoryModal(originalIndex)}
+                        >
+                            {#each element.items as item (item.item)}
+                                <div animate:flip={{ duration: 300 }}>
+                                    <ChecklistItem 
+                                        {item}
+                                        readOnly={pageState.readOnly}
+                                        isEditMode={pageState.isEditMode}
+                                        ontoggleDisabled={() => pageState.toggleDisabled(originalIndex, element.items.indexOf(item))}
+                                        ontoggleItem={() => pageState.toggleItem(originalIndex, element.items.indexOf(item))}
+                                        onupdateQuantity={(delta) => pageState.updateQuantity(originalIndex, element.items.indexOf(item), delta)}
+                                        ondeleteItem={() => pageState.deleteItem(originalIndex, element.items.indexOf(item))}
+                                        oneditItem={() => pageState.openEditItemModal(element.category, element.items.indexOf(item))}
+                                    />
+                                </div>
+                            {/each}
+                        </Category>
+                    </div>
+                {/each}
+            {:else}
+                <!-- Mode lecture seule (historique) : affichage simple sans tri/regroupement -->
+                {#each pageState.checklist.elements as element, catIndex}
+                    <Category 
+                        title={element.category}
+                        progress={element.progress}
+                        isExpanded={pageState.expandedCategories.has(catIndex)}
+                        canDelete={false}
+                        showAddButton={false}
+                        ontoggle={() => pageState.toggleCategory(catIndex)}
+                        ondelete={() => {}}
+                        onadditem={() => {}}
+                    >
+                        {#each element.items as item, itemIndex}
+                            <ChecklistItem 
+                                {item}
+                                readOnly={pageState.readOnly}
+                                isEditMode={false}
+                                ontoggleDisabled={() => {}}
+                                ontoggleItem={() => {}}
+                                onupdateQuantity={() => {}}
+                                ondeleteItem={() => {}}
+                                oneditItem={() => {}}
+                            />
+                        {/each}
+                    </Category>
+                {/each}
+            {/if}
         </main>
 
         <!-- Footer Menu -->
