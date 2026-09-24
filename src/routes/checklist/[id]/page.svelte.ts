@@ -516,7 +516,6 @@ export function createPageState(id: string, readOnly: boolean = false) {
             text += '\n';
         });
 
-        text += `Lien d'importation : ${getShareUrl()}`;
         return text;
     }
 
