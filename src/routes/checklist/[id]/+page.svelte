@@ -1,7 +1,6 @@
 <script lang="ts">
     import { page } from '$app/state';
     import { createPageState } from './page.svelte.ts';
-    import { filterInput } from '$lib/ts/modalInputFilter';
     import { fade, fly, scale } from 'svelte/transition';
     import { flip } from 'svelte/animate';
     import { icons } from '$lib/ts/icons';
@@ -399,9 +398,8 @@
                     bind:value={pageState.newCategoryName}
                     oninput={(e) => {
                         const input = e.currentTarget;
-                        const filtered = filterInput(input.value);
-                        pageState.newCategoryName = filtered;
-                        input.value = filtered;
+                        pageState.newCategoryName = input.value;
+                        input.value = input.value;
                     }}
                     placeholder="Ex: Bagages, Accessoires..."
                     error={pageState.categoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
@@ -437,9 +435,8 @@
                     bind:value={pageState.editCategoryName}
                     oninput={(e) => {
                         const input = e.currentTarget;
-                        const filtered = filterInput(input.value);
-                        pageState.editCategoryName = filtered;
-                        input.value = filtered;
+                        pageState.editCategoryName = input.value;
+                        input.value = input.value;
                     }}
                     placeholder="Ex: Bagages, Accessoires..."
                     error={pageState.editCategoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
@@ -475,9 +472,8 @@
                     bind:value={pageState.newItemName}
                     oninput={(e) => {
                         const input = e.currentTarget;
-                        const filtered = filterInput(input.value);
-                        pageState.newItemName = filtered;
-                        input.value = filtered;
+                        pageState.newItemName = input.value;
+                        input.value = input.value;
                     }}
                     placeholder="Ex: T-shirts, Couches..."
                     error={pageState.itemExists ? 'Un élément avec ce nom existe déjà' : ''}

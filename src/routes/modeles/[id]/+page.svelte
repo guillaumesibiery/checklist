@@ -1,7 +1,6 @@
 <script lang="ts">
     import { page } from '$app/state';
     import { createPageState } from './page.svelte.ts';
-    import { filterInput } from '$lib/ts/modalInputFilter';
     import { fade, fly, scale } from 'svelte/transition';
     import { icons } from '$lib/ts/icons';
 
@@ -98,9 +97,8 @@
                     bind:value={state.newCategoryName}
                     oninput={(e) => {
                         const input = e.currentTarget;
-                        const filtered = filterInput(input.value);
-                        state.newCategoryName = filtered;
-                        input.value = filtered;
+                        state.newCategoryName = input.value;
+                        input.value = input.value;
                     }}
                     placeholder="Ex: Bagages, Accessoires..."
                     error={state.categoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
@@ -135,9 +133,8 @@
                     bind:value={state.editCategoryName}
                     oninput={(e) => {
                         const input = e.currentTarget;
-                        const filtered = filterInput(input.value);
-                        state.editCategoryName = filtered;
-                        input.value = filtered;
+                        state.editCategoryName = input.value;
+                        input.value = input.value;
                     }}
                     placeholder="Ex: Bagages, Accessoires..."
                     error={state.editCategoryExists ? 'Une catégorie avec ce nom existe déjà' : ''}
@@ -173,9 +170,8 @@
                     bind:value={state.newItemName}
                     oninput={(e) => {
                         const input = e.currentTarget;
-                        const filtered = filterInput(input.value);
-                        state.newItemName = filtered;
-                        input.value = filtered;
+                        state.newItemName = input.value;
+                        input.value = input.value;
                     }}
                     placeholder="Ex: T-shirts, Couches..."
                     error={state.itemExists ? 'Un élément avec ce nom existe déjà' : ''}

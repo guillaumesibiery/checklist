@@ -126,10 +126,6 @@ export function createLayoutState() {
     }
 
     async function handleNameChange(name: string) {
-        const validPattern = /^[\p{L}\p{N}\p{Emoji}\s._'\-]*$/u;
-        if (name && !validPattern.test(name)) {
-            return;
-        }
         
         if (name.length > 50) {
             name = name.substring(0, 50);

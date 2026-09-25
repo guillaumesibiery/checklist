@@ -1,12 +1,9 @@
 <script lang="ts">
     import { createPageState } from './page.svelte.ts';
     import { fade, scale } from 'svelte/transition';
-    import { filterInput } from '$lib/ts/modalInputFilter';
-    import { goto } from '$app/navigation';
     import { base } from '$app/paths';
     import { onMount } from 'svelte';
     import { formatDate } from '$lib/ts/date';
-    import { layoutState } from '$lib/ts/layoutState.svelte.ts';
     import Badge from '$lib/components/Badge.svelte';
     import Button from '$lib/components/Button.svelte';
     import Card from '$lib/components/Card.svelte';

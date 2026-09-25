@@ -3,8 +3,6 @@
     import Button from './Button.svelte';
     import Input from './Input.svelte';
     import { layoutState } from '$lib/ts/layoutState.svelte.ts';
-    import { filterInput } from '$lib/ts/modalInputFilter';
-    import { fade } from 'svelte/transition';
 
     interface Props {
         isOpen: boolean;
@@ -22,9 +20,8 @@
             bind:value={layoutState.checklistName}
             oninput={(e) => {
                 const input = e.currentTarget;
-                const filtered = filterInput(input.value);
-                layoutState.checklistName = filtered;
-                input.value = filtered;
+                layoutState.checklistName = input.value;
+                input.value = input.value;
             }}
             placeholder="Ex: Vacances d'été"
             maxlength={50}
