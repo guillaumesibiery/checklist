@@ -48,6 +48,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
     let isEditCategoryModalOpen = $state(false);
     let editCategoryName = $state("");
     let editCategoryIndex = $state<number | null>(null);
+    let visuallyCompletedIndices = $state(new Set<number>());
 
     onMount(async () => {
         isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -66,12 +67,16 @@ export function createPageState(id: string, readOnly: boolean = false) {
 
             // Par défaut, on ouvre les catégories qui ne sont pas à 100%
             const initialSet = new Set<number>();
+            const completedSet = new Set<number>();
             c.elements.forEach((element, index) => {
                 if (element.progress !== 100) {
                     initialSet.add(index);
+                } else {
+                    completedSet.add(index);
                 }
             });
             expandedCategories = initialSet;
+            visuallyCompletedIndices = completedSet;
         }
         loading = false;
     });
@@ -126,7 +131,7 @@ export function createPageState(id: string, readOnly: boolean = false) {
         let totalWanted = 0;
         let totalAdded = 0;
 
-        checklist.elements.forEach(element => {
+        checklist.elements.forEach((element, index) => {
             let catWanted = 0;
             let catAdded = 0;
 
@@ -144,7 +149,29 @@ export function createPageState(id: string, readOnly: boolean = false) {
 
             // Calcul du progrès par catégorie
             const catProgress = catWanted > 0 ? Math.round((catAdded / catWanted) * 100) : 0;
+            const oldProgress = element.progress;
             element.progress = catProgress;
+
+            if (catProgress === 100 && oldProgress !== 100) {
+                // Délai pour laisser l'animation de repli se terminer avant de déplacer la catégorie (600ms + 250ms = 850ms)
+                setTimeout(() => {
+                    if (!checklist) return;
+                    // On vérifie que la catégorie existe toujours et est toujours à 100%
+                    const currentIndex = checklist.elements.findIndex(e => e.category === element.category);
+                    if (currentIndex !== -1 && checklist.elements[currentIndex].progress === 100) {
+                        const newSet = new Set(visuallyCompletedIndices);
+                        newSet.add(currentIndex);
+                        visuallyCompletedIndices = newSet;
+                    }
+                }, 850);
+            } else if (catProgress !== 100) {
+                // Si la catégorie n'est plus à 100%, on la retire immédiatement
+                if (visuallyCompletedIndices.has(index)) {
+                    const newSet = new Set(visuallyCompletedIndices);
+                    newSet.delete(index);
+                    visuallyCompletedIndices = newSet;
+                }
+            }
 
             totalWanted += catWanted;
             totalAdded += catAdded;
@@ -227,6 +254,10 @@ export function createPageState(id: string, readOnly: boolean = false) {
         // On décale les autres catégories déjà ouvertes
         expandedCategories.forEach(idx => newExpanded.add(idx + 1));
         expandedCategories = newExpanded;
+
+        const newCompleted = new Set<number>();
+        visuallyCompletedIndices.forEach(idx => newCompleted.add(idx + 1));
+        visuallyCompletedIndices = newCompleted;
 
         await save();
         toastState.success(`Catégorie "${nameToAdd}" ajoutée`);
@@ -338,6 +369,13 @@ export function createPageState(id: string, readOnly: boolean = false) {
             else if (idx > index) newExpanded.add(idx - 1);
         });
         expandedCategories = newExpanded;
+        
+        const newCompleted = new Set<number>();
+        visuallyCompletedIndices.forEach(idx => {
+            if (idx < index) newCompleted.add(idx);
+            else if (idx > index) newCompleted.add(idx - 1);
+        });
+        visuallyCompletedIndices = newCompleted;
         
         await save();
         toastState.success(`Catégorie "${name}" supprimée`);
@@ -552,19 +590,18 @@ export function createPageState(id: string, readOnly: boolean = false) {
             if (!checklist) return [];
             return checklist.elements
                 .map((element, index) => ({ element, originalIndex: index }))
-                .filter(({ element }) => element.progress !== 100);
+                .filter(({ originalIndex }) => !visuallyCompletedIndices.has(originalIndex));
         },
         /** Catégories complétées à 100% (avec leur index original dans elements) */
         get completedCategories(): { element: typeof checklist extends null ? never : NonNullable<typeof checklist>['elements'][number]; originalIndex: number }[] {
             if (!checklist) return [];
             return checklist.elements
                 .map((element, index) => ({ element, originalIndex: index }))
-                .filter(({ element }) => element.progress === 100);
+                .filter(({ originalIndex }) => visuallyCompletedIndices.has(originalIndex));
         },
-        /** Indique si au moins une catégorie est complétée */
+        /** Indique si au moins une catégorie est complétée (visuellement) */
         get hasCompletedCategories(): boolean {
-            if (!checklist) return false;
-            return checklist.elements.some(e => e.progress === 100);
+            return visuallyCompletedIndices.size > 0;
         },
         get expandedCategories() { return expandedCategories; },
         get isFinalizeModalOpen() { return isFinalizeModalOpen; },
