@@ -8,6 +8,8 @@
     import Badge from '$lib/components/Badge.svelte';
     import Button from '$lib/components/Button.svelte';
     import Card from '$lib/components/Card.svelte';
+    import CircularProgress from '$lib/components/CircularProgress.svelte';
+    import Dropdown from '$lib/components/Dropdown.svelte';
     import ListSkeleton from '$lib/components/ListSkeleton.svelte';
     import Modal from '$lib/components/Modal.svelte';
     import { icons } from '$lib/ts/icons';
@@ -34,30 +36,10 @@
             {#each state.checklists as checklist}
                 <Card
                     title={checklist.checklistName}
-                    onclick={() => goto(`${base}/checklist/${checklist.checklistId}/?readOnly=true`)}
+                    href="{base}/checklist/{checklist.checklistId}/?readOnly=true"
                 >
-                    {#snippet children()}
-                        <!-- Barre de progression pleine largeur avec % à l'intérieur -->
-                        <div class="w-full h-6 bg-primary/10 dark:bg-primary/20 rounded-full relative overflow-hidden">
-                            <!-- Barre de remplissage -->
-                            <div 
-                                class="h-full bg-header-gradient rounded-full transition-all duration-500" 
-                                style="width: {checklist.progress}%"
-                            ></div>
-
-                            <!-- Texte en couleur primaire (par défaut) -->
-                            <div class="absolute inset-0 flex items-center justify-center text-[10px] font-black text-primary">
-                                {checklist.progress}%
-                            </div>
-
-                            <!-- Texte en blanc (révélé par la barre via clip-path) -->
-                            <div 
-                                class="absolute inset-0 flex items-center justify-center text-[10px] font-black text-white transition-all duration-500" 
-                                style="clip-path: inset(0 {100 - Number(checklist.progress)}% 0 0)"
-                            >
-                                {checklist.progress}%
-                            </div>
-                        </div>
+                    {#snippet progress()}
+                        <CircularProgress progress={Number(checklist.progress)} />
                     {/snippet}
 
                     {#snippet info()}
@@ -79,26 +61,28 @@
                     {/snippet}
 
                     {#snippet actions()}
-                        <Button 
-                            variant="ghost"
-                            size="sm"
-                            onclick={() => state.confirmRestore(checklist)}
-                            class="p-2"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                {@html icons.restore}
-                            </svg>
-                        </Button>
-                        <Button 
-                            variant="ghost"
-                            size="sm"
-                            onclick={() => state.confirmDelete(checklist)}
-                            class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                {@html icons.trash}
-                            </svg>
-                        </Button>
+                        <Dropdown>
+                            <button
+                                type="button"
+                                class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-main dark:text-white hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors cursor-pointer"
+                                onclick={() => state.confirmRestore(checklist)}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-primary">
+                                    {@html icons.restore}
+                                </svg>
+                                Restaurer
+                            </button>
+                            <button
+                                type="button"
+                                class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer"
+                                onclick={() => state.confirmDelete(checklist)}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                                    {@html icons.trash}
+                                </svg>
+                                Supprimer
+                            </button>
+                        </Dropdown>
                     {/snippet}
                 </Card>
             {/each}

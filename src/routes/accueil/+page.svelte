@@ -9,6 +9,8 @@
     import Badge from '$lib/components/Badge.svelte';
     import Button from '$lib/components/Button.svelte';
     import Card from '$lib/components/Card.svelte';
+    import CircularProgress from '$lib/components/CircularProgress.svelte';
+    import Dropdown from '$lib/components/Dropdown.svelte';
     import ListSkeleton from '$lib/components/ListSkeleton.svelte';
     import Modal from '$lib/components/Modal.svelte';
     import { icons } from '$lib/ts/icons';
@@ -55,28 +57,8 @@
                         title={checklist.checklistName}
                         href="{base}/checklist/{checklist.checklistId}"
                     >
-                        {#snippet children()}
-                            <!-- Barre de progression pleine largeur avec % à l'intérieur -->
-                            <div class="w-full h-6 bg-primary/10 dark:bg-primary/20 rounded-full relative overflow-hidden">
-                                <!-- Barre de remplissage -->
-                                <div 
-                                    class="h-full bg-header-gradient rounded-full transition-all duration-500" 
-                                    style="width: {checklist.progress}%"
-                                ></div>
-                                
-                                <!-- Texte en couleur primaire (par défaut) -->
-                                <div class="absolute inset-0 flex items-center justify-center text-[10px] font-black text-primary">
-                                    {checklist.progress}%
-                                </div>
-                                
-                                <!-- Texte en blanc (révélé par la barre via clip-path) -->
-                                <div 
-                                    class="absolute inset-0 flex items-center justify-center text-[10px] font-black text-white transition-all duration-500" 
-                                    style="clip-path: inset(0 {100 - checklist.progress}% 0 0)"
-                                >
-                                    {checklist.progress}%
-                                </div>
-                            </div>
+                        {#snippet progress()}
+                            <CircularProgress progress={checklist.progress} />
                         {/snippet}
 
                         {#snippet info()}
@@ -98,27 +80,29 @@
                         {/snippet}
 
                         {#snippet actions()}
-                            <Button 
-                                variant="ghost"
-                                size="sm"
-                                onclick={() => addToGoogleCalendar(checklist)}
-                                class="p-2"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                    <path d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM7.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM8.25 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM9.75 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM10.5 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM12.75 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM14.25 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 13.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
-                                    <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9h-16.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd" />
-                                </svg>
-                            </Button>
-                            <Button 
-                                variant="ghost"
-                                size="sm"
-                                onclick={() => state.confirmDelete(checklist)}
-                                class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                    {@html icons.trash}
-                                </svg>
-                            </Button>
+                            <Dropdown>
+                                <button
+                                    type="button"
+                                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-main dark:text-white hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors cursor-pointer"
+                                    onclick={() => addToGoogleCalendar(checklist)}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-primary">
+                                        <path d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM7.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM8.25 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM9.75 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM10.5 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM12.75 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM14.25 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 13.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
+                                        <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9h-16.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd" />
+                                    </svg>
+                                    Calendrier
+                                </button>
+                                <button
+                                    type="button"
+                                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer"
+                                    onclick={() => state.confirmDelete(checklist)}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                                        {@html icons.trash}
+                                    </svg>
+                                    Supprimer
+                                </button>
+                            </Dropdown>
                         {/snippet}
                     </Card>
                 {/each}
