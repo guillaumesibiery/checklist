@@ -84,9 +84,14 @@
 
     <!-- Numéro de version et lien de mise à jour en bas de page -->
     <div class="fixed bottom-4 left-0 right-0 flex flex-col items-center gap-1">
-        <span class="text-[10px] text-gray-400 dark:text-gray-600 uppercase font-bold tracking-[0.2em] pointer-events-none">
-            v{__PACKAGE_VERSION__}
-        </span>
+        {#key state.currentVersion}
+            <span
+                in:fade={{ duration: 200 }}
+                class="text-[10px] text-gray-400 dark:text-gray-600 uppercase font-bold tracking-[0.2em] pointer-events-none"
+            >
+                v{state.currentVersion}
+            </span>
+        {/key}
         <button
             onclick={state.handleCheckUpdate}
             class="text-[10px] text-primary font-medium underline underline-offset-2 transition-colors cursor-pointer"

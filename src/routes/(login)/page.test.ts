@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { createPageState } from './page.svelte';
 import { db } from '$lib/ts/db';
 import { layoutState } from '$lib/ts/layoutState.svelte.ts';
@@ -20,6 +20,10 @@ describe('Page State - User Deletion', () => {
         await db.models.clear();
         localStorage.clear();
         vi.clearAllMocks();
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
     it('devrait purger toutes les données quand le dernier utilisateur est supprimé', async () => {
@@ -110,6 +114,60 @@ describe('Page State - User Deletion', () => {
 
             expect(await db.users.count()).toBe(1);
             expect(await db.users.where('firstName').equals('Bob').count()).toBe(0);
+        });
+    });
+
+    describe('Vérification de mise à jour et version affichée', () => {
+        it('initialise currentVersion avec la version stockée si elle est plus récente que le build', () => {
+            expect.assertions(1);
+
+            localStorage.setItem('app_last_known_version', '99.0.0');
+            const state = createPageState();
+
+            expect(state.currentVersion).toBe('99.0.0');
+        });
+
+        it('met à jour currentVersion lorsqu\'une nouvelle version est détectée via handleCheckUpdate', async () => {
+            expect.assertions(3);
+
+            localStorage.setItem('app_last_known_version', '1.16.4');
+            vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+                new Response(JSON.stringify({ version: '99.1.0' }), { status: 200 })
+            );
+
+            const state = createPageState();
+            await state.handleCheckUpdate();
+
+            expect(state.updateChecking).toBe(false);
+            expect(state.updateResult).toEqual({ status: 'updated', newVersion: '99.1.0' });
+            expect(state.currentVersion).toBe('99.1.0');
+        });
+
+        it('met à jour currentVersion lors d\'une première vérification si la version distante est plus récente', async () => {
+            expect.assertions(2);
+
+            vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+                new Response(JSON.stringify({ version: '99.2.0' }), { status: 200 })
+            );
+
+            const state = createPageState();
+            await state.handleCheckUpdate();
+
+            expect(state.updateResult).toEqual({ status: 'up-to-date', version: '99.2.0' });
+            expect(state.currentVersion).toBe('99.2.0');
+        });
+
+        it('conserve currentVersion intacte en mode hors-ligne', async () => {
+            expect.assertions(2);
+
+            vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+
+            const state = createPageState();
+            const initialVersion = state.currentVersion;
+            await state.handleCheckUpdate();
+
+            expect(state.updateResult).toEqual({ status: 'offline' });
+            expect(state.currentVersion).toBe(initialVersion);
         });
     });
 });

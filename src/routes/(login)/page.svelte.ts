@@ -5,7 +5,12 @@ import { base } from '$app/paths';
 import { layoutState } from '$lib/ts/layoutState.svelte.ts';
 import { UserRepository } from '$lib/ts/repositories/UserRepository';
 import { toastState } from '$lib/ts/toastState.svelte';
-import { checkForUpdate, type UpdateCheckResult } from '$lib/ts/updateService';
+import {
+  checkForUpdate,
+  compareVersions,
+  getDisplayedVersion,
+  type UpdateCheckResult
+} from '$lib/ts/updateService';
 
 export function createPageState() {
   let users = liveQuery(() => UserRepository.getAll());
@@ -16,6 +21,10 @@ export function createPageState() {
   let userToDelete = $state<number | null>(null);
   let userToDeleteName = $state('');
   let showDeleteModal = $state(false);
+
+  // Version de l'application affichée sur la page de login
+  const buildVersion = typeof __PACKAGE_VERSION__ !== 'undefined' ? __PACKAGE_VERSION__ : '';
+  let currentVersion = $state(getDisplayedVersion(buildVersion));
 
   // État de la vérification de mise à jour
   let showUpdateModal = $state(false);
@@ -109,6 +118,13 @@ export function createPageState() {
 
       // Vérification de la version sur GitHub
       updateResult = await checkForUpdate();
+      if (updateResult.status === 'updated') {
+          currentVersion = updateResult.newVersion;
+      } else if (updateResult.status === 'up-to-date') {
+          currentVersion = compareVersions(updateResult.version, currentVersion) > 0
+              ? updateResult.version
+              : getDisplayedVersion(buildVersion);
+      }
       updateChecking = false;
   }
 
@@ -124,6 +140,7 @@ export function createPageState() {
     get showDeleteModal() { return showDeleteModal; },
     set showDeleteModal(v) { showDeleteModal = v; },
     get isValid() { return isValid; },
+    get currentVersion() { return currentVersion; },
     get showUpdateModal() { return showUpdateModal; },
     set showUpdateModal(v) { showUpdateModal = v; },
     get updateChecking() { return updateChecking; },

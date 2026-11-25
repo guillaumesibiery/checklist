@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { checkForUpdate } from './updateService';
+import { checkForUpdate, compareVersions, getDisplayedVersion } from './updateService';
 
 /**
  * Tests unitaires du service de vérification de mise à jour.
@@ -117,5 +117,49 @@ describe('updateService', () => {
     const result = await checkForUpdate();
 
     expect(localStorage.getItem(STORAGE_KEY)).toBe('1.12.0');
+  });
+
+  describe('compareVersions', () => {
+    it('compare correctement deux versions sémantiques', () => {
+      expect.assertions(5);
+
+      expect(compareVersions('1.17.0', '1.16.4')).toBeGreaterThan(0);
+      expect(compareVersions('1.10.0', '1.2.0')).toBeGreaterThan(0);
+      expect(compareVersions('1.16.4', '1.17.0')).toBeLessThan(0);
+      expect(compareVersions('1.17.0', '1.17.0')).toBe(0);
+      expect(compareVersions('2.0.0', '1.99.99')).toBeGreaterThan(0);
+    });
+  });
+
+  describe('getDisplayedVersion', () => {
+    it('retourne la version du build quand le localStorage est vide', () => {
+      expect.assertions(1);
+
+      expect(getDisplayedVersion('1.17.0')).toBe('1.17.0');
+    });
+
+    it('retourne la version stockée si elle est plus récente que la version du build', () => {
+      expect.assertions(1);
+
+      localStorage.setItem(STORAGE_KEY, '1.18.0');
+
+      expect(getDisplayedVersion('1.17.0')).toBe('1.18.0');
+    });
+
+    it('retourne la version du build si elle est plus récente que la version stockée', () => {
+      expect.assertions(1);
+
+      localStorage.setItem(STORAGE_KEY, '1.16.4');
+
+      expect(getDisplayedVersion('1.17.0')).toBe('1.17.0');
+    });
+
+    it('ignore une valeur invalide dans le localStorage', () => {
+      expect.assertions(1);
+
+      localStorage.setItem(STORAGE_KEY, 'invalid');
+
+      expect(getDisplayedVersion('1.17.0')).toBe('1.17.0');
+    });
   });
 });

@@ -56,3 +56,41 @@ export async function checkForUpdate(): Promise<UpdateCheckResult> {
     return { status: 'offline' };
   }
 }
+
+/**
+ * Compare deux versions sémantiques (ex: "1.17.0" vs "1.16.4").
+ * Retourne un nombre > 0 si a > b, < 0 si a < b, et 0 si elles sont égales.
+ */
+export function compareVersions(a: string, b: string): number {
+  const partsA = a.split('.').map((n) => parseInt(n, 10) || 0);
+  const partsB = b.split('.').map((n) => parseInt(n, 10) || 0);
+  const maxLength = Math.max(partsA.length, partsB.length);
+
+  for (let i = 0; i < maxLength; i++) {
+    const numA = partsA[i] ?? 0;
+    const numB = partsB[i] ?? 0;
+    if (numA !== numB) {
+      return numA - numB;
+    }
+  }
+
+  return 0;
+}
+
+/**
+ * Retourne le numéro de version à afficher en prenant la version la plus récente
+ * entre la version du build courant et celle enregistrée dans le localStorage.
+ */
+export function getDisplayedVersion(buildVersion: string): string {
+  if (typeof localStorage === 'undefined') {
+    return buildVersion;
+  }
+
+  const storedVersion = localStorage.getItem(VERSION_STORAGE_KEY);
+  if (!storedVersion || !/^\d+/.test(storedVersion)) {
+    return buildVersion;
+  }
+
+  return compareVersions(storedVersion, buildVersion) > 0 ? storedVersion : buildVersion;
+}
+
